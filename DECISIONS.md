@@ -169,3 +169,22 @@ Instead:
 - The shared harness (`tsconfig.json`, `vite.config.ts`, `playwright.config.ts`, `index.html`,
   `src/app/main.ts` placeholder) is Warden-built infrastructure, already in place and `tsc`-clean, so
   all six silos can run `npm run dev` and Playwright from the first minute.
+
+### #21 — `exportWebM()` returns `null` today, honestly. The GPU flags stay per-suite.
+S1's first pass returned a **110-byte Blob** from `exportWebM()` — not a video, but something a browser
+would download and then fail to play, while the test passed because it only asserted "did not throw".
+That is precisely the failure the lock's evidence rule exists to prevent: a green check over a broken
+artefact. Sent back and fixed. `exportWebM()` now returns a Blob **only** if the recording clears a
+frame-completeness gate (≥3 non-empty `MediaRecorder` chunks and ≥`max(20_000, frames*3_000)` bytes);
+otherwise `null`. Measured on this machine: **`null`, 3/3 runs** — MediaRecorder here never clears the
+floor. WebM is stretch (decision #12), so `null` is an acceptable and *correct* outcome; a broken Blob
+was not. The test now asserts `result === null || blob.size >= 72_000`, so an unverified small Blob can
+never pass again. `npx tsc --noEmit` is **clean project-wide, 0 errors**.
+
+**GPU launch flags are NOT promoted to `playwright.config.ts`.** Headless Chromium renders this at ~2 fps
+on SwiftShader and 60 fps through ANGLE/D3D11, so any suite that measures frame rate must pass
+`--use-gl=angle --use-angle=d3d11`. S1 reports 15+ stable runs but was explicit that it only exercised
+them under its own WebGL-heavy suite, not S2–S6. Promoting a Windows-only flag set globally on evidence
+from one suite is how you destabilise five passing suites, so the flags stay in the suites that need a
+real GPU (S1 and the end-to-end run). `--use-angle=d3d11` is Windows-only and would need a fallback if
+this ever runs on Linux CI.
