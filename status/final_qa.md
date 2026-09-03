@@ -137,6 +137,7 @@ normal page navigation and DOM clicks, rather than an isolated dynamic-imported 
 | E2E | Step 6 Assert: ZIP entry count + names | exactly 24, `frame_0001…frame_0024.png` | 24 entries, names exact match | PASS |
 | E2E | Step 6 Assert: every frame's decoded dimensions | 1024×1024 | 24/24 frames 1024×1024 | PASS |
 | E2E | Hint state (Warden finding, real app shell, not an isolated studio): `#viewport-hint` before any load / after a real library-tile click loads a model | visible+idle text before, fully hidden after | before: `hidden=false state=idle text="Drop a .glb, or pick one from the library"`; after: `hidden=true state=loaded` | PASS |
+| E2E | Bloom readability (Warden finding, real app shell): fully-clipped pixels (R,G,B all ≥250) inside the model's screen bounds, default Bloom on a loaded `kenney/car-kit/ambulance` | <25% clipped | region=[146,110,546,580] totalPx=188,000 clippedPx=0 → **0.000%** (was near-total blow-out before the retune) | PASS |
 
 **All 6 SCOPE.md §6 steps complete with 0 thrown errors; every number matches exactly** — file
 count `===24`, every frame `1024×1024`, turntable sample `π ±1e-6` (diff measured as exactly 0),
@@ -231,6 +232,22 @@ integration finding 0).
 7. **No `BLOCKED.md` was needed.** No blocker was hit three times (or at all) during shell wiring,
    end-to-end test authoring, or verification.
 
+8. **Default Bloom blew the model out to near-solid white — Warden-caught by looking at the app,
+   and invisible to every numeric check that existed.** S2's own acceptance check is "≥0.5% of
+   pixels moved within the emissive object's screen bounds" and it measured **94.32% — a
+   comfortably passing number produced by an unusable image**. S2's defaults were tuned against a
+   synthetic emissive box fixture (`src/editor/postfx.ts` `DEFAULT_BLOOM`, threshold 0.6–0.88,
+   strength 0.6–1.2), which is a fair fixture for S2's own suite but far too hot for the app's real
+   lighting on a plain white Kenney model. Fixed in `src/app/main.ts` only (S2's silo and its
+   passing suite untouched): the app now passes `strength 0.15, radius 0.15, threshold 0.99`, so
+   only genuinely near-clipped highlights bloom and the glow stays tight. Measured after the
+   retune: **0.000% clipped** (0 of 188,000 pixels), and visually confirmed the effect is still
+   present — a soft halo, with body panels, orange stripes and blue lights all still legible, so
+   this is a retune and not a silent disable. A clipped-pixel guard (<25%) is now asserted in
+   `tests/e2e.spec.ts` so it cannot regress.
+   *Class of bug:* same as the 110-byte `exportWebM()` Blob (decision #21) — **a green check over a
+   wrong artefact.** Both were found by a human-equivalent look, not by a measurement.
+
 ## What Assembly touched
 
 - `index.html` — extended markup around the six frozen mount-point ids (`#viewport`,
@@ -251,6 +268,6 @@ integration finding 0).
 ## Ready to deploy
 
 **Yes.** All 40 silo-owned tests pass (individually/per-suite, 40/40) and the end-to-end script
-passes 3/3 runs with every SCOPE.md §6 number exact. `tsc --noEmit` is clean project-wide. The one
-outstanding item is finding 3 above (run tests per-file rather than as one 41-test batch, or treat
+passes 3/3 runs with every SCOPE.md §6 number exact. `tsc --noEmit` is clean project-wide. Bloom was retuned after a Warden review (finding 8) and is now guarded by a clipped-pixel
+assertion. The one outstanding item is finding 3 above (run tests per-file rather than as one 41-test batch, or treat
 it as a future harness hardening task) — it affects local CI ergonomics only, not the shipped app.

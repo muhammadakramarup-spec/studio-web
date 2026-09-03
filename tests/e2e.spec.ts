@@ -422,3 +422,101 @@ test("E2E regression — real app shell: #viewport-hint reflects actual ready/lo
   expect(afterLoad.hidden).toBe(true);
   expect(afterLoad.state).toBe("loaded");
 });
+
+// ---------------------------------------------------------------------------------------------
+// Regression test — the Warden's second Wave-3 finding: the toolbar's default Bloom parameters
+// blew a plain white/light Kenney model out to near-solid white. S2's own bloom acceptance check
+// ("≥0.5% of pixels moved within the emissive object's screen bounds") measures 94.32% either way
+// — it is satisfied by a blown-out frame just as readily as a tasteful one, exactly the shape of
+// problem decision #21 already called out for the WebM Blob (a passing check over a broken
+// artefact). This test adds the missing numeric guard: with the real toolbar's default Bloom
+// enabled on a real loaded ambulance, the fraction of fully-clipped pixels (R,G,B all >=250)
+// inside the model's own screen-space bounds must stay under 25%.
+test("E2E regression — default Bloom stays readable on a plain white Kenney model (no full clip)", async ({
+  page,
+}) => {
+  test.setTimeout(30_000);
+  page.on("pageerror", (err) => console.log("[e2e pageerror]", err.message));
+
+  await page.goto("/");
+  await page.waitForTimeout(500);
+
+  // Load the real ambulance through the real rendered library panel (same tile step1's sibling
+  // test picks — kenney/car-kit/ambulance, a plain white/light-bodied model).
+  await page.waitForSelector("#panel-library .library-panel__tile", { timeout: 15_000 });
+  await page.locator("#panel-library .library-panel__tile").first().click();
+  await expect(page.locator("#viewport-hint")).toBeHidden({ timeout: 10_000 });
+
+  // Toggle the real toolbar Bloom button — exactly what the Warden clicked.
+  await page.getByRole("button", { name: "Bloom", exact: true }).click();
+
+  const result = await page.evaluate(async () => {
+    const THREE_MODULE_PATH = "/node_modules/three/build/three.module.js";
+    const THREE = (await import(THREE_MODULE_PATH)) as any;
+    const studio = (window as any).__studio;
+    const canvas = studio.renderer.domElement as HTMLCanvasElement;
+
+    // Screen-space bounds of the loaded model (everything under studio.pivot — the floor/lights
+    // live directly on studio.scene, not the pivot), same corner-projection technique
+    // tests/s2.spec.ts's own bloom test uses for its synthetic emissive box.
+    const bbox = new THREE.Box3().setFromObject(studio.pivot);
+    const corners: number[][] = [];
+    for (const x of [bbox.min.x, bbox.max.x])
+      for (const y of [bbox.min.y, bbox.max.y]) for (const z of [bbox.min.z, bbox.max.z]) corners.push([x, y, z]);
+
+    let minPx = Infinity;
+    let minPy = Infinity;
+    let maxPx = -Infinity;
+    let maxPy = -Infinity;
+    for (const [x, y, z] of corners) {
+      const v = new THREE.Vector3(x, y, z).project(studio.camera);
+      const px = ((v.x + 1) / 2) * canvas.width;
+      const py = ((1 - v.y) / 2) * canvas.height;
+      minPx = Math.min(minPx, px);
+      maxPx = Math.max(maxPx, px);
+      minPy = Math.min(minPy, py);
+      maxPy = Math.max(maxPy, py);
+    }
+    const pad = 10;
+    minPx = Math.max(0, Math.floor(minPx - pad));
+    minPy = Math.max(0, Math.floor(minPy - pad));
+    maxPx = Math.min(canvas.width, Math.ceil(maxPx + pad));
+    maxPy = Math.min(canvas.height, Math.ceil(maxPy + pad));
+
+    // Do NOT call studio.debug.renderOnce() here — per src/viewer/studio.ts it calls
+    // renderer.render(scene, camera) directly, bypassing setRenderHook entirely (that bypass is
+    // deliberate, for other tests' deterministic single-frame captures), which would silently
+    // measure the NON-bloom frame. Bloom only reaches the canvas through S1's own rAF loop
+    // invoking the hook S2 installed, so read the canvas as that loop actually painted it.
+    await new Promise((r) => setTimeout(r, 250));
+
+    const off = document.createElement("canvas");
+    off.width = canvas.width;
+    off.height = canvas.height;
+    const ctx = off.getContext("2d")!;
+    ctx.drawImage(canvas, 0, 0);
+    const data = ctx.getImageData(0, 0, off.width, off.height).data;
+
+    let total = 0;
+    let clipped = 0;
+    for (let y = minPy; y < maxPy; y++) {
+      for (let x = minPx; x < maxPx; x++) {
+        const o = (y * canvas.width + x) * 4;
+        total++;
+        if (data[o] >= 250 && data[o + 1] >= 250 && data[o + 2] >= 250) clipped++;
+      }
+    }
+    return {
+      total,
+      clipped,
+      clippedPct: total > 0 ? (clipped / total) * 100 : 0,
+      region: [minPx, minPy, maxPx, maxPy],
+    };
+  });
+
+  console.log(
+    `[E2E] bloom clip check: region=${JSON.stringify(result.region)} totalPx=${result.total} ` +
+      `clippedPx=${result.clipped} clippedPct=${result.clippedPct.toFixed(3)}%`,
+  );
+  expect(result.clippedPct).toBeLessThan(25);
+});

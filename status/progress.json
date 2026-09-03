@@ -1,64 +1,115 @@
 {
- "wave": "1",
+ "wave": "3",
  "started": "",
  "silos": {
   "S1": {
-   "state": "done",
-   "last": "05:29",
-   "msg": "SPEC written",
+   "state": "qa-pass",
+   "last": "06:30",
+   "msg": "WebM honesty fix accepted",
    "n": {
     "targets": 6,
-    "cuts": 7
+    "cuts": 7,
+    "tests_pass": 6,
+    "tests_total": 6,
+    "load_ms": 482.3,
+    "fps": 60,
+    "framing_files_failed": 0,
+    "framing_files_total": 10,
+    "metallic_false_negatives": 0,
+    "zip_entries": 24,
+    "png_dims": 2048,
+    "pmrem_scene_ms": 3.7,
+    "pmrem_hdr_ms": 0.7,
+    "tsc_errors": 0,
+    "webm_gate_min_bytes": 72000,
+    "webm_gate_min_chunks": 3,
+    "webm_result": "null (gate not met, 3/3 consecutive runs)"
    }
   },
   "S2": {
-   "state": "done",
-   "last": "05:29",
-   "msg": "SPEC written",
+   "state": "qa-pass",
+   "last": "06:13",
+   "msg": "undo/redo command stack (canonical serialization, 50-op fuzz round trip) + execute(op); selection (raycast+outliner, fixed 3-mesh+1-light+1-camera fixture); TransformControls gizmo translate/rotate/scale; add light/camera/primitive; PBR material panel w/ reset; mirror modifier; array modifier (count=total visible incl. source); bloom-only post FX via UnrealBloomPass off S1's setRenderHook seam. Built entirely against local StudioLike type per HANDOFF, no import of src/viewer/**. 9/9 playwright tests pass, deterministic across reruns.",
    "n": {
     "targets": 8,
-    "cuts": 4
+    "cuts": 4,
+    "tests_pass": 9,
+    "tests_total": 9,
+    "undo_ops": 50,
+    "redo_ops": 50,
+    "selection_5_5": 5,
+    "canvas_pick_3_3": 3,
+    "mirror_tri_ratio": 2,
+    "array_count_at_5": 5,
+    "bloom_moved_pct": 94.32
    }
   },
   "S3": {
-   "state": "done",
-   "last": "05:32",
-   "msg": "KTX2 cut",
+   "state": "qa-pass",
+   "last": "06:05",
+   "msg": "2268 Kenney GLBs ingested unchanged (53.13MB exact match), manifest.assets root shape with animationClipNames, independent triangle gate 0/2268 failures, licence coverage 100% (2280 assets), 12/12 Poly Haven HDRIs fetched and decoded via RGBELoader (floor 6), 20 kit thumbnails 256x256 <=50KB, both S6-contractual asset ids verified byte-exact, LibraryPanel built and tested, 5/5 playwright tests pass. Found+fixed: 16 kits GLB reference external colormap.png sibling texture not embedded, needed alongside extraction.",
    "n": {
     "models_on_disk": 2518,
     "shippable": 2268,
     "over_gate": 23,
     "kenney_glb": 2268,
     "kenney_mb": 53,
-    "polyhaven_usable": 0
+    "polyhaven_usable": 0,
+    "assets": 2280,
+    "hdris": 12,
+    "thumbs": 20
    }
   },
   "S4": {
-   "state": "done",
-   "last": "05:29",
-   "msg": "SPEC written: 7 rigged Kenney characters on disk (189 total clips), contra existing-3d-assets skill's stale no-characters claim",
+   "state": "qa-pass",
+   "last": "06:05",
+   "msg": "8-preset easing fixture + pure sampleAt + exportRange + non-circular scrub + 50-key round-trip + perf + 3-key turntable all green; stretch (character-clip trigger) not attempted per build-order stop rule",
    "n": {
     "easing_presets": 8,
     "clips_on_disk": 189,
-    "characters_on_disk": 7
+    "characters_on_disk": 7,
+    "checks_pass": 7,
+    "checks_fail": 0,
+    "easing_samples_pass": 40,
+    "scrub_perf_ms": 0.0205,
+    "turntable_angle_diff": 0
    }
   },
   "S5": {
-   "state": "done",
-   "last": "05:32",
-   "msg": "EthicalAds not applied for",
+   "state": "qa-pass",
+   "last": "06:03",
+   "msg": "useAccount/AccountPanel/AdSlot/checkout-stub/telemetry all built and passing; status union corrected to signed-out|signed-in per decision #18; AccountPanel/AdSlot typed HTMLElement (no React); 0 ethicalads/lemonsqueezy requests; secrets 0 in isolated build (App shell not yet wired to real dist)",
    "n": {
     "signups": 4,
-    "targets": 7
+    "targets": 7,
+    "tests_total": 8,
+    "tests_pass": 8,
+    "console_errors": 0,
+    "ethicalads_requests": 0,
+    "lemonsqueezy_requests": 0,
+    "telemetry_pre_consent_posts": 0,
+    "telemetry_opted_in_posts": 3,
+    "telemetry_post_optout_total": 3,
+    "secret_matches": 0,
+    "event_type_union_size": 6
    }
   },
   "S6": {
-   "state": "done",
-   "last": "05:32",
-   "msg": "Meshy mock only",
+   "state": "qa-pass",
+   "last": "05:59",
+   "msg": "Worker stub + generation panel + credits gate + mock labelling + avatar tile all pass, 3 consecutive Playwright runs, 0 network calls, 0 keys",
    "n": {
     "targets": 5,
-    "cuts": 5
+    "cuts": 5,
+    "worker_ms_max": 3,
+    "round_trip_ms_max": 216.1,
+    "credits_gate_ms_max": 0.1,
+    "avatar_ms_max": 59.8,
+    "avatar_diff_px": 3932,
+    "avatar_meshes": 2,
+    "avatar_tris": 465,
+    "tests_passed": 12,
+    "tests_total": 12
    }
   }
  },
@@ -74,9 +125,12 @@
   "#9 05:32 EthicalAds cut for today (50k pageview floor); house-ad placeholder ships, 0 requests to ethicalads.io",
   "#10 05:32 No free Meshy API tier exists; S6 ships mock Worker with zero env vars; three-vrm default over RPM demo subdomain",
   "#11 05:37 Library ships as same-origin Cloudflare Pages assets; R2 deferred (2268 files / 53 MB fits Pages limits, R2 adds sign-up surface)",
-  "#12 05:37 All 6 Codex reviews accepted as binding; S1 gains setRenderHook; WebM+postFX+character-clip export demoted; 3 circular acceptance checks replaced"
+  "#12 05:37 All 6 Codex reviews accepted as binding; S1 gains setRenderHook; WebM+postFX+character-clip export demoted; 3 circular acceptance checks replaced",
+  "#13 05:45 SCOPE.md SIGNED after verifying all review mandates folded in and 4 random citations resolve exactly; decisions 13-18 override SCOPE section 5 gaps",
+  "#14 05:45 No worktrees: disjoint directory ownership already prevents collisions; no silo runs git; Warden commits; shared harness pre-built and tsc-clean",
+  "#15 06:30 exportWebM returns null unless frame-complete (measured null 3/3); GPU flags stay per-suite, not global"
  ],
  "blockers": [],
  "signups": [],
- "events": 32
+ "events": 53
 }

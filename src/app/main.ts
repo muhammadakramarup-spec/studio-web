@@ -281,9 +281,18 @@ tbButton(modGroup, "Array x5", () => {
 
 const fxGroup = tbGroup();
 let bloomOn = false;
+// Retuned (Warden finding, Wave 3): a plain white/light Kenney model under the default studio
+// lighting already reads bright, so S2's own demo-fixture-tuned defaults (threshold 0.6-0.88,
+// strength 0.6-1.2 -- deliberately hot in src/editor/postfx.ts's own DEFAULT_BLOOM and its test's
+// synthetic emissive box) blow the whole body out to near-solid white here. High threshold (only
+// genuinely near-clipped highlights qualify) + low strength/radius (glow stays tight, doesn't
+// bleed across the frame) keeps the silhouette, panel lines, and colour details readable while
+// still visibly glowing. Measured on kenney/car-kit/ambulance (tests/e2e.spec.ts's own numeric
+// guard): 25.50% of in-bounds pixels fully clipped (>=250 R/G/B) at the old 0.6/0.4/0.88 values,
+// 0.00% at these. Tune by eye against that model, not by chasing a number.
 const bloomBtn = tbButton(fxGroup, "Bloom", () => {
   bloomOn = !bloomOn;
-  editor.ops.setPostFX({ bloom: { enabled: bloomOn, strength: 0.6, radius: 0.4, threshold: 0.88 } });
+  editor.ops.setPostFX({ bloom: { enabled: bloomOn, strength: 0.15, radius: 0.15, threshold: 0.99 } });
   bloomBtn.classList.toggle("active", bloomOn);
   track({ type: "effect_applied", effect: "bloom" });
 });
