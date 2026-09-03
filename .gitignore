@@ -10,3 +10,4 @@ public/assets/**/*.ktx2
 test-results/
 playwright-report/
 __pycache__/
+status/devserver.log
