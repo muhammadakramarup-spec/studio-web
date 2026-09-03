@@ -31,3 +31,6 @@
 {"t":"05:37","agent":"warden","silo":null,"wave":"1","msg":"All Codex findings binding","decision":"All 6 Codex reviews accepted as binding; S1 gains setRenderHook; WebM+postFX+character-clip export demoted; 3 circular acceptance checks replaced"}
 {"t":"05:37","agent":"warden","silo":null,"wave":"1","msg":"toolchain installed and verified","n":{"three":"0.170.0","types_match":1,"addons_ok":4}}
 {"t":"05:37","agent":"assembly-1","silo":null,"wave":"1","msg":"writing SCOPE.md"}
+{"t":"05:43","agent":"assembly-1","silo":null,"wave":"1","msg":"SCOPE.md written","n":{"interfaces":7,"gaps":6,"cuts":15}}
+{"t":"05:45","agent":"warden","silo":null,"wave":"2","msg":"SCOPE.md signed","decision":"SCOPE.md SIGNED after verifying all review mandates folded in and 4 random citations resolve exactly; decisions 13-18 override SCOPE section 5 gaps"}
+{"t":"05:45","agent":"warden","silo":null,"wave":"2","msg":"Wave 2 in shared tree","decision":"No worktrees: disjoint directory ownership already prevents collisions; no silo runs git; Warden commits; shared harness pre-built and tsc-clean"}
