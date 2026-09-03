@@ -43,7 +43,6 @@ test.describe('S6 — AI + avatars', () => {
     await page.goto('/');
 
     await page.evaluate(async () => {
-      // @ts-expect-error — Vite dynamic import of a raw module path; resolved by the dev
       // server at runtime in the browser, not by tsc's module graph (Testing section pattern).
       const mod = await import('/src/ai/index.ts');
       (window as any).__s6 = mod;
@@ -102,7 +101,6 @@ test.describe('S6 — AI + avatars', () => {
     await page.goto('/');
 
     const gate = await page.evaluate(async () => {
-      // @ts-expect-error — Vite dynamic import of a raw module path; resolved by the dev
       // server at runtime in the browser, not by tsc's module graph (Testing section pattern).
       const mod = await import('/src/ai/index.ts');
       const container = document.createElement('div');
@@ -159,10 +157,8 @@ test.describe('S6 — AI + avatars', () => {
     await page.goto('/');
 
     const result = await page.evaluate(async () => {
-      // @ts-expect-error — Vite dynamic import of a raw module path; resolved by the dev
       // server at runtime in the browser, not by tsc's module graph (Testing section pattern).
       const mod = await import('/src/ai/index.ts');
-      // @ts-expect-error — Vite dynamic import of a raw module path; resolved by the dev
       // server at runtime in the browser, not by tsc's module graph (Testing section pattern).
       const harness = await import('/src/ai/testHarness.ts');
 

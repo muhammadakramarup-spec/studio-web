@@ -1,0 +1,102 @@
+{
+  "requested": 12,
+  "fetched": 12,
+  "results": [
+    {
+      "slug": "studio_small_03",
+      "name": "Studio Small 03",
+      "ext": "hdr",
+      "bytes": 1686299,
+      "fileUrl": "/assets/hdri/studio_small_03.hdr",
+      "sourceUrl": "https://polyhaven.com/a/studio_small_03"
+    },
+    {
+      "slug": "brown_photostudio_02",
+      "name": "Brown Photostudio 02",
+      "ext": "hdr",
+      "bytes": 1648130,
+      "fileUrl": "/assets/hdri/brown_photostudio_02.hdr",
+      "sourceUrl": "https://polyhaven.com/a/brown_photostudio_02"
+    },
+    {
+      "slug": "royal_esplanade",
+      "name": "Royal Esplanade",
+      "ext": "hdr",
+      "bytes": 1676014,
+      "fileUrl": "/assets/hdri/royal_esplanade.hdr",
+      "sourceUrl": "https://polyhaven.com/a/royal_esplanade"
+    },
+    {
+      "slug": "kloofendal_48d_partly_cloudy_puresky",
+      "name": "Kloofendal 48d Partly Cloudy (Pure Sky)",
+      "ext": "hdr",
+      "bytes": 1435119,
+      "fileUrl": "/assets/hdri/kloofendal_48d_partly_cloudy_puresky.hdr",
+      "sourceUrl": "https://polyhaven.com/a/kloofendal_48d_partly_cloudy_puresky"
+    },
+    {
+      "slug": "venice_sunset",
+      "name": "Venice Sunset",
+      "ext": "hdr",
+      "bytes": 1440400,
+      "fileUrl": "/assets/hdri/venice_sunset.hdr",
+      "sourceUrl": "https://polyhaven.com/a/venice_sunset"
+    },
+    {
+      "slug": "small_hangar_01",
+      "name": "Small Hangar 01",
+      "ext": "hdr",
+      "bytes": 1697028,
+      "fileUrl": "/assets/hdri/small_hangar_01.hdr",
+      "sourceUrl": "https://polyhaven.com/a/small_hangar_01"
+    },
+    {
+      "slug": "photo_studio_01",
+      "name": "Photo Studio 01",
+      "ext": "hdr",
+      "bytes": 1597273,
+      "fileUrl": "/assets/hdri/photo_studio_01.hdr",
+      "sourceUrl": "https://polyhaven.com/a/photo_studio_01"
+    },
+    {
+      "slug": "quarry_01",
+      "name": "Quarry 01",
+      "ext": "hdr",
+      "bytes": 1477951,
+      "fileUrl": "/assets/hdri/quarry_01.hdr",
+      "sourceUrl": "https://polyhaven.com/a/quarry_01"
+    },
+    {
+      "slug": "sunflowers",
+      "name": "Sunflowers",
+      "ext": "hdr",
+      "bytes": 1674694,
+      "fileUrl": "/assets/hdri/sunflowers.hdr",
+      "sourceUrl": "https://polyhaven.com/a/sunflowers"
+    },
+    {
+      "slug": "autumn_forest_04",
+      "name": "Autumn Forest 04",
+      "ext": "hdr",
+      "bytes": 1959488,
+      "fileUrl": "/assets/hdri/autumn_forest_04.hdr",
+      "sourceUrl": "https://polyhaven.com/a/autumn_forest_04"
+    },
+    {
+      "slug": "industrial_sunset_puresky",
+      "name": "Industrial Sunset (Pure Sky)",
+      "ext": "hdr",
+      "bytes": 1158432,
+      "fileUrl": "/assets/hdri/industrial_sunset_puresky.hdr",
+      "sourceUrl": "https://polyhaven.com/a/industrial_sunset_puresky"
+    },
+    {
+      "slug": "neon_photostudio",
+      "name": "Neon Photostudio",
+      "ext": "hdr",
+      "bytes": 1618638,
+      "fileUrl": "/assets/hdri/neon_photostudio.hdr",
+      "sourceUrl": "https://polyhaven.com/a/neon_photostudio"
+    }
+  ]
+}
