@@ -1,1 +1,33 @@
 {"t":"00:00","agent":"handoff","silo":null,"wave":"0","msg":"seed: page rendered before the day starts"}
+{"t":"05:24","agent":"S1-scout","silo":"S1","wave":"1","state":"building","msg":"scout started"}
+{"t":"05:25","agent":"S2-scout","silo":"S2","wave":"1","state":"building","msg":"scout started"}
+{"t":"05:25","agent":"S3-scout","silo":"S3","wave":"1","state":"building","msg":"scout started"}
+{"t":"05:26","agent":"S4-scout","silo":"S4","wave":"1","state":"building","msg":"scout started"}
+{"t":"05:26","agent":"S5-scout","silo":"S5","wave":"1","state":"building","msg":"scout started"}
+{"t":"05:27","agent":"S6-scout","silo":"S6","wave":"1","state":"building","msg":"scout started"}
+{"t":"05:27","agent":"warden","silo":null,"wave":"1","msg":"Wave 0 complete: repo init, tag wave0=06846db, toolchain verified","decision":"Wave 0 boot accepted; node 24.19.0 / npm 11.17.0 / py 3.12.10 / ffmpeg 9 / codex-cli 0.151.0 verified; 118 test GLBs present"}
+{"t":"05:27","agent":"warden","silo":null,"wave":"1","msg":"Wave clocks re-read as agent batches","decision":"Heartbeat = event appended at agent start and end; Warden renders PROGRESS.html at each batch boundary; no perpetual clerk left running"}
+{"t":"05:27","agent":"warden","silo":null,"wave":"1","msg":"Scouts write specs only","decision":"Wave-1 scouts write one SPEC.md each in the shared tree; worktree isolation begins at Wave 2"}
+{"t":"05:27","agent":"warden","silo":null,"wave":"1","msg":"three pin and interfaces deferred","decision":"three version pin and every interface signature are settled in SCOPE.md, signed by the Warden; no silo may assume an interface shape before then"}
+{"t":"05:27","agent":"S1-scout","silo":"S1","wave":"1","state":"building","msg":"scouting reference port + three pin"}
+{"t":"05:27","agent":"S2-scout","silo":"S2","wave":"1","state":"building","msg":"scouting editor tool set"}
+{"t":"05:27","agent":"S3-scout","silo":"S3","wave":"1","state":"building","msg":"inventorying CC0 assets + pipeline"}
+{"t":"05:27","agent":"S4-scout","silo":"S4","wave":"1","state":"building","msg":"scouting keyframes + easing presets"}
+{"t":"05:27","agent":"S5-scout","silo":"S5","wave":"1","state":"building","msg":"confirming free tiers + sign-up list"}
+{"t":"05:27","agent":"S6-scout","silo":"S6","wave":"1","state":"building","msg":"scouting Meshy/RPM stubs"}
+{"t":"05:29","agent":"S5-scout","silo":"S5","wave":"1","state":"done","msg":"SPEC written","n":{"signups":4,"targets":7}}
+{"t":"05:29","agent":"S2-scout","silo":"S2","wave":"1","state":"done","msg":"SPEC written","n":{"targets":8,"cuts":4}}
+{"t":"05:29","agent":"S1-scout","silo":"S1","wave":"1","state":"done","msg":"SPEC written","n":{"targets":6,"cuts":7}}
+{"t":"05:29","agent":"S4-scout","silo":"S4","wave":"1","state":"done","msg":"SPEC written: 7 rigged Kenney characters on disk (189 total clips), contra existing-3d-assets skill's stale no-characters claim","n":{"easing_presets":8,"clips_on_disk":189,"characters_on_disk":7}}
+{"t":"05:30","agent":"S6-scout","silo":"S6","wave":"1","state":"done","msg":"SPEC written","n":{"targets":5,"cuts":5}}
+{"t":"05:31","agent":"S3-scout","silo":"S3","wave":"1","state":"done","msg":"SPEC written","n":{"models_on_disk":2518,"shippable":2268,"over_gate":23}}
+{"t":"05:32","agent":"warden","silo":null,"wave":"1","msg":"three pin signed","decision":"three@0.170.0 + @types/three@0.170.0 is the pin; no silo may differ"}
+{"t":"05:32","agent":"warden","silo":"S3","wave":"1","msg":"Poly Haven bundle is descriptor-only","decision":"Library floor = 2268 Kenney GLB (verified); Poly Haven models fetch-gated stretch; asset_manifest.csv downloaded_locally column is untrustworthy","n":{"kenney_glb":2268,"kenney_mb":53,"polyhaven_usable":0}}
+{"t":"05:32","agent":"warden","silo":"S3","wave":"1","msg":"HDRIs must be fetched","decision":"HDRI fetch is a blocking Wave-2 dependency of S1 environment target; fallback is built-in room/studio env"}
+{"t":"05:32","agent":"warden","silo":"S3","wave":"1","msg":"KTX2 cut","decision":"KTX2 cut: toktx/basisu need a native binary outside npm; ship Draco + resized JPEG/PNG"}
+{"t":"05:32","agent":"warden","silo":"S5","wave":"1","msg":"EthicalAds not applied for","decision":"EthicalAds cut for today (50k pageview floor); house-ad placeholder ships, 0 requests to ethicalads.io"}
+{"t":"05:32","agent":"warden","silo":"S6","wave":"1","msg":"Meshy mock only","decision":"No free Meshy API tier exists; S6 ships mock Worker with zero env vars; three-vrm default over RPM demo subdomain"}
+{"t":"05:37","agent":"warden","silo":null,"wave":"1","msg":"Pages over R2","decision":"Library ships as same-origin Cloudflare Pages assets; R2 deferred (2268 files / 53 MB fits Pages limits, R2 adds sign-up surface)"}
+{"t":"05:37","agent":"warden","silo":null,"wave":"1","msg":"All Codex findings binding","decision":"All 6 Codex reviews accepted as binding; S1 gains setRenderHook; WebM+postFX+character-clip export demoted; 3 circular acceptance checks replaced"}
+{"t":"05:37","agent":"warden","silo":null,"wave":"1","msg":"toolchain installed and verified","n":{"three":"0.170.0","types_match":1,"addons_ok":4}}
+{"t":"05:37","agent":"assembly-1","silo":null,"wave":"1","msg":"writing SCOPE.md"}

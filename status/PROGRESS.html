@@ -10,28 +10,28 @@ h1{font-size:18px;margin:0 0 4px} .sub{color:#8d949c;font-size:12px;margin-botto
 h2{font-size:12px;color:#8d949c;text-transform:uppercase;letter-spacing:.06em;margin:18px 0 6px}
 ul{margin:0;padding-left:18px} li{margin:3px 0;font-size:13px} .dim{color:#5d646c}
 </style></head><body>
-<h1>Studio build — wave 0</h1>
-<div class="sub">rendered 05:14 · 1 events folded · page refreshes itself every minute</div>
+<h1>Studio build — wave 1</h1>
+<div class="sub">rendered 05:37 · 32 events folded · page refreshes itself every minute</div>
 <div class="grid"><div class="card"><div class="hd"><b>S1 Viewer core</b>
-        <span class="pill" style="background:#3a4149">pending</span></div>
-        <div class="msg">—</div><div class="n">no numbers yet</div>
-        <div class="t">last heartbeat —</div></div><div class="card"><div class="hd"><b>S2 Editor</b>
-        <span class="pill" style="background:#3a4149">pending</span></div>
-        <div class="msg">—</div><div class="n">no numbers yet</div>
-        <div class="t">last heartbeat —</div></div><div class="card"><div class="hd"><b>S3 Library</b>
-        <span class="pill" style="background:#3a4149">pending</span></div>
-        <div class="msg">—</div><div class="n">no numbers yet</div>
-        <div class="t">last heartbeat —</div></div><div class="card"><div class="hd"><b>S4 Timeline &amp; motion</b>
-        <span class="pill" style="background:#3a4149">pending</span></div>
-        <div class="msg">—</div><div class="n">no numbers yet</div>
-        <div class="t">last heartbeat —</div></div><div class="card"><div class="hd"><b>S5 Accounts / Pro / ads</b>
-        <span class="pill" style="background:#3a4149">pending</span></div>
-        <div class="msg">—</div><div class="n">no numbers yet</div>
-        <div class="t">last heartbeat —</div></div><div class="card"><div class="hd"><b>S6 AI &amp; avatars (stubs)</b>
-        <span class="pill" style="background:#3a4149">pending</span></div>
-        <div class="msg">—</div><div class="n">no numbers yet</div>
-        <div class="t">last heartbeat —</div></div></div>
-<h2>Decisions</h2><ul><li class='dim'>none yet</li></ul>
+        <span class="pill" style="background:#4caf7d">done</span></div>
+        <div class="msg">SPEC written</div><div class="n">targets 6 · cuts 7</div>
+        <div class="t">last heartbeat 05:29</div></div><div class="card"><div class="hd"><b>S2 Editor</b>
+        <span class="pill" style="background:#4caf7d">done</span></div>
+        <div class="msg">SPEC written</div><div class="n">targets 8 · cuts 4</div>
+        <div class="t">last heartbeat 05:29</div></div><div class="card"><div class="hd"><b>S3 Library</b>
+        <span class="pill" style="background:#4caf7d">done</span></div>
+        <div class="msg">KTX2 cut</div><div class="n">models_on_disk 2518 · shippable 2268 · over_gate 23 · kenney_glb 2268 · kenney_mb 53 · polyhaven_usable 0</div>
+        <div class="t">last heartbeat 05:32</div></div><div class="card"><div class="hd"><b>S4 Timeline &amp; motion</b>
+        <span class="pill" style="background:#4caf7d">done</span></div>
+        <div class="msg">SPEC written: 7 rigged Kenney characters on disk (189 total clips), contra existing-3d-assets skill&#x27;s stale no-characters claim</div><div class="n">easing_presets 8 · clips_on_disk 189 · characters_on_disk 7</div>
+        <div class="t">last heartbeat 05:29</div></div><div class="card"><div class="hd"><b>S5 Accounts / Pro / ads</b>
+        <span class="pill" style="background:#4caf7d">done</span></div>
+        <div class="msg">EthicalAds not applied for</div><div class="n">signups 4 · targets 7</div>
+        <div class="t">last heartbeat 05:32</div></div><div class="card"><div class="hd"><b>S6 AI &amp; avatars (stubs)</b>
+        <span class="pill" style="background:#4caf7d">done</span></div>
+        <div class="msg">Meshy mock only</div><div class="n">targets 5 · cuts 5</div>
+        <div class="t">last heartbeat 05:32</div></div></div>
+<h2>Decisions</h2><ul><li>#1 05:27 Wave 0 boot accepted; node 24.19.0 / npm 11.17.0 / py 3.12.10 / ffmpeg 9 / codex-cli 0.151.0 verified; 118 test GLBs present</li><li>#2 05:27 Heartbeat = event appended at agent start and end; Warden renders PROGRESS.html at each batch boundary; no perpetual clerk left running</li><li>#3 05:27 Wave-1 scouts write one SPEC.md each in the shared tree; worktree isolation begins at Wave 2</li><li>#4 05:27 three version pin and every interface signature are settled in SCOPE.md, signed by the Warden; no silo may assume an interface shape before then</li><li>#5 05:32 three@0.170.0 + @types/three@0.170.0 is the pin; no silo may differ</li><li>#6 05:32 Library floor = 2268 Kenney GLB (verified); Poly Haven models fetch-gated stretch; asset_manifest.csv downloaded_locally column is untrustworthy</li><li>#7 05:32 HDRI fetch is a blocking Wave-2 dependency of S1 environment target; fallback is built-in room/studio env</li><li>#8 05:32 KTX2 cut: toktx/basisu need a native binary outside npm; ship Draco + resized JPEG/PNG</li><li>#9 05:32 EthicalAds cut for today (50k pageview floor); house-ad placeholder ships, 0 requests to ethicalads.io</li><li>#10 05:32 No free Meshy API tier exists; S6 ships mock Worker with zero env vars; three-vrm default over RPM demo subdomain</li><li>#11 05:37 Library ships as same-origin Cloudflare Pages assets; R2 deferred (2268 files / 53 MB fits Pages limits, R2 adds sign-up surface)</li><li>#12 05:37 All 6 Codex reviews accepted as binding; S1 gains setRenderHook; WebM+postFX+character-clip export demoted; 3 circular acceptance checks replaced</li></ul>
 <h2>Blockers</h2><ul><li class='dim'>none</li></ul>
 <h2>Sign-ups waiting on Akram</h2><ul><li class='dim'>none</li></ul>
 </body></html>
