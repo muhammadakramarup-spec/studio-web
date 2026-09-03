@@ -6,15 +6,35 @@
     <title>Studio</title>
   </head>
   <body>
-    <!-- Assembly owns this shell in Wave 3. Silos mount into their own slot and nothing else. -->
+    <!-- Assembly (Wave 3) owns this shell. Silos mount into their own slot (the ids below)
+         and nothing else. Layout/CSS wrapper elements around those ids were added here so the
+         six panels read as one app instead of a stack of debug boxes; every silo's original
+         mount-point id is preserved exactly. -->
     <div id="app">
-      <canvas id="viewport"></canvas>
-      <aside id="panel-outliner"></aside>
-      <aside id="panel-library"></aside>
-      <aside id="panel-material"></aside>
-      <aside id="panel-account"></aside>
-      <aside id="panel-ai"></aside>
-      <footer id="panel-timeline"></footer>
+      <header id="app-header">
+        <div id="app-brand">Studio<span id="app-brand-dot">·</span>web</div>
+        <div id="toolbar"></div>
+      </header>
+
+      <div id="app-body">
+        <div class="sidebar sidebar-left">
+          <aside id="panel-library" class="panel"></aside>
+          <aside id="panel-ai" class="panel"></aside>
+          <aside id="panel-account" class="panel"></aside>
+        </div>
+
+        <div class="viewport-wrap">
+          <canvas id="viewport"></canvas>
+          <div id="viewport-hint" class="viewport-hint" data-state="idle">Drop a .glb, or pick one from the library</div>
+        </div>
+
+        <div class="sidebar sidebar-right">
+          <aside id="panel-outliner" class="panel"></aside>
+          <aside id="panel-material" class="panel"></aside>
+        </div>
+      </div>
+
+      <footer id="panel-timeline" class="panel"></footer>
     </div>
     <script type="module" src="/src/app/main.ts"></script>
   </body>
