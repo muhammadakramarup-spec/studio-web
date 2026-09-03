@@ -1,0 +1,1317 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>360° Product Studio</title>
+<style>
+  :root{
+    --bg:#0d0f11; --panel:#16191d; --line:#262b31; --txt:#e8e6e1;
+    --dim:#8d949c; --accent:#c9a227;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--txt);
+    font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Arial,sans-serif}
+  #stage{position:fixed;inset:0}
+  /* checkerboard shows through when the render is transparent */
+  #stage.tp{
+    background-color:#6f757c;
+    background-image:
+      linear-gradient(45deg,#565c63 25%,transparent 25%,transparent 75%,#565c63 75%),
+      linear-gradient(45deg,#565c63 25%,transparent 25%,transparent 75%,#565c63 75%);
+    background-size:24px 24px;background-position:0 0,12px 12px;
+  }
+  canvas{display:block}
+
+  #panel{position:fixed;top:16px;left:16px;width:274px;background:rgba(22,25,29,.92);
+    border:1px solid var(--line);border-radius:12px;padding:14px 14px 16px;
+    backdrop-filter:blur(8px);z-index:5;max-height:calc(100vh - 32px);overflow:auto}
+  #panel h1{margin:0 0 2px;font-size:14px;letter-spacing:.02em}
+  #panel .sub{color:var(--dim);font-size:11.5px;margin-bottom:12px}
+  .grp{border-top:1px solid var(--line);padding-top:11px;margin-top:11px}
+  .grp:first-of-type{border-top:0;margin-top:0;padding-top:0}
+  details.grp>summary{list-style:none;cursor:pointer;color:var(--dim);font-size:11.5px;
+    text-transform:uppercase;letter-spacing:.06em;margin-bottom:9px;user-select:none;
+    display:flex;justify-content:space-between;align-items:center}
+  details.grp>summary::-webkit-details-marker{display:none}
+  details.grp>summary:after{content:"+";color:#5d646c;font-size:13px}
+  details.grp[open]>summary:after{content:"\2013"}
+  details.grp>summary b{color:var(--txt);font-weight:500;text-transform:none;letter-spacing:0;font-size:12px}
+  label{display:flex;justify-content:space-between;align-items:center;
+    color:var(--dim);font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+  label b{color:var(--txt);font-weight:500;text-transform:none;letter-spacing:0;font-size:12px}
+  input[type=range]{width:100%;margin:0 0 10px;accent-color:var(--accent)}
+  input[type=color]{width:100%;height:26px;margin:0 0 10px;padding:0;background:#1e2228;
+    border:1px solid var(--line);border-radius:7px;cursor:pointer}
+  select{width:100%;margin:0 0 10px;background:#1e2228;color:var(--txt);border:1px solid var(--line);
+    border-radius:7px;padding:6px 7px;font-size:12px;cursor:pointer;font-family:inherit}
+  .row{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+  button{flex:1;min-width:60px;background:#1e2228;color:var(--txt);border:1px solid var(--line);
+    border-radius:7px;padding:7px 8px;font-size:12px;cursor:pointer;transition:.15s}
+  button:hover{background:#272c33;border-color:#3a4149}
+  button.on{background:var(--accent);border-color:var(--accent);color:#151208;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+  .chip{display:flex;align-items:center;gap:5px;background:#1e2228;border:1px solid var(--line);
+    border-radius:6px;padding:4px 6px;font-size:11px;cursor:pointer;max-width:100%}
+  .chip.on{background:var(--accent);border-color:var(--accent);color:#151208;font-weight:600}
+  .chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:150px}
+  .chip i{font-style:normal;opacity:.55;padding:0 1px}
+  .chip i:hover{opacity:1}
+  .note{color:var(--dim);font-size:10.5px;margin:-4px 0 8px;line-height:1.35}
+  .note code{background:#1e2228;padding:1px 4px;border-radius:3px}
+  .err{color:#e08c7a}
+  #prog{height:4px;background:#1e2228;border-radius:3px;overflow:hidden;margin-bottom:8px;display:none}
+  #prog i{display:block;height:100%;width:0;background:var(--accent);transition:width .1s}
+  #drop{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+    z-index:10;background:rgba(13,15,17,.94);text-align:center;padding:24px}
+  #drop .box{border:1.5px dashed #3a4149;border-radius:16px;padding:44px 52px;max-width:560px}
+  #drop h2{margin:0 0 8px;font-size:19px;font-weight:600}
+  #drop p{margin:0 0 6px;color:var(--dim);font-size:13px}
+  #drop code{background:#1e2228;padding:2px 6px;border-radius:4px;color:#cfd5dc;font-size:12px}
+  #pick{display:inline-block;margin-top:18px;background:var(--accent);color:#151208;
+    padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px}
+  #drop.hide{display:none}
+  #bar{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:5;
+    background:rgba(22,25,29,.92);border:1px solid var(--line);border-radius:10px;
+    padding:8px;display:flex;gap:6px;backdrop-filter:blur(8px)}
+  #bar button{min-width:auto;padding:7px 13px}
+  #hint{position:fixed;bottom:16px;right:16px;color:#5d646c;font-size:11px;z-index:5;text-align:right}
+  #stats{position:fixed;top:16px;right:16px;z-index:5;background:rgba(22,25,29,.86);
+    border:1px solid var(--line);border-radius:10px;padding:9px 11px;font-size:11px;
+    color:var(--dim);backdrop-filter:blur(8px);min-width:180px;line-height:1.6}
+  #stats b{color:var(--txt);font-weight:500;float:right;margin-left:10px}
+  #stats .hd{color:var(--txt);text-transform:uppercase;letter-spacing:.06em;font-size:10px;
+    margin-bottom:4px;border-bottom:1px solid var(--line);padding-bottom:4px}
+  #stats .sp{margin-top:6px;border-top:1px solid var(--line);padding-top:5px}
+  #load{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--dim);z-index:8;display:none;
+    background:rgba(22,25,29,.94);border:1px solid var(--line);border-radius:10px;padding:12px 20px}
+  #keys{position:fixed;inset:0;z-index:11;background:rgba(13,15,17,.9);display:none;
+    align-items:center;justify-content:center}
+  #keys.show{display:flex}
+  #keys .box{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px 28px;
+    max-width:460px;font-size:12.5px}
+  #keys h3{margin:0 0 12px;font-size:14px}
+  #keys table{border-collapse:collapse;width:100%}
+  #keys td{padding:3px 10px 3px 0;color:var(--dim)}
+  #keys td:first-child{color:var(--txt);font-family:ui-monospace,Consolas,monospace;white-space:nowrap}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+
+<div id="panel">
+  <h1>360° Product Studio</h1>
+  <div class="sub">drag to orbit · scroll to zoom · right-drag to pan</div>
+
+  <details class="grp" open><summary>Model</summary>
+    <div id="chips"></div>
+    <div class="row">
+      <button id="bNew">Load model</button>
+      <button id="bEnvFile">Load HDRI</button>
+    </div>
+    <div class="note">Drop <code>.glb .gltf .hdr .exr</code> anywhere. Draco-compressed GLBs work.</div>
+  </details>
+
+  <details class="grp" open><summary>Turntable <b id="vSpin">on</b></summary>
+    <div class="row">
+      <button id="bSpin" class="on">Spin</button>
+      <button id="bFront">Photo angle</button>
+    </div>
+    <label>Speed</label>
+    <input type="range" id="spd" min="0" max="30" value="9">
+  </details>
+
+  <details class="grp" open><summary>Camera <b id="vFocal">50 mm</b></summary>
+    <div class="row">
+      <button class="fl" data-mm="24">24</button>
+      <button class="fl" data-mm="35">35</button>
+      <button class="fl on" data-mm="50">50</button>
+      <button class="fl" data-mm="85">85</button>
+      <button class="fl" data-mm="135">135</button>
+    </div>
+    <div class="note">Focal length on a 35&nbsp;mm frame. Subject size is held constant, so only the perspective changes.</div>
+  </details>
+
+  <details class="grp"><summary>Environment <b id="vEnv">Room</b></summary>
+    <div class="row">
+      <button class="env on" data-env="room">Room</button>
+      <button class="env" data-env="studio">Softbox</button>
+    </div>
+    <div class="row">
+      <button class="env" data-env="ph_studio_small_09">Studio HDRI</button>
+      <button class="env" data-env="ph_brown_photostudio_02">Photo HDRI</button>
+    </div>
+    <div class="note" id="envNote">Room and Softbox are built in and work offline. The two HDRIs download from Poly Haven.</div>
+    <label>Rotation <b id="vEnvRot">0°</b></label>
+    <input type="range" id="envRot" min="0" max="360" value="0">
+    <label>Intensity <b id="vEnvInt">1.00</b></label>
+    <input type="range" id="envInt" min="0" max="300" value="100">
+    <div class="row"><button id="bEnvBg" disabled>Show as backdrop</button></div>
+  </details>
+
+  <details class="grp" open><summary>Light &amp; tone</summary>
+    <label>Studio light</label>
+    <input type="range" id="key" min="0" max="100" value="55">
+    <label>Exposure <b id="vExpo">1.05</b></label>
+    <input type="range" id="expo" min="10" max="300" value="105">
+    <label>Tone mapping</label>
+    <select id="tone">
+      <option value="aces" selected>ACES Filmic</option>
+      <option value="filmic">Filmic (Cineon)</option>
+      <option value="reinhard">Reinhard</option>
+      <option value="linear">Linear</option>
+      <option value="none">None</option>
+    </select>
+    <div class="row">
+      <button id="bShadow" class="on">Shadow</button>
+      <button id="bGround" class="on">Floor</button>
+    </div>
+  </details>
+
+  <details class="grp" open><summary>Backdrop</summary>
+    <div class="row">
+      <button class="bg on" data-bg="studio">Studio</button>
+      <button class="bg" data-bg="white">White</button>
+      <button class="bg" data-bg="warm">Warm</button>
+    </div>
+    <div class="row"><button id="bTransp">Transparent + shadow catcher</button></div>
+  </details>
+
+  <details class="grp"><summary>Material <b id="vMat">—</b></summary>
+    <select id="matSel"></select>
+    <label>Base colour</label>
+    <input type="color" id="matCol" value="#ffffff">
+    <label>Roughness <b id="vRough">—</b></label>
+    <input type="range" id="matRough" min="0" max="100" value="50">
+    <label>Metalness <b id="vMetal">—</b></label>
+    <input type="range" id="matMetal" min="0" max="100" value="0">
+    <div class="row">
+      <button id="bMatReset">Reset</button>
+      <button id="bMatResetAll">Reset all</button>
+    </div>
+    <div class="row"><button id="bDeMetal">Metalness → 0 on all</button></div>
+    <div class="note" id="matNote"></div>
+  </details>
+
+  <details class="grp"><summary>Viewport <b id="vVp">Solid</b></summary>
+    <div class="row">
+      <button class="vp on" data-vp="solid">Solid</button>
+      <button class="vp" data-vp="wire">Wire</button>
+    </div>
+    <div class="row">
+      <button class="vp" data-vp="normals">Normals</button>
+      <button class="vp" data-vp="uv">UV</button>
+    </div>
+  </details>
+
+  <details class="grp"><summary>Lamp module <b id="vLampMod">off</b></summary>
+    <div class="row">
+      <button id="bLampMod">Enable</button>
+    </div>
+    <div class="note">Adds a bulb and makes the lampshade glow. For lamps only — leave off for furniture.</div>
+    <div class="row">
+      <button id="bLamp" class="on">Light on</button>
+      <button id="bBulb" class="on">Bulb</button>
+    </div>
+    <label>Bulb warmth</label>
+    <input type="range" id="warm" min="0" max="100" value="62">
+    <label>Bulb strength</label>
+    <input type="range" id="glow" min="0" max="100" value="55">
+  </details>
+
+  <details class="grp" open><summary>Export</summary>
+    <label>Resolution</label>
+    <select id="expRes">
+      <option value="1024x1024">1024 × 1024</option>
+      <option value="2048x2048" selected>2048 × 2048</option>
+      <option value="1920x1080">1920 × 1080</option>
+      <option value="1080x1350">1080 × 1350</option>
+      <option value="viewport">Viewport size</option>
+    </select>
+    <label>Turntable frames</label>
+    <select id="expFrames">
+      <option value="24">24</option>
+      <option value="36" selected>36</option>
+      <option value="72">72</option>
+    </select>
+    <label>WebM frame rate</label>
+    <select id="expFps">
+      <option value="24" selected>24 fps</option>
+      <option value="30">30 fps</option>
+    </select>
+    <div id="prog"><i></i></div>
+    <div class="note" id="expNote">PNG sequence is lossless and frame-exact — use it for the real deliverable. WebM is real-time browser capture: every angle is there, but the clip opens and closes on a short hold and carries no duration metadata.</div>
+    <div class="row">
+      <button id="bShot">Save PNG</button>
+    </div>
+    <div class="row">
+      <button id="bZip">PNG sequence</button>
+      <button id="bWebm">WebM</button>
+    </div>
+    <div class="row"><button id="bCancel" disabled>Cancel</button></div>
+  </details>
+
+  <details class="grp"><summary>Settings</summary>
+    <div class="row">
+      <button id="bKeys">Shortcuts</button>
+      <button id="bReset">Reset settings</button>
+    </div>
+  </details>
+</div>
+
+<div id="stats">
+  <div class="hd">Scene</div>
+  <div>Triangles <b id="sTri">—</b></div>
+  <div>Vertices <b id="sVert">—</b></div>
+  <div>Meshes <b id="sMesh">—</b></div>
+  <div>Materials <b id="sMat">—</b></div>
+  <div>Textures <b id="sTex">—</b></div>
+  <div>Model size <b id="sSize">—</b></div>
+  <div class="sp">Draw calls <b id="sCalls">—</b></div>
+  <div>Rendered tris <b id="sRTri">—</b></div>
+  <div>FPS <b id="sFps">—</b></div>
+</div>
+
+<div id="bar">
+  <button data-view="0">Front</button>
+  <button data-view="90">Right</button>
+  <button data-view="180">Back</button>
+  <button data-view="270">Left</button>
+  <button data-view="top">Top</button>
+</div>
+<div id="hint">drag = orbit · scroll = zoom · right-drag = pan<br>press ? for shortcuts</div>
+<div id="load">loading model…</div>
+
+<div id="keys"><div class="box">
+  <h3>Keyboard shortcuts</h3>
+  <table>
+    <tr><td>Space</td><td>turntable spin on / off</td></tr>
+    <tr><td>1 / 3 / 7</td><td>front / right / top view</td></tr>
+    <tr><td>Ctrl+1 / Ctrl+3</td><td>back / left view</td></tr>
+    <tr><td>0</td><td>photo angle</td></tr>
+    <tr><td>[ / ]</td><td>previous / next focal length</td></tr>
+    <tr><td>Z</td><td>cycle viewport mode</td></tr>
+    <tr><td>B</td><td>cycle backdrop</td></tr>
+    <tr><td>T</td><td>transparent + shadow catcher</td></tr>
+    <tr><td>G</td><td>floor on / off</td></tr>
+    <tr><td>S</td><td>shadows on / off</td></tr>
+    <tr><td>L</td><td>lamp module on / off</td></tr>
+    <tr><td>M</td><td>next model</td></tr>
+    <tr><td>P</td><td>save PNG</td></tr>
+    <tr><td>E</td><td>export PNG sequence</td></tr>
+    <tr><td>? or Esc</td><td>show / hide this list</td></tr>
+  </table>
+</div></div>
+
+<div id="drop">
+  <div class="box">
+    <h2>Drop a .glb here</h2>
+    <p>Drag a model — <code>.glb</code> or <code>.gltf</code>, Draco-compressed is fine — anywhere on this page.</p>
+    <p>Several at once is fine, and an <code>.hdr</code> or <code>.exr</code> will light the scene.</p>
+    <p>Or rename one <code>lamp.glb</code>, put it beside this HTML and serve the folder
+       (<code>python -m http.server</code>) to load it automatically.</p>
+    <label id="pick" for="file">Choose files</label>
+    <input id="file" type="file" accept=".glb,.gltf,.hdr,.exr" multiple hidden>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/RGBELoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/EXRLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/environments/RoomEnvironment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var stage=$('stage');
+
+  /* ---------------------------------------------------------------- renderer
+     alpha:true is needed for the transparent export mode. It does not change
+     the opaque look: scene.background is a Color, which clears at alpha 1.
+     preserveDrawingBuffer stays on — every PNG export depends on it.        */
+  var renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true,alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setSize(innerWidth,innerHeight);
+  renderer.outputEncoding=THREE.sRGBEncoding;
+  renderer.toneMapping=THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure=1.05;
+  renderer.shadowMap.enabled=true;
+  renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  stage.appendChild(renderer.domElement);
+
+  var scene=new THREE.Scene();
+  var camera=new THREE.PerspectiveCamera(24,innerWidth/innerHeight,0.01,100);
+  var controls=new THREE.OrbitControls(camera,renderer.domElement);
+  controls.enableDamping=true; controls.dampingFactor=.07;
+  controls.minDistance=.3; controls.maxDistance=6;
+
+  var BG={studio:0x101317,white:0xf2f0ec,warm:0x2a2119};
+  var bgKey='studio';
+  scene.background=new THREE.Color(BG.studio);
+
+  var hemi=new THREE.HemisphereLight(0xffffff,0x3a3a3a,.35); scene.add(hemi);
+  var keyL=new THREE.DirectionalLight(0xfff4e6,1.5);
+  keyL.position.set(2.2,3.2,2.4); keyL.castShadow=true;
+  keyL.shadow.mapSize.set(2048,2048);
+  keyL.shadow.camera.near=.5; keyL.shadow.camera.far=12;
+  keyL.shadow.camera.left=-1.4; keyL.shadow.camera.right=1.4;
+  keyL.shadow.camera.top=1.4; keyL.shadow.camera.bottom=-1.4;
+  keyL.shadow.bias=-0.0006; keyL.shadow.radius=3;
+  scene.add(keyL);
+  var fill=new THREE.DirectionalLight(0xdfe8ff,.45); fill.position.set(-3,1.4,1.6); scene.add(fill);
+  var rim =new THREE.DirectionalLight(0xffffff,.7);  rim.position.set(-1.2,2.2,-3); scene.add(rim);
+
+  // bulb inside the shade (lamp module)
+  var bulb=new THREE.PointLight(0xffb45c,0,3,2);
+  bulb.castShadow=false; scene.add(bulb);
+
+  // floor
+  var floorMat=new THREE.MeshStandardMaterial({color:0x1a1e22,roughness:.92,metalness:0});
+  var catcherMat=new THREE.ShadowMaterial({opacity:.36});
+  var floor=new THREE.Mesh(new THREE.CircleGeometry(6,64),floorMat);
+  floor.rotation.x=-Math.PI/2; floor.receiveShadow=true; scene.add(floor);
+
+  var pivot=new THREE.Group(); scene.add(pivot);
+
+  /* ------------------------------------------------------------------ state */
+  var models=[], active=null;
+  var spin=true, spd=9, busy=false, cancelFlag=false;
+  var focalMM=50, transp=false, vpMode='solid';
+  var lampMod=false, lampOn=true, shadeMats=[];
+  var envKind='room', envLabel='Room', envTex=null, envRotDeg=0, envIntensity=1, envShow=false;
+
+  var FOCALS=[24,35,50,85,135];
+  var PH={
+    ph_studio_small_09:['Studio HDRI','https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_09_1k.hdr'],
+    ph_brown_photostudio_02:['Photo HDRI','https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/brown_photostudio_02_1k.hdr']
+  };
+
+  /* ------------------------------------------------------------------ loaders
+     One shared GLTFLoader with a pinned Draco decoder. The 90 furniture GLBs
+     are KHR_draco_mesh_compression and fail on a plain GLTFLoader.           */
+  var draco=new THREE.DRACOLoader();
+  draco.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/draco/');
+  draco.setDecoderConfig({type:'wasm'});
+  var gltfLoader=new THREE.GLTFLoader();
+  gltfLoader.setDRACOLoader(draco);
+
+  /* -------------------------------------------------------------- environment */
+  var pmrem=new THREE.PMREMGenerator(renderer);
+  try{ pmrem.compileEquirectangularShader(); }catch(e){}
+
+  // one material shared by the visible backdrop sphere and the PMREM capture sphere
+  var envMat=new THREE.MeshBasicMaterial({side:THREE.BackSide,depthWrite:false});
+  var envGeo=new THREE.SphereGeometry(50,64,32);
+  var envSphere=new THREE.Mesh(envGeo,envMat);
+  envSphere.renderOrder=-1; envSphere.visible=false; scene.add(envSphere);
+  var envCapture=new THREE.Mesh(envGeo,envMat);   // separate mesh: one parent each
+
+  var envScene=null, envRotGroup=null, envRT=null;
+
+  function areaLight(intensity){
+    return new THREE.MeshBasicMaterial({color:new THREE.Color().setScalar(intensity)});
+  }
+  function softboxRig(){
+    var g=new THREE.Group();
+    var room=new THREE.Mesh(new THREE.BoxGeometry(20,13,20),
+      new THREE.MeshBasicMaterial({color:0x0e0e10,side:THREE.BackSide}));
+    g.add(room);
+    function panel(w,h,x,y,z,i,tint){
+      var m=areaLight(i); if(tint) m.color.multiply(new THREE.Color(tint));
+      var p=new THREE.Mesh(new THREE.PlaneGeometry(w,h),m);
+      p.position.set(x,y,z); p.lookAt(0,0,0); g.add(p);
+    }
+    panel(4.5,4.5, 3.0, 2.6, 3.0, 20);            // key softbox
+    panel(5.5,3.2,-3.8, 1.4, 1.8,  5, 0xd8e4ff);  // cool fill
+    panel(6.5,1.6, 0.0, 4.2,-3.2, 11);            // top/rim strip
+    panel(8.0,8.0, 0.0,-2.2, 0.0,  1.4,0xfff0dd); // floor bounce
+    return g;
+  }
+
+  function buildEnvScene(){
+    envScene=new THREE.Scene();
+    envRotGroup=new THREE.Group(); envScene.add(envRotGroup);
+    if(envKind==='room') envRotGroup.add(new THREE.RoomEnvironment());
+    else if(envKind==='studio') envRotGroup.add(softboxRig());
+    else envRotGroup.add(envCapture);
+  }
+
+  function rebuildEnvMap(){
+    if(!envScene) buildEnvScene();
+    var rad=envRotDeg*Math.PI/180;
+    envRotGroup.rotation.y=rad; envRotGroup.updateMatrixWorld(true);
+    envSphere.rotation.y=rad;
+    try{
+      var rt=pmrem.fromScene(envScene, envKind==='hdr'?0.0:0.02, 0.1, 100);
+      if(envRT) envRT.dispose();
+      envRT=rt; scene.environment=rt.texture;
+    }catch(e){ envNote('Could not build the environment: '+e.message,true); }
+  }
+
+  function setEnvKind(kind,tex,label){
+    envKind=kind; envLabel=label||kind;
+    if(kind==='hdr'&&tex){
+      if(envTex&&envTex!==tex) envTex.dispose();
+      envTex=tex; envMat.map=tex; envMat.needsUpdate=true;
+    }
+    if(kind!=='hdr'){ envShow=false; }
+    buildEnvScene(); rebuildEnvMap(); applyEnvIntensity(); applyTransparent();
+    $('bEnvBg').disabled=(kind!=='hdr');
+    $('bEnvBg').classList.toggle('on',envShow&&kind==='hdr');
+    $('vEnv').textContent=envLabel;
+    save();
+  }
+
+  function applyEnvIntensity(){
+    eachMaterial(function(m){ if('envMapIntensity' in m) m.envMapIntensity=envIntensity; });
+    floorMat.envMapIntensity=envIntensity;
+    $('vEnvInt').textContent=envIntensity.toFixed(2);
+  }
+
+  function envNote(msg,isErr){
+    var n=$('envNote');
+    n.textContent=msg||'Room and Softbox are built in and work offline. The two HDRIs download from Poly Haven.';
+    n.classList.toggle('err',!!isErr);
+  }
+
+  function loadEnvUrl(url,label,key,revoke,ext){
+    ext=(ext||url.split('?')[0].split('.').pop()||'').toLowerCase();
+    var L=(ext==='exr')?new THREE.EXRLoader():new THREE.RGBELoader();
+    if(L.setDataType) L.setDataType(THREE.HalfFloatType);
+    envNote('Loading '+label+'…');
+    $('load').style.display='block';
+    L.load(url,function(tex){
+      tex.mapping=THREE.EquirectangularReflectionMapping;
+      setEnvKind('hdr',tex,label);
+      envNote(label+' loaded. Rotation and intensity apply to it.');
+      $('load').style.display='none';
+      if(revoke) URL.revokeObjectURL(url);
+      markEnvBtn(key);
+    },undefined,function(e){
+      $('load').style.display='none';
+      envNote('Could not load '+label+' — check the connection, or drop an .hdr/.exr file instead.',true);
+      if(revoke) URL.revokeObjectURL(url);
+    });
+  }
+
+  function markEnvBtn(key){
+    document.querySelectorAll('.env').forEach(function(b){
+      b.classList.toggle('on',b.dataset.env===key);
+    });
+  }
+
+  /* ------------------------------------------------------------- model helpers */
+  var MAXANISO=Math.min(16,renderer.capabilities.getMaxAnisotropy()||8);
+  function eachMaterial(fn){ if(active) active.mats.forEach(fn); }
+
+  function prepMaterials(root){
+    var mats=[],seen={},meshes=0,tris=0,verts=0,texs={},ntex=0;
+    root.traverse(function(n){
+      if(!n.isMesh) return;
+      meshes++;
+      n.castShadow=true; n.receiveShadow=true;
+      var g=n.geometry;
+      if(g){
+        var pc=g.attributes&&g.attributes.position?g.attributes.position.count:0;
+        tris+=(g.index?g.index.count:pc)/3; verts+=pc;
+      }
+      var ms=Array.isArray(n.material)?n.material:[n.material];
+      ms.forEach(function(m){
+        if(!m||seen[m.uuid]) return; seen[m.uuid]=1;
+        m.side=THREE.DoubleSide;
+        ['map','normalMap','roughnessMap','metalnessMap','aoMap','emissiveMap'].forEach(function(k){
+          if(!m[k]) return;
+          // grazing-angle wood grain aliases badly at the default anisotropy
+          m[k].anisotropy=MAXANISO; m[k].needsUpdate=true;
+          if(!texs[m[k].uuid]){ texs[m[k].uuid]=1; ntex++; }
+        });
+        m.userData.__orig={
+          color:m.color?m.color.getHex():null,
+          roughness:('roughness' in m)?m.roughness:null,
+          metalness:('metalness' in m)?m.metalness:null,
+          emissive:m.emissive?m.emissive.getHex():null,
+          emissiveIntensity:('emissiveIntensity' in m)?m.emissiveIntensity:null
+        };
+        mats.push(m);
+      });
+    });
+    return {mats:mats,meshes:meshes,tris:Math.round(tris),verts:verts,texs:ntex};
+  }
+
+  function frameModel(e){
+    var obj=e.root;
+    obj.position.set(0,0,0); obj.scale.setScalar(1); obj.updateMatrixWorld(true);
+    var box=new THREE.Box3().setFromObject(obj);
+    var size=box.getSize(new THREE.Vector3());
+    var ctr=box.getCenter(new THREE.Vector3());
+    e.raw={x:size.x,y:size.y,z:size.z};
+    var h=size.y||1, s=1/h;                       // normalise to 1 unit tall
+    obj.scale.setScalar(s);
+    obj.position.set(-ctr.x*s,-box.min.y*s,-ctr.z*s);
+    // half-extents after normalisation. halfW uses the horizontal diagonal so the
+    // model never clips as the turntable spins.
+    e.halfH=0.5;
+    e.halfW=0.5*Math.sqrt(size.x*size.x+size.z*size.z)*s;
+    e.radius=Math.max(e.halfH,e.halfW);
+    floor.position.y=0.0005;
+    var ext=Math.max(e.radius*1.45,0.9);
+    keyL.shadow.camera.left=-ext; keyL.shadow.camera.right=ext;
+    keyL.shadow.camera.top=ext;  keyL.shadow.camera.bottom=-ext;
+    keyL.shadow.camera.updateProjectionMatrix();
+  }
+
+  /* -------------------------------------------------------------- camera maths */
+  function vfovDeg(aspect,mm){
+    var fh=camera.filmGauge/Math.max(aspect,1);
+    return 2*Math.atan(0.5*fh/mm)*180/Math.PI;
+  }
+  function applyFocalFor(aspect){
+    camera.fov=vfovDeg(aspect,focalMM); camera.updateProjectionMatrix();
+  }
+  var ELEV=12*Math.PI/180;               // product-shot elevation above the target
+  function idealDist(aspect){
+    var hh=active?active.halfH:0.5, hw=active?active.halfW:0.5;
+    var vf=vfovDeg(aspect,focalMM)*Math.PI/180;
+    var hf=2*Math.atan(Math.tan(vf/2)*aspect);
+    return Math.max(hh/Math.tan(vf/2), hw/Math.tan(hf/2))*1.25;
+  }
+  function zoomFactor(){
+    var d=camera.position.distanceTo(controls.target);
+    return d/idealDist(camera.aspect);
+  }
+  function setDistance(d){
+    var v=new THREE.Vector3().subVectors(camera.position,controls.target).setLength(d);
+    camera.position.copy(controls.target).add(v);
+  }
+  function clampRange(){
+    var d=idealDist(camera.aspect);
+    controls.minDistance=d*0.12; controls.maxDistance=d*3.2;
+  }
+  function setFocal(mm,keepZoom){
+    var k=keepZoom===false?1:zoomFactor();
+    focalMM=mm; applyFocalFor(camera.aspect);
+    setDistance(idealDist(camera.aspect)*k);
+    clampRange(); controls.update();
+    document.querySelectorAll('.fl').forEach(function(b){
+      b.classList.toggle('on',+b.dataset.mm===mm);
+    });
+    $('vFocal').textContent=mm+' mm';
+    save();
+  }
+  function setPhotoAngle(){
+    controls.target.set(0,0.5,0);
+    applyFocalFor(camera.aspect);
+    var d=idealDist(camera.aspect);
+    camera.position.set(0,0.5+d*Math.sin(ELEV),d*Math.cos(ELEV));
+    clampRange(); controls.update();
+  }
+  function setView(v){
+    controls.target.set(0,0.5,0);
+    var d=idealDist(camera.aspect);
+    if(v==='top'){ camera.position.set(0,0.5+d,0.001); }
+    else{ var a=+v*Math.PI/180, y=0.5+d*Math.sin(ELEV), h=d*Math.cos(ELEV);
+          camera.position.set(Math.sin(a)*h,y,Math.cos(a)*h); pivot.rotation.y=0; }
+    clampRange(); controls.update();
+  }
+
+  /* ------------------------------------------------------------- viewport modes */
+  var wireMat=new THREE.MeshBasicMaterial({color:0x8fd0ff,wireframe:true});
+  var normMat=new THREE.MeshNormalMaterial({side:THREE.DoubleSide});
+  var uvMat=(function(){
+    var N=512,c=document.createElement('canvas'); c.width=c.height=N;
+    var g=c.getContext('2d'), s=N/8;
+    for(var y=0;y<8;y++) for(var x=0;x<8;x++){
+      g.fillStyle=((x+y)%2)?'#d8d8d8':'#5a5a5a';
+      g.fillRect(x*s,y*s,s,s);
+    }
+    g.fillStyle='#c94f3d'; g.fillRect(0,0,s,s);            // U origin marker
+    g.fillStyle='#4d8fd0'; g.fillRect(0,N-s,s,s);          // V marker
+    g.font='bold '+(s*0.42)+'px sans-serif'; g.fillStyle='#111';
+    g.fillText('0,0',6,N-s*0.35);
+    var t=new THREE.CanvasTexture(c);
+    t.wrapS=t.wrapT=THREE.RepeatWrapping; t.anisotropy=8;
+    return new THREE.MeshStandardMaterial({map:t,roughness:.85,metalness:0,side:THREE.DoubleSide});
+  })();
+
+  function applyViewport(){
+    if(active) active.root.traverse(function(n){
+      if(!n.isMesh) return;
+      if(n.userData.__mat===undefined) n.userData.__mat=n.material;
+      n.material = vpMode==='wire'?wireMat : vpMode==='normals'?normMat :
+                   vpMode==='uv'?uvMat : n.userData.__mat;
+    });
+    document.querySelectorAll('.vp').forEach(function(b){
+      b.classList.toggle('on',b.dataset.vp===vpMode);
+    });
+    $('vVp').textContent={solid:'Solid',wire:'Wireframe',normals:'Normals',uv:'UV checker'}[vpMode];
+  }
+
+  /* ------------------------------------------------------------------ backdrop */
+  function applyBackdrop(){
+    document.querySelectorAll('.bg').forEach(function(b){
+      b.classList.toggle('on',b.dataset.bg===bgKey&&!transp);
+    });
+    floorMat.color.set(bgKey==='white'?0xe6e3dd:bgKey==='warm'?0x2f2620:0x1a1e22);
+    applyTransparent();
+  }
+  function applyTransparent(){
+    if(transp){
+      scene.background=null; renderer.setClearColor(0x000000,0);
+      floor.material=catcherMat; envSphere.visible=false;
+      stage.classList.add('tp');
+    }else{
+      scene.background=new THREE.Color(BG[bgKey]); renderer.setClearColor(0x000000,1);
+      floor.material=floorMat; envSphere.visible=(envShow&&envKind==='hdr');
+      stage.classList.remove('tp');
+    }
+    $('bTransp').classList.toggle('on',transp);
+    document.querySelectorAll('.bg').forEach(function(b){
+      b.classList.toggle('on',b.dataset.bg===bgKey&&!transp);
+    });
+  }
+
+  /* ---------------------------------------------------------------- tone / expo */
+  var TONE={aces:THREE.ACESFilmicToneMapping,filmic:THREE.CineonToneMapping,
+            reinhard:THREE.ReinhardToneMapping,linear:THREE.LinearToneMapping,
+            none:THREE.NoToneMapping};
+  function applyTone(){
+    renderer.toneMapping=TONE[$('tone').value];
+    scene.traverse(function(n){ if(n.isMesh){
+      var ms=Array.isArray(n.material)?n.material:[n.material];
+      ms.forEach(function(m){ if(m) m.needsUpdate=true; });
+    }});
+    save();
+  }
+  function applyExposure(){
+    var v=+$('expo').value/100;
+    renderer.toneMappingExposure=v;
+    $('vExpo').textContent=v.toFixed(2);
+    save();
+  }
+
+  /* ------------------------------------------------------------- lamp module */
+  var bulbMesh=new THREE.Group(), bulbGlass=null;
+  (function makeBulb(){
+    var glass=new THREE.MeshPhysicalMaterial({
+      color:0xfff2dd, roughness:.35, metalness:0, transmission:.6, thickness:.3,
+      transparent:true, opacity:.92, emissive:new THREE.Color(0xffb45c), emissiveIntensity:1.4
+    });
+    bulbGlass=glass;
+    var env=new THREE.Mesh(new THREE.SphereGeometry(1,48,32),glass);
+    env.scale.set(1,1.12,1);
+    var neck=new THREE.Mesh(new THREE.CylinderGeometry(.62,.9,.5,32),glass);
+    neck.position.y=-1.15;
+    var brass=new THREE.MeshStandardMaterial({color:0xb9a06a,roughness:.38,metalness:.9});
+    var base=new THREE.Mesh(new THREE.CylinderGeometry(.6,.58,.85,32),brass);
+    base.position.y=-1.62;
+    var tip=new THREE.Mesh(new THREE.SphereGeometry(.3,24,16),
+      new THREE.MeshStandardMaterial({color:0x2a2a2a,roughness:.6,metalness:.2}));
+    tip.position.y=-2.05;
+    bulbMesh.add(env,neck,base,tip);
+  })();
+
+  // heuristic: with several materials, the ones reaching into the top half are the shade
+  function markShade(root){
+    shadeMats=[];
+    var whole=new THREE.Box3().setFromObject(root);
+    var top=whole.max.y, bot=whole.min.y, span=Math.max(top-bot,1e-6);
+    var seen={}, entries=[];
+    root.traverse(function(n){
+      if(!n.isMesh) return;
+      var b=new THREE.Box3().setFromObject(n);
+      var rel=(b.max.y-bot)/span;
+      var ms=Array.isArray(n.material)?n.material:[n.material];
+      ms.forEach(function(m){
+        if(!m||seen[m.uuid]) return; seen[m.uuid]=1;
+        entries.push({m:m,rel:rel});
+      });
+    });
+    if(entries.length>1) entries.forEach(function(e){ if(e.rel>0.55) shadeMats.push(e.m); });
+  }
+
+  function clearShade(){
+    shadeMats.forEach(function(m){
+      var o=m.userData.__orig;
+      if(o&&m.emissive&&o.emissive!==null){
+        m.emissive.setHex(o.emissive);
+        m.emissiveIntensity=o.emissiveIntensity;
+        m.needsUpdate=true;
+      }
+    });
+    shadeMats=[];
+  }
+
+  function applyLamp(){
+    var warm=+$('warm').value/100, pow=+$('glow').value/100;
+    var col=new THREE.Color().setHSL(0.09-0.03*warm,.55+.3*warm,.55);
+    var on=lampMod&&lampOn;
+    bulb.color.copy(col);
+    bulb.intensity=on?pow*3.2:0;
+    if(bulbGlass){
+      bulbGlass.emissive.copy(col);
+      bulbGlass.emissiveIntensity=on?0.6+pow*2.2:0;
+      bulbGlass.needsUpdate=true;
+    }
+    shadeMats.forEach(function(m){
+      if(!m.emissive) return;
+      m.emissive.copy(col);
+      m.emissiveIntensity=on?pow*0.55:0;
+      m.needsUpdate=true;
+    });
+  }
+
+  function applyLampModule(){
+    $('vLampMod').textContent=lampMod?'on':'off';
+    $('bLampMod').classList.toggle('on',lampMod);
+    $('bLampMod').textContent=lampMod?'Enabled':'Enable';
+    ['bLamp','bBulb','warm','glow'].forEach(function(id){ $(id).disabled=!lampMod; });
+    if(lampMod){
+      if(active) markShade(active.root);
+      if(!bulbMesh.parent) pivot.add(bulbMesh);
+      bulbMesh.scale.setScalar(0.055);
+      bulbMesh.position.set(0,0.80,0);
+      bulb.position.set(0,0.80,0);
+    }else{
+      clearShade();
+      if(bulbMesh.parent) bulbMesh.parent.remove(bulbMesh);
+    }
+    applyLamp();
+    save();
+  }
+
+  /* --------------------------------------------------------- material inspector */
+  function matName(m,i){ return (m.name&&m.name.trim())?m.name:('Material '+(i+1)); }
+
+  function buildMatList(){
+    var sel=$('matSel'); sel.innerHTML='';
+    if(!active||!active.mats.length){
+      sel.innerHTML='<option>—</option>'; $('vMat').textContent='—';
+      ['matCol','matRough','matMetal','bMatReset','bMatResetAll'].forEach(function(id){$(id).disabled=true});
+      return;
+    }
+    ['matCol','matRough','matMetal','bMatReset','bMatResetAll'].forEach(function(id){$(id).disabled=false});
+    active.mats.forEach(function(m,i){
+      var o=document.createElement('option');
+      o.value=i; o.textContent=matName(m,i); sel.appendChild(o);
+    });
+    sel.value=0; syncMatUI(); matHint();
+  }
+  // glTF defaults metallicFactor to 1.0 when the exporter omits it, which renders
+  // as dark metal. Flag it rather than silently overriding the asset.
+  function matHint(){
+    if(!active){ $('matNote').textContent=''; return; }
+    var n=active.mats.filter(function(m){
+      return ('metalness' in m)&&!m.metalnessMap&&m.metalness>0.9;
+    }).length;
+    $('matNote').textContent = n
+      ? n+' of '+active.mats.length+' materials are fully metallic (glTF metallicFactor defaults to 1.0 '
+        +'when the exporter omits it). That renders as dark metal — set metalness to 0 for wood or fabric.'
+      : '';
+  }
+  function curMat(){
+    if(!active||!active.mats.length) return null;
+    return active.mats[+$('matSel').value]||null;
+  }
+  function syncMatUI(){
+    var m=curMat(); if(!m) return;
+    $('vMat').textContent=matName(m,+$('matSel').value);
+    if(m.color) $('matCol').value='#'+m.color.getHexString();
+    var hasR=('roughness' in m), hasM=('metalness' in m);
+    $('matRough').disabled=!hasR; $('matMetal').disabled=!hasM;
+    $('matRough').value=hasR?Math.round(m.roughness*100):50;
+    $('matMetal').value=hasM?Math.round(m.metalness*100):0;
+    $('vRough').textContent=hasR?m.roughness.toFixed(2):'n/a';
+    $('vMetal').textContent=hasM?m.metalness.toFixed(2):'n/a';
+  }
+  function resetMat(m){
+    var o=m&&m.userData.__orig; if(!o) return;
+    if(m.color&&o.color!==null) m.color.setHex(o.color);
+    if(o.roughness!==null) m.roughness=o.roughness;
+    if(o.metalness!==null) m.metalness=o.metalness;
+    m.needsUpdate=true;
+  }
+
+  /* ------------------------------------------------------------------- stats */
+  function fmt(n){ return n.toLocaleString('en-US'); }
+  function showStats(){
+    if(!active){ ['sTri','sVert','sMesh','sMat','sTex','sSize'].forEach(function(i){$(i).textContent='—'}); return; }
+    var s=active.stats, r=active.raw;
+    $('sTri').textContent=fmt(s.tris);
+    $('sVert').textContent=fmt(s.verts);
+    $('sMesh').textContent=fmt(s.meshes);
+    $('sMat').textContent=fmt(s.mats.length);
+    $('sTex').textContent=fmt(s.texs);
+    $('sSize').textContent=r.x.toFixed(2)+' × '+r.y.toFixed(2)+' × '+r.z.toFixed(2);
+  }
+
+  /* ------------------------------------------------------------------- chips */
+  function buildChips(){
+    var c=$('chips'); c.innerHTML='';
+    models.forEach(function(e,i){
+      var d=document.createElement('div');
+      d.className='chip'+(e===active?' on':'');
+      var s=document.createElement('span'); s.textContent=e.name; d.appendChild(s);
+      var x=document.createElement('i'); x.textContent='✕'; d.appendChild(x);
+      d.onclick=function(ev){ if(ev.target===x) removeModel(i); else selectModel(i); };
+      c.appendChild(d);
+    });
+  }
+  function selectModel(i){
+    var e=models[i]; if(!e) return;
+    if(active&&active.root.parent) pivot.remove(active.root);
+    active=e; pivot.add(e.root); pivot.rotation.y=0;
+    frameModel(e); applyViewport(); applyEnvIntensity();
+    applyLampModule(); buildMatList(); showStats(); buildChips();
+    setPhotoAngle();
+    save();
+  }
+  function removeModel(i){
+    var e=models[i]; if(!e) return;
+    if(e===active&&e.root.parent) pivot.remove(e.root);
+    models.splice(i,1);
+    e.root.traverse(function(n){ if(n.isMesh&&n.geometry) n.geometry.dispose(); });
+    if(e===active){ active=null; if(models.length) selectModel(Math.max(0,i-1)); else { buildChips(); buildMatList(); showStats(); $('drop').classList.remove('hide'); } }
+    else buildChips();
+  }
+
+  /* ------------------------------------------------------------------ loading */
+  function dropMsg(html,isErr){
+    var b=$('drop').querySelector('h2');
+    b.textContent=html; b.classList.toggle('err',!!isErr);
+  }
+
+  function loadModel(url,name,revoke,done){
+    $('load').style.display='block';
+    $('load').textContent='loading '+name+'…';
+    gltfLoader.load(url,function(g){
+      var e={name:name,root:g.scene};
+      e.stats=prepMaterials(e.root);
+      e.mats=e.stats.mats;
+      models.push(e);
+      selectModel(models.length-1);
+      $('drop').classList.add('hide');
+      $('load').style.display='none';
+      if(revoke) URL.revokeObjectURL(url);
+      if(done) done(null);
+    },undefined,function(err){
+      $('load').style.display='none';
+      if(!models.length){
+        $('drop').classList.remove('hide');
+        dropMsg('Could not load '+name,true);
+      }
+      console.warn('load failed',name,err);
+      if(revoke) URL.revokeObjectURL(url);
+      if(done) done(err||new Error('load failed'));
+    });
+  }
+
+  function takeFiles(list){
+    var arr=[].slice.call(list||[]);
+    arr.filter(function(f){return /\.(hdr|exr)$/i.test(f.name)}).forEach(function(f){
+      loadEnvUrl(URL.createObjectURL(f),f.name,null,true,f.name.split('.').pop());
+    });
+    var ms=arr.filter(function(f){return /\.(glb|gltf)$/i.test(f.name)});
+    (function next(i){
+      if(i>=ms.length) return;
+      loadModel(URL.createObjectURL(ms[i]),ms[i].name,true,function(){ next(i+1); });
+    })(0);
+  }
+
+  /* ------------------------------------------------------------------- export */
+  function stamp(){
+    var d=new Date(),p=function(n){return String(n).padStart(2,'0')};
+    return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+p(d.getSeconds());
+  }
+  function dl(href,name,revoke){
+    var a=document.createElement('a'); a.download=name; a.href=href;
+    document.body.appendChild(a); a.click(); a.remove();
+    if(revoke) setTimeout(function(){ URL.revokeObjectURL(href); },20000);
+  }
+  function parseRes(){
+    var v=$('expRes').value;
+    if(v==='viewport'){
+      var r=Math.min(devicePixelRatio,2);
+      return [Math.max(2,Math.round(innerWidth*r)),Math.max(2,Math.round(innerHeight*r))];
+    }
+    var p=v.split('x'); return [+p[0],+p[1]];
+  }
+  function prog(f){
+    var p=$('prog'); p.style.display=f>=0?'block':'none';
+    p.firstElementChild.style.width=Math.max(0,Math.min(1,f))*100+'%';
+  }
+  function setBusy(b){
+    busy=b; cancelFlag=false;
+    ['bShot','bZip','bWebm'].forEach(function(id){$(id).disabled=b});
+    $('bCancel').disabled=!b;
+    if(!b) prog(-1);
+  }
+  var sleep=function(ms){ return new Promise(function(r){setTimeout(r,ms)}); };
+  // rAF is throttled to a standstill in a background tab, which would stall an
+  // export indefinitely. Race it against a timer so exports finish either way.
+  var raf=function(){ return new Promise(function(r){
+    var done=false, fin=function(){ if(!done){ done=true; r(); } };
+    requestAnimationFrame(fin); setTimeout(fin,60);
+  }); };
+
+  function beginOffscreen(w,h){
+    var sz=renderer.getSize(new THREE.Vector2());
+    var st={pr:renderer.getPixelRatio(),w:sz.x,h:sz.y,aspect:camera.aspect,
+            fov:camera.fov,pos:camera.position.clone(),rot:pivot.rotation.y,spin:spin};
+    var k=zoomFactor();
+    spin=false;
+    renderer.setPixelRatio(1);
+    renderer.setSize(w,h,false);
+    camera.aspect=w/h; applyFocalFor(w/h);
+    setDistance(idealDist(w/h)*k);
+    camera.updateProjectionMatrix();
+    return st;
+  }
+  function endOffscreen(st){
+    renderer.setPixelRatio(st.pr);
+    camera.aspect=st.aspect; camera.fov=st.fov;
+    camera.position.copy(st.pos); camera.updateProjectionMatrix();
+    pivot.rotation.y=st.rot; spin=st.spin;
+    onResize();
+  }
+
+  function savePNG(){
+    var r=parseRes(), st=beginOffscreen(r[0],r[1]);
+    renderer.render(scene,camera);
+    var url=renderer.domElement.toDataURL('image/png');
+    endOffscreen(st);
+    dl(url,(transp?'shot-alpha-':'shot-')+r[0]+'x'+r[1]+'-'+stamp()+'.png');
+  }
+
+  async function exportZip(){
+    if(busy||typeof JSZip!=='function') return;
+    var r=parseRes(), n=+$('expFrames').value;
+    setBusy(true); prog(0);
+    var st=beginOffscreen(r[0],r[1]);
+    var zip=new JSZip(), base=st.rot, ok=true;
+    for(var i=0;i<n;i++){
+      if(cancelFlag){ ok=false; break; }
+      pivot.rotation.y=base+i*Math.PI*2/n;
+      renderer.render(scene,camera);
+      var blob=await new Promise(function(res){ renderer.domElement.toBlob(res,'image/png'); });
+      zip.file('frame_'+String(i+1).padStart(4,'0')+'.png',blob);
+      prog((i+1)/n*0.85);
+      await raf();
+    }
+    endOffscreen(st);
+    if(!ok){ setBusy(false); return; }
+    var out=await zip.generateAsync({type:'blob'},function(m){ prog(0.85+m.percent/100*0.15); });
+    dl(URL.createObjectURL(out),'turntable-'+n+'f-'+r[0]+'x'+r[1]+'-'+stamp()+'.zip',true);
+    setBusy(false);
+  }
+
+  async function exportWebm(){
+    if(busy) return;
+    if(typeof MediaRecorder!=='function'||!MediaRecorder.isTypeSupported('video/webm;codecs=vp9')){
+      $('expNote').textContent='This browser cannot record WebM. Use the PNG sequence instead.';
+      $('expNote').classList.add('err'); return;
+    }
+    var r=parseRes(), n=+$('expFrames').value, fps=+$('expFps').value;
+    setBusy(true); prog(0);
+    var st=beginOffscreen(r[0],r[1]);
+    renderer.render(scene,camera);
+    var stream=renderer.domElement.captureStream(0);
+    var track=stream.getVideoTracks()[0];
+    var rec=new MediaRecorder(stream,{mimeType:'video/webm;codecs=vp9',videoBitsPerSecond:8000000});
+    var chunks=[]; rec.ondataavailable=function(e){ if(e.data&&e.data.size) chunks.push(e.data); };
+    var stopped=new Promise(function(res){ rec.onstop=res; });
+    rec.start();
+    // captureStream(0) only emits a frame when we ask for one, so waiting here
+    // lets the encoder finish starting up without eating real turntable angles.
+    await sleep(400);
+    // …and a few frames of the opening pose absorb whatever the encoder still
+    // drops, so no real turntable angle is ever lost. Costs a brief hold at the
+    // start of the clip; the PNG sequence is the frame-exact path.
+    // Frames requested just before stop() are still queued and get discarded, so
+    // pad both ends with repeats of the first and last pose. Every real turntable
+    // angle survives; the clip just opens and closes on a brief hold.
+    var base=st.rot, WARM=4, TAIL=5;
+    for(var i=-WARM;i<n+TAIL;i++){
+      if(cancelFlag) break;
+      pivot.rotation.y=base+Math.min(Math.max(i,0),n-1)*Math.PI*2/n;
+      renderer.render(scene,camera);
+      // let the compositor pick the frame up before asking the track for it,
+      // otherwise the encoder coalesces frames and the turntable stutters
+      await raf(); await raf();
+      if(track.requestFrame) track.requestFrame();
+      if(i>=0) prog(Math.min(i+1,n)/n);
+      await sleep(1000/fps);
+    }
+    await sleep(300);            // let the final frame reach the encoder before stopping
+    rec.stop(); await stopped;
+    track.stop();
+    endOffscreen(st);
+    if(chunks.length) dl(URL.createObjectURL(new Blob(chunks,{type:'video/webm'})),
+      'turntable-'+n+'f-'+fps+'fps-'+r[0]+'x'+r[1]+'-'+stamp()+'.webm',true);
+    setBusy(false);
+  }
+
+  /* -------------------------------------------------------------- persistence */
+  var SKEY='pstudio.v1', saveT=null;
+  function collect(){
+    return {spin:spin,spd:spd,key:+$('key').value,expo:+$('expo').value,tone:$('tone').value,
+            focal:focalMM,bg:bgKey,transp:transp,vp:vpMode,shadow:renderer.shadowMap.enabled,
+            floor:floor.visible,envKind:envKind,envLabel:envLabel,envRot:envRotDeg,
+            envInt:envIntensity,envShow:envShow,lampMod:lampMod,lampOn:lampOn,
+            warm:+$('warm').value,glow:+$('glow').value,
+            res:$('expRes').value,frames:$('expFrames').value,fps:$('expFps').value};
+  }
+  function save(){
+    clearTimeout(saveT);
+    saveT=setTimeout(function(){
+      try{ localStorage.setItem(SKEY,JSON.stringify(collect())); }catch(e){}
+    },250);
+  }
+  function restore(){
+    var s; try{ s=JSON.parse(localStorage.getItem(SKEY)||'null'); }catch(e){}
+    if(!s) return;
+    if(s.spd!=null){ spd=s.spd; $('spd').value=spd; }
+    if(s.spin!=null){ spin=s.spin; $('bSpin').classList.toggle('on',spin); $('vSpin').textContent=spin?'on':'off'; }
+    if(s.key!=null){ $('key').value=s.key; applyKey(); }
+    if(s.expo!=null){ $('expo').value=s.expo; }
+    if(s.tone) $('tone').value=s.tone;
+    if(s.bg&&BG[s.bg]) bgKey=s.bg;
+    if(s.transp!=null) transp=s.transp;
+    if(s.vp) vpMode=s.vp;
+    if(s.shadow!=null){ renderer.shadowMap.enabled=s.shadow; $('bShadow').classList.toggle('on',s.shadow); }
+    if(s.floor!=null){ floor.visible=s.floor; $('bGround').classList.toggle('on',s.floor); }
+    if(s.envRot!=null){ envRotDeg=s.envRot; $('envRot').value=envRotDeg; $('vEnvRot').textContent=envRotDeg+'°'; }
+    if(s.envInt!=null){ envIntensity=s.envInt; $('envInt').value=Math.round(envIntensity*100); }
+    if(s.lampMod!=null) lampMod=s.lampMod;
+    if(s.lampOn!=null) lampOn=s.lampOn;
+    if(s.warm!=null) $('warm').value=s.warm;
+    if(s.glow!=null) $('glow').value=s.glow;
+    if(s.res) $('expRes').value=s.res;
+    if(s.frames) $('expFrames').value=s.frames;
+    if(s.fps) $('expFps').value=s.fps;
+    if(s.focal&&FOCALS.indexOf(s.focal)>=0) focalMM=s.focal;
+    // Poly Haven presets are not auto-refetched on boot; built-ins are restored.
+    if(s.envKind==='studio'){ envKind='studio'; envLabel='Softbox'; markEnvBtn('studio'); }
+    envShow=false;
+  }
+
+  /* --------------------------------------------------------------- UI wiring */
+  function applyKey(){
+    var v=+$('key').value/100;
+    keyL.intensity=v*2.7; fill.intensity=v*.8; rim.intensity=v*1.25; hemi.intensity=.15+v*.4;
+  }
+
+  $('bSpin').onclick=function(){ spin=!spin; this.classList.toggle('on',spin);
+    $('vSpin').textContent=spin?'on':'off'; save(); };
+  $('spd').oninput=function(){ spd=+this.value; save(); };
+  $('bFront').onclick=setPhotoAngle;
+
+  document.querySelectorAll('.fl').forEach(function(b){
+    b.onclick=function(){ setFocal(+b.dataset.mm); };
+  });
+
+  document.querySelectorAll('.env').forEach(function(b){
+    b.onclick=function(){
+      var k=b.dataset.env;
+      if(k==='room'){ markEnvBtn(k); setEnvKind('room',null,'Room'); envNote(); }
+      else if(k==='studio'){ markEnvBtn(k); setEnvKind('studio',null,'Softbox'); envNote(); }
+      else if(PH[k]) loadEnvUrl(PH[k][1],PH[k][0],k,false);
+    };
+  });
+  $('envRot').oninput=function(){
+    envRotDeg=+this.value; $('vEnvRot').textContent=envRotDeg+'°';
+    envSphere.rotation.y=envRotDeg*Math.PI/180;
+  };
+  $('envRot').onchange=function(){ rebuildEnvMap(); save(); };
+  $('envInt').oninput=function(){ envIntensity=+this.value/100; applyEnvIntensity(); };
+  $('envInt').onchange=save;
+  $('bEnvBg').onclick=function(){
+    envShow=!envShow; this.classList.toggle('on',envShow);
+    applyTransparent(); save();
+  };
+  $('bEnvFile').onclick=function(){ $('file').click(); };
+
+  $('key').oninput=function(){ applyKey(); save(); };
+  $('expo').oninput=applyExposure;
+  $('tone').onchange=applyTone;
+  $('bShadow').onclick=function(){
+    renderer.shadowMap.enabled=!renderer.shadowMap.enabled;
+    this.classList.toggle('on',renderer.shadowMap.enabled);
+    scene.traverse(function(n){ if(n.isMesh){
+      var ms=Array.isArray(n.material)?n.material:[n.material];
+      ms.forEach(function(m){ if(m) m.needsUpdate=true; });
+    }});
+    save();
+  };
+  $('bGround').onclick=function(){ floor.visible=!floor.visible; this.classList.toggle('on',floor.visible); save(); };
+
+  document.querySelectorAll('.bg').forEach(function(b){
+    b.onclick=function(){ bgKey=b.dataset.bg; transp=false;
+      $('expo').value=Math.round((bgKey==='white'?1.15:1.05)*100); applyExposure();
+      applyBackdrop(); save(); };
+  });
+  $('bTransp').onclick=function(){ transp=!transp; applyTransparent(); save(); };
+
+  $('matSel').onchange=syncMatUI;
+  $('matCol').oninput=function(){ var m=curMat(); if(m&&m.color){ m.color.set(this.value); m.needsUpdate=true; } };
+  $('matRough').oninput=function(){ var m=curMat(); if(m&&('roughness' in m)){ m.roughness=+this.value/100; $('vRough').textContent=m.roughness.toFixed(2); } };
+  $('matMetal').oninput=function(){ var m=curMat(); if(m&&('metalness' in m)){ m.metalness=+this.value/100; $('vMetal').textContent=m.metalness.toFixed(2); } };
+  $('bMatReset').onclick=function(){ resetMat(curMat()); syncMatUI(); };
+  $('bMatResetAll').onclick=function(){ if(active) active.mats.forEach(resetMat); syncMatUI(); matHint(); };
+  $('bDeMetal').onclick=function(){
+    if(!active) return;
+    active.mats.forEach(function(m){
+      if(('metalness' in m)&&!m.metalnessMap){ m.metalness=0; m.needsUpdate=true; }
+    });
+    syncMatUI(); matHint();
+  };
+
+  document.querySelectorAll('.vp').forEach(function(b){
+    b.onclick=function(){ vpMode=b.dataset.vp; applyViewport(); save(); };
+  });
+
+  $('bLampMod').onclick=function(){ lampMod=!lampMod; applyLampModule(); };
+  $('bLamp').onclick=function(){ lampOn=!lampOn; this.classList.toggle('on',lampOn);
+    this.textContent=lampOn?'Light on':'Light off'; applyLamp(); save(); };
+  $('bBulb').onclick=function(){ bulbMesh.visible=!bulbMesh.visible; this.classList.toggle('on',bulbMesh.visible); };
+  $('warm').oninput=function(){ applyLamp(); save(); };
+  $('glow').oninput=function(){ applyLamp(); save(); };
+
+  $('bShot').onclick=savePNG;
+  $('bZip').onclick=exportZip;
+  $('bWebm').onclick=exportWebm;
+  $('bCancel').onclick=function(){ cancelFlag=true; };
+  ['expRes','expFrames','expFps'].forEach(function(id){ $(id).onchange=save; });
+
+  $('bKeys').onclick=function(){ $('keys').classList.toggle('show'); };
+  $('keys').onclick=function(){ this.classList.remove('show'); };
+  $('bReset').onclick=function(){ try{ localStorage.removeItem(SKEY); }catch(e){} location.reload(); };
+
+  document.querySelectorAll('#bar button').forEach(function(b){
+    b.onclick=function(){ setView(b.dataset.view); };
+  });
+
+  $('bNew').onclick=function(){ $('file').click(); };
+  $('file').addEventListener('change',function(e){ takeFiles(e.target.files); e.target.value=''; });
+  ['dragenter','dragover','drop'].forEach(function(t){
+    window.addEventListener(t,function(e){ e.preventDefault(); e.stopPropagation(); });
+  });
+  window.addEventListener('drop',function(e){ takeFiles(e.dataTransfer.files); });
+
+  /* ---------------------------------------------------------------- shortcuts */
+  addEventListener('keydown',function(e){
+    var t=e.target.tagName;
+    if(t==='INPUT'||t==='SELECT'||t==='TEXTAREA') return;
+    var k=e.key;
+    if(k==='Escape'){ $('keys').classList.remove('show'); return; }
+    if(k==='?'){ $('keys').classList.toggle('show'); return; }
+    if(k===' '){ e.preventDefault(); $('bSpin').click(); return; }
+    if(k==='1'){ setView(e.ctrlKey?'180':'0'); return; }
+    if(k==='3'){ setView(e.ctrlKey?'270':'90'); return; }
+    if(k==='7'){ setView('top'); return; }
+    if(k==='0'){ setPhotoAngle(); return; }
+    if(k==='['||k===']'){
+      var i=FOCALS.indexOf(focalMM)+(k===']'?1:-1);
+      if(i>=0&&i<FOCALS.length) setFocal(FOCALS[i]);
+      return;
+    }
+    var lk=k.toLowerCase();
+    if(lk==='z'){ var vs=['solid','wire','normals','uv']; vpMode=vs[(vs.indexOf(vpMode)+1)%4]; applyViewport(); save(); }
+    else if(lk==='b'){ var bs=['studio','white','warm']; var nb=bs[(bs.indexOf(bgKey)+1)%3];
+                       document.querySelector('.bg[data-bg="'+nb+'"]').click(); }
+    else if(lk==='t'){ $('bTransp').click(); }
+    else if(lk==='g'){ $('bGround').click(); }
+    else if(lk==='s'){ $('bShadow').click(); }
+    else if(lk==='l'){ $('bLampMod').click(); }
+    else if(lk==='m'){ if(models.length>1) selectModel((models.indexOf(active)+1)%models.length); }
+    else if(lk==='p'){ savePNG(); }
+    else if(lk==='e'){ exportZip(); }
+  });
+
+  /* ------------------------------------------------------------------- resize */
+  function onResize(){
+    camera.aspect=innerWidth/innerHeight;
+    applyFocalFor(camera.aspect);
+    renderer.setSize(innerWidth,innerHeight);
+    clampRange();
+  }
+  addEventListener('resize',onResize);
+
+  /* --------------------------------------------------------------- boot + loop */
+  restore();
+  applyKey(); applyExposure(); applyTone();
+  setEnvKind(envKind,null,envKind==='studio'?'Softbox':'Room');
+  markEnvBtn(envKind==='studio'?'studio':'room');
+  applyBackdrop(); applyViewport(); applyLampModule();
+  buildMatList(); showStats();
+  setFocal(focalMM,false);
+  setPhotoAngle();
+
+  // auto-try lamp.glb when served over http — never on file://, where fetch fails
+  if(location.protocol!=='file:'){
+    fetch('lamp.glb',{method:'HEAD'}).then(function(r){
+      if(r.ok) loadModel('lamp.glb','lamp.glb',false);
+    }).catch(function(){});
+  }
+
+  var clock=new THREE.Clock(), accT=0, accN=0;
+  (function tick(){
+    requestAnimationFrame(tick);
+    var d=clock.getDelta();
+    if(busy) return;                       // export drives its own renders
+    if(spin&&active) pivot.rotation.y+=d*(spd/100)*Math.PI;
+    controls.update();
+    renderer.render(scene,camera);
+    accN++; accT+=d;
+    if(accT>0.5){
+      $('sCalls').textContent=renderer.info.render.calls;
+      $('sRTri').textContent=fmt(renderer.info.render.triangles);
+      $('sFps').textContent=Math.round(accN/accT);
+      accN=0; accT=0;
+    }
+  })();
+
+  /* ------------------------------------------------------- verification hook */
+  window.__studio={
+    ready:function(){ return !!active; },
+    renderOnce:function(){ controls.update(); renderer.render(scene,camera); },
+    // downsampled PNG of the live canvas, base64 — alpha preserved
+    snap:function(px){
+      px=px||160;
+      var c=document.createElement('canvas'); c.width=c.height=px;
+      var g=c.getContext('2d'); g.clearRect(0,0,px,px);
+      g.drawImage(renderer.domElement,0,0,px,px);
+      return c.toDataURL('image/png').split(',')[1];
+    },
+    state:function(){
+      return {models:models.map(function(m){return m.name}),
+              active:active?active.name:null,
+              tris:active?active.stats.tris:0,
+              mats:active?active.mats.length:0,
+              raw:active?active.raw:null,
+              focal:focalMM,expo:renderer.toneMappingExposure,tone:$('tone').value,
+              env:envLabel,envKind:envKind,envRot:envRotDeg,envInt:envIntensity,envShow:envShow,
+              bg:bgKey,transp:transp,vp:vpMode,spin:spin,lampMod:lampMod,
+              shadow:renderer.shadowMap.enabled,floorVisible:floor.visible,
+              alpha:renderer.getContext().getContextAttributes().alpha,
+              preserve:renderer.getContext().getContextAttributes().preserveDrawingBuffer,
+              busy:busy};
+    },
+    setSpin:function(v){ spin=v; $('bSpin').classList.toggle('on',v); },
+    setAngle:function(deg){ pivot.rotation.y=deg*Math.PI/180; },
+    matInfo:function(){
+      if(!active) return [];
+      return active.mats.map(function(m,i){
+        return {name:matName(m,i),color:m.color?'#'+m.color.getHexString():null,
+                roughness:('roughness' in m)?m.roughness:null,
+                metalness:('metalness' in m)?m.metalness:null};
+      });
+    }
+  };
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>360° Product Viewer — Tripod Table Lamp</title>
+<style>
+  :root{
+    --bg:#0d0f11; --panel:#16191d; --line:#262b31; --txt:#e8e6e1;
+    --dim:#8d949c; --accent:#c9a227;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--txt);
+    font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Arial,sans-serif}
+  #stage{position:fixed;inset:0}
+  canvas{display:block}
+
+  #panel{position:fixed;top:16px;left:16px;width:264px;background:rgba(22,25,29,.92);
+    border:1px solid var(--line);border-radius:12px;padding:14px 14px 16px;
+    backdrop-filter:blur(8px);z-index:5;max-height:calc(100vh - 32px);overflow:auto}
+  #panel h1{margin:0 0 2px;font-size:14px;letter-spacing:.02em}
+  #panel .sub{color:var(--dim);font-size:11.5px;margin-bottom:12px}
+  .grp{border-top:1px solid var(--line);padding-top:11px;margin-top:11px}
+  .grp:first-of-type{border-top:0;margin-top:0;padding-top:0}
+  label{display:flex;justify-content:space-between;align-items:center;
+    color:var(--dim);font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+  label b{color:var(--txt);font-weight:500;text-transform:none;letter-spacing:0;font-size:12px}
+  input[type=range]{width:100%;margin:0 0 10px;accent-color:var(--accent)}
+  .row{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+  button{flex:1;min-width:60px;background:#1e2228;color:var(--txt);border:1px solid var(--line);
+    border-radius:7px;padding:7px 8px;font-size:12px;cursor:pointer;transition:.15s}
+  button:hover{background:#272c33;border-color:#3a4149}
+  button.on{background:var(--accent);border-color:var(--accent);color:#151208;font-weight:600}
+  #drop{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+    z-index:10;background:rgba(13,15,17,.94);text-align:center;padding:24px}
+  #drop .box{border:1.5px dashed #3a4149;border-radius:16px;padding:44px 52px;max-width:520px}
+  #drop h2{margin:0 0 8px;font-size:19px;font-weight:600}
+  #drop p{margin:0 0 6px;color:var(--dim);font-size:13px}
+  #drop code{background:#1e2228;padding:2px 6px;border-radius:4px;color:#cfd5dc;font-size:12px}
+  #pick{display:inline-block;margin-top:18px;background:var(--accent);color:#151208;
+    padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px}
+  #drop.hide{display:none}
+  #bar{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:5;
+    background:rgba(22,25,29,.92);border:1px solid var(--line);border-radius:10px;
+    padding:8px;display:flex;gap:6px;backdrop-filter:blur(8px)}
+  #bar button{min-width:auto;padding:7px 13px}
+  #hint{position:fixed;bottom:16px;right:16px;color:#5d646c;font-size:11px;z-index:5}
+  #load{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--dim);z-index:8;display:none}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+
+<div id="panel">
+  <h1>Tripod Table Lamp</h1>
+  <div class="sub">360° product view — drag to orbit, scroll to zoom</div>
+
+  <div class="grp">
+    <label>Turntable <b id="vSpin">on</b></label>
+    <div class="row">
+      <button id="bSpin" class="on">Spin</button>
+      <button id="bFront">Photo angle</button>
+    </div>
+    <label>Speed</label>
+    <input type="range" id="spd" min="0" max="30" value="9">
+  </div>
+
+  <div class="grp">
+    <label>Lamp <b id="vLamp">on</b></label>
+    <div class="row">
+      <button id="bLamp" class="on">Light on</button>
+      <button id="bBulb" class="on">Bulb</button>
+    </div>
+    <label>Bulb warmth</label>
+    <input type="range" id="warm" min="0" max="100" value="62">
+    <label>Bulb strength</label>
+    <input type="range" id="glow" min="0" max="100" value="55">
+  </div>
+
+  <div class="grp">
+    <label>Studio light</label>
+    <input type="range" id="key" min="0" max="100" value="55">
+    <label>Shadow</label>
+    <div class="row">
+      <button id="bShadow" class="on">Shadow</button>
+      <button id="bGround" class="on">Floor</button>
+    </div>
+  </div>
+
+  <div class="grp">
+    <label>Backdrop</label>
+    <div class="row">
+      <button class="bg on" data-bg="studio">Studio</button>
+      <button class="bg" data-bg="white">White</button>
+      <button class="bg" data-bg="warm">Warm</button>
+    </div>
+  </div>
+
+  <div class="grp">
+    <div class="row">
+      <button id="bShot">Save PNG</button>
+      <button id="bNew">Load model</button>
+    </div>
+  </div>
+</div>
+
+<div id="bar">
+  <button data-view="0">Front</button>
+  <button data-view="90">Right</button>
+  <button data-view="180">Back</button>
+  <button data-view="270">Left</button>
+  <button data-view="top">Top</button>
+</div>
+<div id="hint">drag = orbit · scroll = zoom · right-drag = pan</div>
+<div id="load">loading model…</div>
+
+<div id="drop">
+  <div class="box">
+    <h2>Drop the lamp .glb here</h2>
+    <p>Drag the file Meshy downloaded — <code>*.glb</code> — anywhere on this page.</p>
+    <p>Or rename it <code>lamp.glb</code>, put it beside this HTML and serve the folder
+       (<code>python -m http.server</code>) to load it automatically.</p>
+    <label id="pick" for="file">Choose .glb file</label>
+    <input id="file" type="file" accept=".glb,.gltf" hidden>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/environments/RoomEnvironment.js"></script>
+<script>
+(function(){
+  var stage=document.getElementById('stage');
+  var renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true,alpha:false});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setSize(innerWidth,innerHeight);
+  renderer.outputEncoding=THREE.sRGBEncoding;
+  renderer.toneMapping=THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure=1.05;
+  renderer.shadowMap.enabled=true;
+  renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  stage.appendChild(renderer.domElement);
+
+  var scene=new THREE.Scene();
+  var camera=new THREE.PerspectiveCamera(24,innerWidth/innerHeight,0.01,100);
+  var controls=new THREE.OrbitControls(camera,renderer.domElement);
+  controls.enableDamping=true; controls.dampingFactor=.07;
+  controls.minDistance=.3; controls.maxDistance=6;
+
+  // environment for PBR reflections
+  try{
+    var pmrem=new THREE.PMREMGenerator(renderer);
+    scene.environment=pmrem.fromScene(new THREE.RoomEnvironment(),0.04).texture;
+  }catch(e){}
+
+  var BG={studio:0x101317,white:0xf2f0ec,warm:0x2a2119};
+  scene.background=new THREE.Color(BG.studio);
+
+  var hemi=new THREE.HemisphereLight(0xffffff,0x3a3a3a,.35); scene.add(hemi);
+  var keyL=new THREE.DirectionalLight(0xfff4e6,1.5);
+  keyL.position.set(2.2,3.2,2.4); keyL.castShadow=true;
+  keyL.shadow.mapSize.set(2048,2048);
+  keyL.shadow.camera.near=.5; keyL.shadow.camera.far=12;
+  keyL.shadow.camera.left=-1.4; keyL.shadow.camera.right=1.4;
+  keyL.shadow.camera.top=1.4; keyL.shadow.camera.bottom=-1.4;
+  keyL.shadow.bias=-0.0006; keyL.shadow.radius=3;
+  scene.add(keyL);
+  var fill=new THREE.DirectionalLight(0xdfe8ff,.45); fill.position.set(-3,1.4,1.6); scene.add(fill);
+  var rim =new THREE.DirectionalLight(0xffffff,.7);  rim.position.set(-1.2,2.2,-3); scene.add(rim);
+
+  // bulb inside the shade
+  var bulb=new THREE.PointLight(0xffb45c,0,3,2);
+  bulb.castShadow=false; scene.add(bulb);
+
+  // floor
+  var floorMat=new THREE.MeshStandardMaterial({color:0x1a1e22,roughness:.92,metalness:0});
+  var floor=new THREE.Mesh(new THREE.CircleGeometry(6,64),floorMat);
+  floor.rotation.x=-Math.PI/2; floor.receiveShadow=true; scene.add(floor);
+
+  var pivot=new THREE.Group(); scene.add(pivot);
+  var model=null, shadeMats=[], spin=true, spd=9, lampOn=true;
+
+  function frame(obj){
+    var box=new THREE.Box3().setFromObject(obj);
+    var size=box.getSize(new THREE.Vector3());
+    var ctr=box.getCenter(new THREE.Vector3());
+    var h=size.y||1;
+    var s=1/h;                              // normalise to 1 unit tall
+    obj.scale.setScalar(s);
+    obj.position.set(-ctr.x*s, -box.min.y*s, -ctr.z*s);
+    floor.position.y=0.0005;
+    // bulb + its light sit just under the top of the shade
+    bulb.position.set(0, 0.80, 0);
+    if(!bulbMesh.parent) pivot.add(bulbMesh);
+    bulbMesh.scale.setScalar(0.055);
+    bulbMesh.position.set(0, 0.80, 0);
+    setPhotoAngle();
+  }
+
+  function setPhotoAngle(){
+    controls.target.set(0,0.5,0);
+    camera.position.set(0,0.60,3.1);
+    controls.update();
+  }
+
+  function markShade(obj){
+    shadeMats=[];
+    var whole=new THREE.Box3().setFromObject(obj);
+    var top=whole.max.y, bot=whole.min.y, span=Math.max(top-bot,1e-6);
+    var seen=new Set(), entries=[];
+    obj.traverse(function(n){
+      if(!n.isMesh) return;
+      n.castShadow=true; n.receiveShadow=true;
+      var b=new THREE.Box3().setFromObject(n);
+      var rel=(b.max.y-bot)/span;          // how high this mesh reaches
+      var mats=Array.isArray(n.material)?n.material:[n.material];
+      mats.forEach(function(m){
+        if(!m||seen.has(m.uuid)) return;
+        seen.add(m.uuid);
+        m.side=THREE.DoubleSide;
+        if(m.map) m.map.anisotropy=8;
+        entries.push({m:m,rel:rel});
+      });
+    });
+    // only treat a material as "the shade" when the model has several materials
+    // and this one lives in the top half - otherwise a single-material lamp
+    // would glow all over, legs included.
+    if(entries.length>1){
+      entries.forEach(function(e){ if(e.rel>0.55) shadeMats.push(e.m); });
+    }
+  }
+
+  // a real bulb: frosted glass envelope + neck + brass screw base
+  var bulbMesh=new THREE.Group(), bulbGlass=null;
+  (function makeBulb(){
+    var glass=new THREE.MeshPhysicalMaterial({
+      color:0xfff2dd, roughness:.35, metalness:0, transmission:.6, thickness:.3,
+      transparent:true, opacity:.92, emissive:new THREE.Color(0xffb45c), emissiveIntensity:1.4
+    });
+    bulbGlass=glass;
+    var env=new THREE.Mesh(new THREE.SphereGeometry(1,48,32),glass);
+    env.scale.set(1,1.12,1);
+    var neck=new THREE.Mesh(new THREE.CylinderGeometry(.62,.9,.5,32),glass);
+    neck.position.y=-1.15;
+    var brass=new THREE.MeshStandardMaterial({color:0xb9a06a,roughness:.38,metalness:.9});
+    var base=new THREE.Mesh(new THREE.CylinderGeometry(.6,.58,.85,32),brass);
+    base.position.y=-1.62;
+    var tip=new THREE.Mesh(new THREE.SphereGeometry(.3,24,16),
+      new THREE.MeshStandardMaterial({color:0x2a2a2a,roughness:.6,metalness:.2}));
+    tip.position.y=-2.05;
+    bulbMesh.add(env,neck,base,tip);
+    bulbMesh.visible=true;
+  })();
+
+  function applyLamp(){
+    var warm=+document.getElementById('warm').value/100;
+    var pow =+document.getElementById('glow').value/100;
+    var col=new THREE.Color().setHSL(0.09-0.03*warm, .55+.3*warm, .55);
+    bulb.color.copy(col);
+    bulb.intensity = lampOn ? pow*3.2 : 0;
+    if(bulbGlass){
+      bulbGlass.emissive.copy(col);
+      bulbGlass.emissiveIntensity = lampOn ? 0.6+pow*2.2 : 0.0;
+      bulbGlass.needsUpdate=true;
+    }
+    shadeMats.forEach(function(m){
+      if(!m.emissive) return;
+      m.emissive.copy(col);
+      m.emissiveIntensity = lampOn ? pow*0.55 : 0;
+      m.needsUpdate=true;
+    });
+  }
+
+  function load(url,revoke){
+    document.getElementById('load').style.display='block';
+    new THREE.GLTFLoader().load(url,function(g){
+      if(model) pivot.remove(model);
+      model=g.scene; pivot.add(model);
+      markShade(model); frame(model); applyLamp();
+      document.getElementById('drop').classList.add('hide');
+      document.getElementById('load').style.display='none';
+      if(revoke) URL.revokeObjectURL(url);
+    },undefined,function(){
+      document.getElementById('load').style.display='none';
+      document.getElementById('drop').classList.remove('hide');
+    });
+  }
+
+  // auto-try lamp.glb when served over http
+  if(location.protocol!=='file:'){
+    fetch('lamp.glb',{method:'HEAD'}).then(function(r){ if(r.ok) load('lamp.glb'); }).catch(function(){});
+  }
+
+  // file input + drag/drop
+  function take(f){ if(f) load(URL.createObjectURL(f),true); }
+  document.getElementById('file').addEventListener('change',function(e){take(e.target.files[0])});
+  ['dragenter','dragover','drop'].forEach(function(t){
+    window.addEventListener(t,function(e){e.preventDefault();e.stopPropagation();});
+  });
+  window.addEventListener('drop',function(e){take(e.dataTransfer.files[0])});
+  document.getElementById('bNew').addEventListener('click',function(){document.getElementById('file').click()});
+
+  // controls
+  var $=function(id){return document.getElementById(id)};
+  $('bSpin').onclick=function(){spin=!spin;this.classList.toggle('on',spin);$('vSpin').textContent=spin?'on':'off';};
+  $('spd').oninput=function(){spd=+this.value};
+  $('bFront').onclick=setPhotoAngle;
+  $('bLamp').onclick=function(){lampOn=!lampOn;this.classList.toggle('on',lampOn);
+    $('vLamp').textContent=lampOn?'on':'off';this.textContent=lampOn?'Light on':'Light off';applyLamp();};
+  $('bBulb').onclick=function(){bulbMesh.visible=!bulbMesh.visible;this.classList.toggle('on',bulbMesh.visible);};
+  $('warm').oninput=applyLamp; $('glow').oninput=applyLamp;
+  $('key').oninput=function(){var v=+this.value/100;keyL.intensity=v*2.7;fill.intensity=v*.8;rim.intensity=v*1.25;hemi.intensity=.15+v*.4;};
+  $('bShadow').onclick=function(){renderer.shadowMap.enabled=!renderer.shadowMap.enabled;
+    this.classList.toggle('on',renderer.shadowMap.enabled);
+    scene.traverse(function(n){if(n.isMesh)n.material&&(n.material.needsUpdate=true)});};
+  $('bGround').onclick=function(){floor.visible=!floor.visible;this.classList.toggle('on',floor.visible);};
+  document.querySelectorAll('.bg').forEach(function(b){
+    b.onclick=function(){
+      document.querySelectorAll('.bg').forEach(function(x){x.classList.remove('on')});
+      b.classList.add('on');
+      var k=b.dataset.bg; scene.background=new THREE.Color(BG[k]);
+      floorMat.color.set(k==='white'?0xe6e3dd:k==='warm'?0x2f2620:0x1a1e22);
+      renderer.toneMappingExposure = k==='white'?1.15:1.05;
+    };
+  });
+  document.querySelectorAll('#bar button').forEach(function(b){
+    b.onclick=function(){
+      var v=b.dataset.view;
+      if(v==='top'){ camera.position.set(0,3.0,0.001); controls.target.set(0,.5,0); }
+      else{ var a=+v*Math.PI/180; camera.position.set(Math.sin(a)*3.1,0.60,Math.cos(a)*3.1);
+            controls.target.set(0,.5,0); pivot.rotation.y=0; }
+      controls.update();
+    };
+  });
+  $('bShot').onclick=function(){
+    renderer.render(scene,camera);
+    var a=document.createElement('a');
+    a.download='lamp-'+Date.now()+'.png';
+    a.href=renderer.domElement.toDataURL('image/png'); a.click();
+  };
+
+  addEventListener('resize',function(){
+    camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth,innerHeight);
+  });
+
+  var clock=new THREE.Clock();
+  (function tick(){
+    requestAnimationFrame(tick);
+    var d=clock.getDelta();
+    if(spin&&model) pivot.rotation.y += d*(spd/100)*Math.PI;
+    controls.update();
+    renderer.render(scene,camera);
+  })();
+})();
+</script>
+</body>
+</html>

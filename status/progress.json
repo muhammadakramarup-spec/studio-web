@@ -1,0 +1,46 @@
+{
+ "wave": "0",
+ "started": "",
+ "silos": {
+  "S1": {
+   "state": "pending",
+   "last": "",
+   "msg": "",
+   "n": {}
+  },
+  "S2": {
+   "state": "pending",
+   "last": "",
+   "msg": "",
+   "n": {}
+  },
+  "S3": {
+   "state": "pending",
+   "last": "",
+   "msg": "",
+   "n": {}
+  },
+  "S4": {
+   "state": "pending",
+   "last": "",
+   "msg": "",
+   "n": {}
+  },
+  "S5": {
+   "state": "pending",
+   "last": "",
+   "msg": "",
+   "n": {}
+  },
+  "S6": {
+   "state": "pending",
+   "last": "",
+   "msg": "",
+   "n": {}
+  }
+ },
+ "decisions": [],
+ "blockers": [],
+ "signups": [],
+ "events": 1
+}

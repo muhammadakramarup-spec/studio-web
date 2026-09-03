@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.vite/
+*.local
+.env
+.env.*
+public/assets/**/*.glb
+public/assets/**/*.hdr
+public/assets/**/*.ktx2
+test-results/
+playwright-report/
+__pycache__/
