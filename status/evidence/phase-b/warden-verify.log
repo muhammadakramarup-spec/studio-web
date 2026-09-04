@@ -1,0 +1,46 @@
+=== Warden Gate 3 verification 2026-09-05T00:53:34+05:00 ===
+TSC_EXIT=0
+ℹ tests 16
+ℹ pass 16
+ℹ fail 0
+--- tests/exports.spec.ts ---
+Running 3 tests using 1 worker
+
+[1/3] tests\exports.spec.ts:106:1 › X1 — all five exports download as valid artifacts
+[2/3] tests\exports.spec.ts:160:1 › X2 — package exports after a library pick carry a receipt and licence
+[3/3] tests\exports.spec.ts:198:1 › X3 — a locally opened GLB exports without a receipt and without its filename
+  3 passed (10.1s)
+EXIT=0 for tests/exports.spec.ts
+--- tests/export-timeline.spec.ts ---
+
+[3/3] tests\export-timeline.spec.ts:302:1 › legacy 3-argument exportSequence call still yields the linear sweep
+tests\export-timeline.spec.ts:302:1 › legacy 3-argument exportSequence call still yields the linear sweep
+[export-timeline C] entries=24 progressCalls=25
+
+  3 passed (9.3s)
+EXIT=0 for tests/export-timeline.spec.ts
+--- tests/project-recovery.spec.ts ---
+
+[1/4] tests\project-recovery.spec.ts:25:1 › P1 persist round-trips a v2 document through IndexedDB across a reload
+[2/4] tests\project-recovery.spec.ts:80:1 › P2 editing then reload offers Restore and rebuilds the scene
+[3/4] tests\project-recovery.spec.ts:144:1 › P3 simulated context loss shows a recoverable message and clears on restore
+[4/4] tests\project-recovery.spec.ts:178:1 › P4 a locally opened GLB never leaks its filename or path into the recovery record
+  4 passed (11.4s)
+EXIT=0 for tests/project-recovery.spec.ts
+--- tests/studio-shell.spec.ts ---
+
+Running 2 tests using 1 worker
+
+[1/2] tests\studio-shell.spec.ts:3:1 › Studio Shell keeps the load-to-export workflow focused and discoverable
+[2/2] tests\studio-shell.spec.ts:45:1 › Studio Shell keeps the desktop toolbar readable without horizontal scrolling
+  2 passed (8.0s)
+EXIT=0 for tests/studio-shell.spec.ts
+--- tests/e2e.spec.ts ---
+
+[4/4] tests\e2e.spec.ts:468:1 › E2E regression — default Bloom stays readable on a plain white Kenney model (no full clip)
+tests\e2e.spec.ts:468:1 › E2E regression — default Bloom stays readable on a plain white Kenney model (no full clip)
+[E2E] bloom clip check: region=[275,73,565,449] totalPx=109040 clippedPx=0 clippedPct=0.000%
+
+  4 passed (11.5s)
+EXIT=0 for tests/e2e.spec.ts
+=== DONE 2026-09-05T00:54:38+05:00 ===

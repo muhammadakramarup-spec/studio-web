@@ -136,3 +136,25 @@ the two `finally` blocks), and may align wording/selectors in `tests/export-time
 `tests/project-recovery.spec.ts`, and `tests/exports.spec.ts` to the integrated contract without
 weakening any assertion; every such edit is listed in its evidence. The shared dev server on
 5173 stays up for Phase B (extends Decision W-4).
+
+## 2026-09-05 — Gate 3 accepted (Wave 3 complete)
+
+Phase B integrated all three functions into `src/app/main.ts` (427 insertions), added
+`aria-live` to `#viewport-hint`, and fixed defect D-1 in `src/viewer/studio.ts` exactly as
+assigned. All 26 `index.html` ids are unchanged. Agent evidence: per-file counts exports 3,
+export-timeline 3, project-recovery 4, e2e 4, s1 6, s2 9, s3 5, s4 7, s5 8, s6 4, studio-shell 2;
+serial full run 55 passed, 0 failed; bundle 754.38 kB vs 737.36 kB baseline (+17.02 kB, +2.3 %),
+no source maps, no secret patterns. Warden re-ran tsc, unit (16/16) and the exports,
+export-timeline, project-recovery, studio-shell and e2e files independently: all green
+(`status/evidence/phase-b/warden-verify.log`). Four test edits reviewed and accepted as
+documented in `status/evidence/phase-b/summary.md` (two were latent test bugs, one is a stronger
+check, one applies Decision W-5). Carried limitations: shallow undo depth after restore, the
+cached GLB is not invalidated by gizmo drags (no hook on the frozen editor surface), and the
+context-loss message shows the last capture time rather than a confirmed write time.
+
+### Decision W-7 — Wave 4 servers
+
+The shared dev server on 5173 is stopped at Gate 3. The performance/reliability QA agent works
+from a clean clone in the session scratchpad and lets Playwright start and stop its own server;
+the accessibility/responsive QA agent serves the worktree's production build with
+`vite preview --port 4174` and stops it when done.

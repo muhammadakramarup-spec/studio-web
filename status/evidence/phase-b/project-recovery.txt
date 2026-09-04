@@ -1,0 +1,9 @@
+
+Running 4 tests using 1 worker
+
+[1/4] tests\project-recovery.spec.ts:25:1 › P1 persist round-trips a v2 document through IndexedDB across a reload
+[2/4] tests\project-recovery.spec.ts:80:1 › P2 editing then reload offers Restore and rebuilds the scene
+[3/4] tests\project-recovery.spec.ts:144:1 › P3 simulated context loss shows a recoverable message and clears on restore
+[4/4] tests\project-recovery.spec.ts:178:1 › P4 a locally opened GLB never leaks its filename or path into the recovery record
+  4 passed (17.3s)
+exit:0
