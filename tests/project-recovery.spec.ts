@@ -218,3 +218,73 @@ test("P4 a locally opened GLB never leaks its filename or path into the recovery
   expect(record.doc.asset).not.toBeNull();
   expect(record.doc.asset!.origin).toBe("local");
 });
+
+test("P5 an edit made while an export is rendering is still autosaved and restorable", async ({ page }) => {
+  test.setTimeout(30_000);
+  await page.goto("/");
+
+  await page.waitForSelector("#panel-library .library-panel__tile", { timeout: 15_000 });
+  const firstTile = page.locator("#panel-library .library-panel__tile").first();
+  await firstTile.click();
+  await expect(page.locator("#viewport-hint")).toHaveAttribute("data-state", "loaded", { timeout: 15_000 });
+
+  // D-2 (status/warden-log.md "defect D-2 opened"): start a deliberately slow 72-frame export
+  // (72 x >=60ms per frame keeps the viewer busy well past the 2s autosave debounce) and make an
+  // edit partway through it, all inside one page.evaluate so the export is genuinely in flight —
+  // via studio.debug.state().busy — when the edit's autosave debounce timer would otherwise fire.
+  const busyAfterExport = await page.evaluate(async () => {
+    const studio = (
+      window as unknown as {
+        __studio: {
+          exportSequence(
+            res: string,
+            frames: number,
+            onProgress: undefined,
+            options: { applyFrame: () => void },
+          ): Promise<Blob>;
+          debug: { state(): Record<string, unknown> };
+        };
+      }
+    ).__studio;
+    const p = studio.exportSequence("1024x1024", 72, undefined, {
+      applyFrame: () => {
+        const t = performance.now();
+        while (performance.now() - t < 60) {
+          // busy-wait: keeps the export loop occupied so studio.debug.state().busy stays true
+        }
+      },
+    });
+    await new Promise((r) => setTimeout(r, 300));
+    const button = Array.from(document.querySelectorAll("#toolbar button")).find((b) =>
+      b.textContent?.includes("+ Light"),
+    ) as HTMLButtonElement | undefined;
+    button?.click();
+    await p;
+    return studio.debug.state().busy;
+  });
+  expect(busyAfterExport).toBe(false);
+
+  // Give the autosave debounce (createAutosaver, default 2000ms) plus one busy-retry cycle time
+  // to flush before reload.
+  await page.waitForTimeout(3_500);
+  await page.reload();
+
+  await expect(page.getByRole("button", { name: "Restore" })).toBeVisible({ timeout: 10_000 });
+  await page.getByRole("button", { name: "Restore" }).click();
+
+  await expect(page.locator("#viewport-hint")).toHaveAttribute("data-state", "loaded", { timeout: 10_000 });
+
+  // Reuses P2's approach of reading the live scene through window.__studio.scene.traverse rather
+  // than re-deriving outliner DOM structure.
+  const hasLight = await page.evaluate(() => {
+    const studio = (window as unknown as { __studio: { scene: { traverse(cb: (o: unknown) => void): void } } })
+      .__studio;
+    let found = false;
+    studio.scene.traverse((obj: unknown) => {
+      const o = obj as { isLight?: boolean };
+      if (o.isLight) found = true;
+    });
+    return found;
+  });
+  expect(hasLight).toBe(true);
+});

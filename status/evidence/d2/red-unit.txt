@@ -1,0 +1,71 @@
+
+> studio-web@0.1.0 test:unit
+> node --test tests/unit/*.test.ts
+
+✔ planSequence samples over the max authored key time, not state.duration (3.0317ms)
+✔ planSequence on an empty timeline yields default-sweep with a full-length times array (1.5121ms)
+✔ planSequence uses the max key t even when keys live only on a non-pivot track (0.2991ms)
+✖ a busy capture re-arms the debounce and saves once the viewer is free (134.0538ms)
+✔ a null capture does not save and does not re-arm (93.2124ms)
+✖ dispose stops a pending busy retry (92.9821ms)
+✔ project round-trip preserves the active model, view, and timeline (3.0489ms)
+✔ project parser rejects unsupported versions and malformed model data (1.0884ms)
+✔ v2 round-trips scene objects, modifiers, asset identity, environment, and view (3.1049ms)
+✔ committed v1 fixture parses and upgrades to v2 defaults (2.0222ms)
+✔ rejects version 3 as newer and version 0 or 'x' as not a project (0.7429ms)
+✔ rejects an hdri fileUrl outside /assets/ and a non-https sourceUrl (0.3975ms)
+✔ receipt carries app version, kind, ISO timestamp, frames, and CC0 asset provenance (2.1784ms)
+✔ licence text names the asset, its source URL, CC0 1.0, and the app version (0.4797ms)
+✔ receiptFiles yields studio-web-receipt.json and LICENCE.txt whose JSON parses back to the receipt (0.6339ms)
+✔ privacy guard rejects local paths and non-https sources (0.5081ms)
+✔ registry lists model then hdri, replaces on set, clears on null (0.3914ms)
+✔ telemetry payload keeps only the allowlisted fields for its event (1.1089ms)
+✔ telemetry payload rejects free text, non-finite durations, and unknown events (0.1889ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 17
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 463.7554
+
+✖ failing tests:
+
+test at tests\unit\persist-autosaver.test.ts:33:1
+✖ a busy capture re-arms the debounce and saves once the viewer is free (134.0538ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'busy'
+  - {
+  -   name: 'fixture'
+  - }
+  
+      at TestContext.<anonymous> (file:///C:/3D-Studio/02_projects/studio-web/.worktrees/claude-design-product-v1/tests/unit/persist-autosaver.test.ts:51:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'busy',
+    expected: { name: 'fixture' },
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\unit\persist-autosaver.test.ts:78:1
+✖ dispose stops a pending busy retry (92.9821ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///C:/3D-Studio/02_projects/studio-web/.worktrees/claude-design-product-v1/tests/unit/persist-autosaver.test.ts:95:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
