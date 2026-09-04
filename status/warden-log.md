@@ -175,3 +175,17 @@ missing after a reload. Fix assigned: capture may return `"busy"`, on which the 
 the debounce; the shell returns `"busy"` instead of `null` when `studio.debug.state().busy`.
 Red evidence required from a Node unit test (fake store, short debounce) and a browser test that
 starts a 72-frame export straight after an edit. Runs after the performance QA releases port 5173.
+
+## 2026-09-05 — Wave 4 performance/reliability QA accepted
+
+`docs/qa/performance-reliability-qa.md`, measured from a clean local clone at 37884e5 with the
+asset fixture copied in (public-clone limitation documented): unit 16/16; per file 55/55 with two
+pre-existing flakes reported and rerun (s1 render-loop seam timing, s6 avatar context loss — both
+already in the baseline); serial 55/55 in about 3 min; every WebGL `INVALID_OPERATION` warning
+originates in s1.spec.ts (425 lines, 0 elsewhere). Bundle 754.38 kB / 200.15 kB gzip
+(+17.02 kB), dist 2,323 files, 0 maps, 0 secrets, 0 private paths, 2,280/2,280 assets CC0 with
+https sources. Lighthouse (same GPU-off mobile profile as baseline): performance 51→61,
+accessibility 87→87, best practices 96→96, TBT 7,180→843 ms, TTI 13.8→7.0 s, LCP 1.8→2.0 s
+(regression, attributed to the larger bundle and the boot-time IndexedDB open), CLS unchanged
+0.344. Orbit 60 fps on the largest asset; D-1 verified fixed at 1280×720 after the full export
+click cycle (24 × 1024² across three runs); recovery record 41,399 B.
