@@ -3,7 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Studio</title>
+    <meta name="description" content="Prepare, light, and export 3D assets in your browser." />
+    <title>Studio Web — browser 3D asset finishing</title>
   </head>
   <body>
     <!-- Assembly (Wave 3) owns this shell. Silos mount into their own slot (the ids below)
@@ -12,29 +13,56 @@
          mount-point id is preserved exactly. -->
     <div id="app">
       <header id="app-header">
-        <div id="app-brand">Studio<span id="app-brand-dot">·</span>web</div>
+        <div class="brand-lockup">
+          <div id="app-brand">Studio<span id="app-brand-dot">·</span>web</div>
+          <span class="alpha-badge">Alpha</span>
+        </div>
+        <nav id="file-actions" aria-label="Project files">
+          <button id="open-model-btn" type="button">Open GLB</button>
+          <button id="open-project-btn" type="button">Open project</button>
+          <button id="save-project-btn" type="button" disabled>Save project</button>
+          <input id="model-file-input" type="file" accept=".glb,model/gltf-binary" hidden />
+          <input id="project-file-input" type="file" accept=".studio.json,application/json" hidden />
+        </nav>
         <div id="toolbar"></div>
+        <div id="app-status" role="status" aria-live="polite">Ready</div>
       </header>
 
       <div id="app-body">
-        <div class="sidebar sidebar-left">
-          <aside id="panel-library" class="panel"></aside>
-          <aside id="panel-ai" class="panel"></aside>
-          <aside id="panel-account" class="panel"></aside>
-        </div>
+        <aside class="sidebar sidebar-left" aria-label="Assets and workflow">
+          <section id="panel-start" class="panel workflow-card" aria-labelledby="start-title">
+            <p class="eyebrow">Product-shot workflow</p>
+            <h1 id="start-title">Turn a 3D asset into a finished visual.</h1>
+            <ol class="workflow-steps">
+              <li><span>1</span> Choose or open an asset</li>
+              <li><span>2</span> Adjust its material and view</li>
+              <li><span>3</span> Export a polished result</li>
+            </ol>
+          </section>
+          <section id="panel-library" class="panel" aria-labelledby="library-title">
+            <h2 id="library-title">Asset library</h2>
+          </section>
+          <aside id="panel-ai" hidden></aside>
+          <aside id="panel-account" hidden></aside>
+        </aside>
 
-        <div class="viewport-wrap">
-          <canvas id="viewport"></canvas>
-          <div id="viewport-hint" class="viewport-hint" data-state="idle">Drop a .glb, or pick one from the library</div>
-        </div>
+        <main class="viewport-wrap" aria-label="3D viewport">
+          <canvas id="viewport" aria-label="Interactive 3D preview">Your browser needs WebGL to show the 3D preview.</canvas>
+          <div id="viewport-hint" class="viewport-hint" data-state="idle">
+            <strong>Start with a GLB</strong>
+            <span>Drop it here, open a file, or choose from the library.</span>
+            <button id="empty-open-model-btn" type="button">Open a GLB</button>
+          </div>
+          <div id="viewport-error" role="alert" hidden></div>
+        </main>
 
-        <div class="sidebar sidebar-right">
-          <aside id="panel-outliner" class="panel"></aside>
-          <aside id="panel-material" class="panel"></aside>
-        </div>
+        <aside class="sidebar sidebar-right" aria-label="Scene inspector">
+          <section id="panel-outliner" class="panel" aria-labelledby="outliner-title"></section>
+          <section id="panel-material" class="panel" aria-labelledby="material-title"></section>
+        </aside>
       </div>
 
-      <footer id="panel-timeline" class="panel"></footer>
+      <footer id="panel-timeline" class="panel" aria-label="Animation timeline"></footer>
     </div>
     <script type="module" src="/src/app/main.ts"></script>
   </body>

@@ -1,5 +1,6 @@
 import type { TelemetryEvent } from './types';
-import { safeGet, safeSet } from './storage';
+import { safeGet, safeRemove, safeSet } from './storage';
+import { buildTelemetryPayload } from './telemetry-payload';
 
 // Opt-in, anonymised, fire-and-forget telemetry. The original SPEC's acceptance check was
 // trivially passable by a permanently no-op track() — it only asserted 0 requests before/after
@@ -10,16 +11,9 @@ import { safeGet, safeSet } from './storage';
 const OPT_IN_KEY = 'telemetry-opt-in';
 const ANON_ID_KEY = 'telemetry-anon-id';
 
-/** No real telemetry backend exists today (SPEC §3 cut list) — this relative path exists so a
- *  test can route it locally; it deliberately does not depend on any env var, so behaviour is
- *  identical with 0 env vars set. VITE_TELEMETRY_ENDPOINT, if a caller ever sets it, overrides
- *  the destination for a future real backend. */
+/** No real telemetry backend exists today. Keep the destination same-origin so a build-time
+ *  setting cannot redirect consented data to an arbitrary third party. */
 const DEFAULT_ENDPOINT = '/api/telemetry';
-
-function resolveEndpoint(): string {
-  const configured = import.meta.env.VITE_TELEMETRY_ENDPOINT;
-  return configured && configured.length > 0 ? configured : DEFAULT_ENDPOINT;
-}
 
 let optInMemo: boolean | null = null;
 
@@ -33,6 +27,7 @@ export function getTelemetryOptIn(): boolean {
 export function setTelemetryOptIn(optIn: boolean): void {
   optInMemo = optIn;
   safeSet(OPT_IN_KEY, optIn ? 'true' : 'false');
+  if (!optIn) safeRemove(ANON_ID_KEY);
 }
 
 function getOrCreateAnonId(): string {
@@ -46,39 +41,17 @@ function getOrCreateAnonId(): string {
   return generated;
 }
 
-const EVENT_TYPES = [
-  'asset_loaded',
-  'effect_applied',
-  'export_completed',
-  'tool_used',
-  'session_started',
-  'pro_cta_clicked',
-] as const;
-
-function isValidTelemetryEvent(event: TelemetryEvent): boolean {
-  return (
-    typeof event === 'object' &&
-    event !== null &&
-    (EVENT_TYPES as readonly string[]).includes((event as { type?: unknown }).type as string)
-  );
-}
-
 /** Never throws, never blocks the caller — fire-and-forget. No-op until the user has opted in.
  *  Attaches its own internally generated anonymous UUID; callers never supply one
  *  (reviews/codex_review_S5.md:14). No PII: no filenames, no email, no user id, no free text,
  *  no query-string URLs — only the typed event shape plus anonId + a timestamp. */
 export function track(event: TelemetryEvent): void {
   if (!getTelemetryOptIn()) return;
-  if (!isValidTelemetryEvent(event)) return;
-
-  const payload = {
-    ...event,
-    anonId: getOrCreateAnonId(),
-    ts: Date.now(),
-  };
+  const payload = buildTelemetryPayload(event, getOrCreateAnonId(), Date.now());
+  if (!payload) return;
 
   try {
-    void fetch(resolveEndpoint(), {
+    void fetch(DEFAULT_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),

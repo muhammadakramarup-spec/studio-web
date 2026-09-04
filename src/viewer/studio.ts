@@ -85,6 +85,8 @@ export interface StudioHandle {
   demetalizeActive(): void;
 
   exportPNG(res: ExportResolution): Promise<Blob>;
+  /** Export only the active authored model, excluding the studio floor, lights, and helpers. */
+  exportActiveGLB(): Promise<Blob>;
   exportGLB(): Promise<Blob>;
   exportGLTF(): Promise<Blob>;
   /** A Blender-friendly ZIP containing GLB, GLTF, and import instructions. */
@@ -252,12 +254,10 @@ export function createStudio(opts: StudioOptions): StudioHandle {
   scene.add(pivot);
 
   // ----------------------------------------------------------------- loaders
-  // Draco decoder served from the already-installed three package under
-  // node_modules rather than a CDN (SPEC.md risk 3 mitigation) — no file may
-  // be added outside src/viewer/** (SCOPE.md #20 ownership), and this path is
-  // Vite-dev-served without needing a public/ asset.
+  // Keep the decoder same-origin and inside public/ so the production build contains it.
+  // A /node_modules path only works on Vite's development server.
   const draco = new DRACOLoader();
-  draco.setDecoderPath("/node_modules/three/examples/jsm/libs/draco/gltf/");
+  draco.setDecoderPath("/vendor/draco/");
   draco.setDecoderConfig({ type: "wasm" });
   const gltfLoader = new GLTFLoader();
   gltfLoader.setDRACOLoader(draco);
@@ -644,6 +644,34 @@ export function createStudio(opts: StudioOptions): StudioHandle {
     if (activeEntry && activeEntry.root.parent) pivot.remove(activeEntry.root);
   }
 
+  function disposeObjectResources(root: THREE.Object3D): void {
+    const geometries = new Set<THREE.BufferGeometry>();
+    const materials = new Set<THREE.Material>();
+    const textures = new Set<THREE.Texture>();
+    root.traverse((node) => {
+      const mesh = node as THREE.Mesh;
+      if (!(mesh as any).isMesh) return;
+      if (mesh.geometry) geometries.add(mesh.geometry);
+      const meshMaterials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+      for (const material of meshMaterials) {
+        if (!material) continue;
+        materials.add(material);
+        for (const value of Object.values(material)) {
+          if (value && typeof value === "object" && (value as THREE.Texture).isTexture) {
+            textures.add(value as THREE.Texture);
+          }
+        }
+      }
+    });
+    for (const geometry of geometries) geometry.dispose();
+    for (const material of materials) material.dispose();
+    for (const texture of textures) {
+      const image = texture.image as { close?: () => void } | undefined;
+      image?.close?.();
+      texture.dispose();
+    }
+  }
+
   function selectModel(id: string): void {
     const entry = models.get(id);
     if (!entry) return;
@@ -660,10 +688,7 @@ export function createStudio(opts: StudioOptions): StudioHandle {
     if (!entry) return;
     if (entry === activeEntry && entry.root.parent) pivot.remove(entry.root);
     models.delete(id);
-    entry.root.traverse((n) => {
-      const mesh = n as THREE.Mesh;
-      if ((mesh as any).isMesh && mesh.geometry) mesh.geometry.dispose();
-    });
+    disposeObjectResources(entry.root);
     if (entry === activeEntry) {
       activeEntry = null;
       const remaining = [...models.values()];
@@ -829,6 +854,16 @@ export function createStudio(opts: StudioOptions): StudioHandle {
     const result = await exporter.parseAsync(scene, { binary: true, embedImages: true });
     if (!(result instanceof ArrayBuffer)) {
       throw new Error("GLB export returned JSON data unexpectedly");
+    }
+    return new Blob([result], { type: "model/gltf-binary" });
+  }
+
+  async function exportActiveGLB(): Promise<Blob> {
+    if (!activeEntry) throw new Error("Load a model before saving a project");
+    const exporter = new GLTFExporter();
+    const result = await exporter.parseAsync(activeEntry.root, { binary: true, embedImages: true });
+    if (!(result instanceof ArrayBuffer)) {
+      throw new Error("Active model export returned JSON data unexpectedly");
     }
     return new Blob([result], { type: "model/gltf-binary" });
   }
@@ -1000,14 +1035,10 @@ export function createStudio(opts: StudioOptions): StudioHandle {
     controls.dispose();
     renderer.dispose();
     if (envRT) envRT.dispose();
+    if (hdrTexture) hdrTexture.dispose();
     if (framingRT) framingRT.dispose();
     pmrem.dispose();
-    models.forEach((entry) => {
-      entry.root.traverse((n) => {
-        const mesh = n as THREE.Mesh;
-        if ((mesh as any).isMesh && mesh.geometry) mesh.geometry.dispose();
-      });
-    });
+    models.forEach((entry) => disposeObjectResources(entry.root));
     models.clear();
   }
 
@@ -1121,6 +1152,7 @@ export function createStudio(opts: StudioOptions): StudioHandle {
     demetalizeActive,
 
     exportPNG,
+    exportActiveGLB,
     exportGLB,
     exportGLTF,
     exportBlenderPackage,

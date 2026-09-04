@@ -19,3 +19,12 @@ export function safeSet(key: string, value: string): boolean {
     return false;
   }
 }
+
+export function safeRemove(key: string): boolean {
+  try {
+    localStorage.removeItem(key);
+    return true;
+  } catch {
+    return false;
+  }
+}

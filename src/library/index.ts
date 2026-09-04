@@ -27,6 +27,7 @@ export interface LibraryPanelHandle {
 }
 
 const DEFAULT_MANIFEST_URL = "/assets/manifest.json";
+const MAX_VISIBLE_TILES = 96;
 
 export function mountLibraryPanel(container: HTMLElement, options: LibraryPanelOptions): LibraryPanelHandle {
   let manifest: LibraryManifest | null = options.manifest ?? null;
@@ -41,6 +42,7 @@ export function mountLibraryPanel(container: HTMLElement, options: LibraryPanelO
 
   const kindSelect = document.createElement("select");
   kindSelect.className = "library-panel__kind";
+  kindSelect.setAttribute("aria-label", "Asset type");
   for (const k of ["all", "model", "hdri", "material"]) {
     const opt = document.createElement("option");
     opt.value = k;
@@ -50,11 +52,13 @@ export function mountLibraryPanel(container: HTMLElement, options: LibraryPanelO
 
   const categorySelect = document.createElement("select");
   categorySelect.className = "library-panel__category";
+  categorySelect.setAttribute("aria-label", "Asset category");
 
   const searchInput = document.createElement("input");
   searchInput.type = "text";
   searchInput.placeholder = "Search…";
   searchInput.className = "library-panel__search";
+  searchInput.setAttribute("aria-label", "Search assets");
 
   controls.appendChild(kindSelect);
   controls.appendChild(categorySelect);
@@ -62,10 +66,14 @@ export function mountLibraryPanel(container: HTMLElement, options: LibraryPanelO
 
   const grid = document.createElement("div");
   grid.className = "library-panel__grid";
+  grid.setAttribute("role", "grid");
+  grid.setAttribute("aria-label", "3D asset library");
 
   const status = document.createElement("div");
   status.className = "library-panel__status";
   status.textContent = "Loading library…";
+  status.setAttribute("role", "status");
+  status.setAttribute("aria-live", "polite");
 
   container.appendChild(controls);
   container.appendChild(status);
@@ -104,22 +112,30 @@ export function mountLibraryPanel(container: HTMLElement, options: LibraryPanelO
       return;
     }
     const filtered = manifest.assets.filter(matchesFilter);
-    status.textContent = `${filtered.length} of ${manifest.assets.length} assets`;
+    const visible = filtered.slice(0, MAX_VISIBLE_TILES);
+    status.textContent = filtered.length > MAX_VISIBLE_TILES
+      ? `Showing ${visible.length} of ${filtered.length} matches — narrow the search to see more`
+      : `${filtered.length} of ${manifest.assets.length} assets`;
 
     const frag = document.createDocumentFragment();
-    for (const asset of filtered) {
+    for (const [index, asset] of visible.entries()) {
       const tile = document.createElement("button");
       tile.type = "button";
       tile.className = "library-panel__tile";
       tile.dataset.assetId = asset.id;
+      tile.setAttribute("role", "gridcell");
+      tile.setAttribute("aria-label", `${asset.name}, ${asset.category}, ${asset.licence}`);
+      tile.tabIndex = index === 0 ? 0 : -1;
 
       const img = document.createElement("img");
       img.className = "library-panel__thumb";
       img.loading = "lazy";
       img.width = 96;
       img.height = 96;
-      img.src = asset.thumbnailUrl;
-      img.alt = asset.name;
+      // Keep the static studio private by default: never make a visitor's browser contact an
+      // upstream thumbnail CDN. Bundled/same-origin thumbnails are safe to render.
+      if (asset.thumbnailUrl.startsWith("/")) img.src = asset.thumbnailUrl;
+      img.alt = "";
 
       const label = document.createElement("div");
       label.className = "library-panel__label";
@@ -134,6 +150,18 @@ export function mountLibraryPanel(container: HTMLElement, options: LibraryPanelO
       tile.appendChild(badge);
       tile.addEventListener("click", () => {
         options.onAssetPicked(asset);
+      });
+      tile.addEventListener("keydown", (event) => {
+        if (!["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"].includes(event.key)) return;
+        event.preventDefault();
+        const tiles = Array.from(grid.querySelectorAll<HTMLButtonElement>(".library-panel__tile"));
+        const current = tiles.indexOf(tile);
+        const columns = 2;
+        const delta = event.key === "ArrowLeft" ? -1 : event.key === "ArrowRight" ? 1 : event.key === "ArrowUp" ? -columns : columns;
+        const next = tiles[Math.max(0, Math.min(tiles.length - 1, current + delta))];
+        if (!next) return;
+        for (const item of tiles) item.tabIndex = item === next ? 0 : -1;
+        next.focus();
       });
 
       frag.appendChild(tile);
@@ -172,6 +200,7 @@ export function mountLibraryPanel(container: HTMLElement, options: LibraryPanelO
 
   const initialLoad = load().catch((err) => {
     status.textContent = `Failed to load library: ${(err as Error).message}`;
+    status.setAttribute("role", "alert");
   });
   void initialLoad;
 
