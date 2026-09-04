@@ -9,6 +9,7 @@ services.
 - Public repository: `https://github.com/muhammadakramarup-spec/studio-web`
 - Live product: `https://studio-web-6ms.pages.dev/`
 - Detailed execution plan: `docs/superpowers/plans/2026-09-04-claude-design-product-improvement.md`
+- Current execution handoff: `docs/handoffs/2026-09-04-claude-design-product-v1-execution-handoff.md`
 - Product/deployment handoff: `docs/handoffs/2026-09-04-full-control-development-handoff.md`
 - Current shell handoff: `docs/handoffs/2026-09-04-studio-shell-1.0.md`
 - Research and monetization plan: `docs/superpowers/plans/2026-09-04-studio-web-research-and-monetization.md`
@@ -56,4 +57,3 @@ states, documentation, tests, and commercially useful product functions.
 Follow the detailed plan. If evidence changes a priority, record the decision before changing scope.
 Ask the owner only when a choice would spend money, expose private data, grant external permissions,
 or materially change the product's target customer.
-
