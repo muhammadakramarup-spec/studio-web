@@ -1,0 +1,9 @@
+
+Running 5 tests using 1 worker
+
+[1/5] tests\s3.spec.ts:8:3 › S3 Library manifest › manifest.assets root shape, counts, and licence coverage
+[2/5] tests\s3.spec.ts:30:3 › S3 Library manifest › both S6-contractual asset ids are present (decision #16)
+[3/5] tests\s3.spec.ts:52:3 › S3 Library manifest › 20 kit-level thumbnails: 256x256, <=50KB each
+[4/5] tests\s3.spec.ts:83:3 › S3 Library GLB spot-check › ≥20 GLBs across ≥10 kits open in GLTFLoader with 0 console errors
+[5/5] tests\s3.spec.ts:134:3 › S3 LibraryPanel › renders manifest grid and emits onAssetPicked on tile click
+  5 passed (26.1s)

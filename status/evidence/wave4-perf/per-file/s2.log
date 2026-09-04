@@ -1,0 +1,44 @@
+
+Running 9 tests using 1 worker
+
+[1/9] tests\s2.spec.ts:29:1 › 1a. history stack in isolation: execute/undo/redo a trivial op with no editor wiring
+tests\s2.spec.ts:29:1 › 1a. history stack in isolation: execute/undo/redo a trivial op with no editor wiring
+MEASURED history-isolation: afterExecute=5 afterUndo=0 afterRedo=5
+
+[2/9] tests\s2.spec.ts:67:1 › 1. undo/redo: 50-op canonical-state round trip (undo x50, redo x50)
+tests\s2.spec.ts:67:1 › 1. undo/redo: 50-op canonical-state round trip (undo x50, redo x50)
+MEASURED undo-redo-50: undoCount=50 redoCount=50 undoMatchesInitial=true redoMatchesPreUndo=true initialObjs=1 afterOpsObjs=3
+
+[3/9] tests\s2.spec.ts:191:1 › 2. selection: outliner 5/5, row-select 5/5, canvas-pick 3/3, blank -> null
+tests\s2.spec.ts:191:1 › 2. selection: outliner 5/5, row-select 5/5, canvas-pick 3/3, blank -> null
+MEASURED selection: outlinerSetMatches=true rowSelectHits=5/5 canvasPickHits=3/3 blankReturnsNull=true
+
+[4/9] tests\s2.spec.ts:291:1 › 3. gizmo: translate/rotate/scale deltas within 1e-3 of an independent oracle + canvas changed()
+tests\s2.spec.ts:291:1 › 3. gizmo: translate/rotate/scale deltas within 1e-3 of an independent oracle + canvas changed()
+MEASURED gizmo-translate: pos.x=0.6994614872324979 expected=0.6994614872324978 moved=8.07%
+
+MEASURED gizmo-rotate: rot.x=-2.7978459489299916 expected=-2.7978459489299916 moved=6.02%
+
+MEASURED gizmo-scale: scale.x=2 expected=2.0000000000000004 moved=3.75%
+
+[5/9] tests\s2.spec.ts:452:1 › 4. add: light/camera/primitive each +1 object count; light+primitive pass changed()
+tests\s2.spec.ts:452:1 › 4. add: light/camera/primitive each +1 object count; light+primitive pass changed()
+MEASURED add: lightDelta=1 lightMoved=13.20% meshDelta=1 primMoved=5.68% camDelta=1
+
+[6/9] tests\s2.spec.ts:550:1 › 5. material: roughness drag passes changed(); reset-to-original passes same()
+tests\s2.spec.ts:550:1 › 5. material: roughness drag passes changed(); reset-to-original passes same()
+MEASURED material: editMoved=9.28% resetMean=0.000
+
+[7/9] tests\s2.spec.ts:629:1 › 6. mirror: triangle count exactly 2x; mirrored bbox negated within 1e-4
+tests\s2.spec.ts:629:1 › 6. mirror: triangle count exactly 2x; mirrored bbox negated within 1e-4
+MEASURED mirror: triBefore=12 triAfter=24 (x2) triAfterUndo=12 negatedMin=true negatedMax=true
+
+[8/9] tests\s2.spec.ts:683:1 › 7. array: count = N total visible instances incl. source; changed() between count 1 and 5
+tests\s2.spec.ts:683:1 › 7. array: count = N total visible instances incl. source; changed() between count 1 and 5
+MEASURED array: countAt1=1 sceneCountAt1=1 countAt5=5 sceneCountAt5=5 moved(1->5)=5.45%
+
+[9/9] tests\s2.spec.ts:764:1 › 8. bloom: toggling on passes changed() restricted to the emissive object's screen bounds
+tests\s2.spec.ts:764:1 › 8. bloom: toggling on passes changed() restricted to the emissive object's screen bounds
+MEASURED bloom: movedInBounds=94.32% region=256x256 bloomEnabled=true
+
+  9 passed (22.0s)

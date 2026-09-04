@@ -1,0 +1,19 @@
+=== GLB count before fixture ===
+0
+=== HDR count before fixture ===
+0
+=== public/assets listing ===
+total 1036
+drwxr-xr-x 1 muazz 197609       0 Sep  5 00:58 .
+drwxr-xr-x 1 muazz 197609       0 Sep  5 00:58 ..
+drwxr-xr-x 1 muazz 197609       0 Sep  5 00:58 kenney
+-rw-r--r-- 1 muazz 197609 1054153 Sep  5 00:58 manifest.json
+=== worktree public/assets GLB count ===
+2268
+=== worktree public/assets HDR count ===
+12
+=== worktree public/assets top dirs ===
+hdri
+kenney
+manifest.json
+77M	/c/3D-Studio/02_projects/studio-web/.worktrees/claude-design-product-v1/public/assets

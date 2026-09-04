@@ -1,0 +1,663 @@
+{
+  "generatedAt": "2026-09-04T20:18:13.893Z",
+  "baseUrl": "http://localhost:4175",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "representativeAssets": {
+    "smallest": {
+      "id": "kenney/castle-kit/ground",
+      "kind": "model",
+      "name": "Ground",
+      "source": "kenney",
+      "licence": "CC0",
+      "sourceUrl": "https://kenney.nl/assets/castle-kit",
+      "category": "castle-kit",
+      "triangles": 2,
+      "fileUrl": "/assets/kenney/castle-kit/ground.glb",
+      "fileBytes": 1788,
+      "thumbnailUrl": "/assets/kenney/thumbs/castle-kit.png"
+    },
+    "median": {
+      "id": "kenney/fantasy-town-kit/wall-wood-rounded",
+      "kind": "model",
+      "name": "Wall Wood Rounded",
+      "source": "kenney",
+      "licence": "CC0",
+      "sourceUrl": "https://kenney.nl/assets/fantasy-town-kit",
+      "category": "fantasy-town-kit",
+      "triangles": 136,
+      "fileUrl": "/assets/kenney/fantasy-town-kit/wall-wood-rounded.glb",
+      "fileBytes": 12632,
+      "thumbnailUrl": "/assets/kenney/thumbs/fantasy-town-kit.png"
+    },
+    "largest": {
+      "id": "kenney/city-kit-commercial/building-j",
+      "kind": "model",
+      "name": "Building J",
+      "source": "kenney",
+      "licence": "CC0",
+      "sourceUrl": "https://kenney.nl/assets/city-kit-commercial",
+      "category": "city-kit-commercial",
+      "triangles": 5246,
+      "fileUrl": "/assets/kenney/city-kit-commercial/building-j.glb",
+      "fileBytes": 440652,
+      "thumbnailUrl": "/assets/kenney/thumbs/city-kit-commercial.png"
+    }
+  },
+  "coldLoad": {
+    "wallMs": {
+      "runs": [
+        745,
+        228,
+        195
+      ],
+      "median": 228,
+      "min": 195,
+      "max": 745,
+      "spread": 550
+    },
+    "navDurationMs": {
+      "runs": [
+        371.09999999962747,
+        194.19999999925494,
+        161.40000000037253
+      ],
+      "median": 194.19999999925494,
+      "min": 161.40000000037253,
+      "max": 371.09999999962747,
+      "spread": 209.69999999925494
+    },
+    "raw": [
+      {
+        "wallMs": 745,
+        "navTiming": {
+          "domContentLoaded": 359.69999999925494,
+          "loadEvent": 371.09999999962747,
+          "duration": 371.09999999962747
+        }
+      },
+      {
+        "wallMs": 228,
+        "navTiming": {
+          "domContentLoaded": 180.30000000074506,
+          "loadEvent": 194.19999999925494,
+          "duration": 194.19999999925494
+        }
+      },
+      {
+        "wallMs": 195,
+        "navTiming": {
+          "domContentLoaded": 149.80000000074506,
+          "loadEvent": 161.40000000037253,
+          "duration": 161.40000000037253
+        }
+      }
+    ]
+  },
+  "firstUsefulRender": {
+    "smallest": {
+      "asset": {
+        "id": "kenney/castle-kit/ground",
+        "name": "Ground",
+        "triangles": 2,
+        "fileBytes": 1788
+      },
+      "clickToLoadedMs": {
+        "runs": [
+          393,
+          176,
+          183
+        ],
+        "median": 183,
+        "min": 176,
+        "max": 393,
+        "spread": 217
+      },
+      "stats": [
+        {
+          "tris": 2,
+          "fps": 27,
+          "rendererCalls": 2,
+          "rendererTriangles": 66
+        },
+        {
+          "tris": 2,
+          "fps": 0,
+          "rendererCalls": 2,
+          "rendererTriangles": 66
+        },
+        {
+          "tris": 2,
+          "fps": 0,
+          "rendererCalls": 2,
+          "rendererTriangles": 66
+        }
+      ]
+    },
+    "median": {
+      "asset": {
+        "id": "kenney/fantasy-town-kit/wall-wood-rounded",
+        "name": "Wall Wood Rounded",
+        "triangles": 136,
+        "fileBytes": 12632
+      },
+      "clickToLoadedMs": {
+        "runs": [
+          178,
+          186,
+          187
+        ],
+        "median": 186,
+        "min": 178,
+        "max": 187,
+        "spread": 9
+      },
+      "stats": [
+        {
+          "tris": 136,
+          "fps": 0,
+          "rendererCalls": 2,
+          "rendererTriangles": 200
+        },
+        {
+          "tris": 136,
+          "fps": 0,
+          "rendererCalls": 2,
+          "rendererTriangles": 200
+        },
+        {
+          "tris": 136,
+          "fps": 0,
+          "rendererCalls": 2,
+          "rendererTriangles": 200
+        }
+      ]
+    },
+    "largest": {
+      "asset": {
+        "id": "kenney/city-kit-commercial/building-j",
+        "name": "Building J",
+        "triangles": 5246,
+        "fileBytes": 440652
+      },
+      "clickToLoadedMs": {
+        "runs": [
+          195,
+          199,
+          197
+        ],
+        "median": 197,
+        "min": 195,
+        "max": 199,
+        "spread": 4
+      },
+      "stats": [
+        {
+          "tris": 5246,
+          "fps": 0,
+          "rendererCalls": 2,
+          "rendererTriangles": 5310
+        },
+        {
+          "tris": 5246,
+          "fps": 0,
+          "rendererCalls": 2,
+          "rendererTriangles": 5310
+        },
+        {
+          "tris": 5246,
+          "fps": 0,
+          "rendererCalls": 2,
+          "rendererTriangles": 5310
+        }
+      ]
+    }
+  },
+  "orbitFps": {
+    "runs": [
+      60,
+      60,
+      60
+    ],
+    "median": 60,
+    "min": 60,
+    "max": 60,
+    "spread": 0
+  },
+  "memory": {
+    "beforeBytes": {
+      "runs": [
+        9039879,
+        8999583,
+        9281867
+      ],
+      "median": 9039879,
+      "min": 8999583,
+      "max": 9281867,
+      "spread": 282284
+    },
+    "afterBytes": {
+      "runs": [
+        9601424,
+        9588416,
+        9542900
+      ],
+      "median": 9588416,
+      "min": 9542900,
+      "max": 9601424,
+      "spread": 58524
+    },
+    "deltaBytes": {
+      "runs": [
+        561545,
+        588833,
+        261033
+      ],
+      "median": 561545,
+      "min": 261033,
+      "max": 588833,
+      "spread": 327800
+    },
+    "raw": [
+      {
+        "before": 9039879,
+        "after": 9601424,
+        "deltaBytes": 561545
+      },
+      {
+        "before": 8999583,
+        "after": 9588416,
+        "deltaBytes": 588833
+      },
+      {
+        "before": 9281867,
+        "after": 9542900,
+        "deltaBytes": 261033
+      }
+    ]
+  },
+  "exports": {
+    "summary": {
+      "PNG": {
+        "ms": {
+          "runs": [
+            345,
+            192,
+            195
+          ],
+          "median": 195,
+          "min": 192,
+          "max": 345,
+          "spread": 153
+        },
+        "bytes": {
+          "runs": [
+            444319,
+            444319,
+            444319
+          ],
+          "median": 444319,
+          "min": 444319,
+          "max": 444319,
+          "spread": 0
+        },
+        "raw": [
+          {
+            "ms": 345,
+            "bytes": 444319,
+            "dims": {
+              "width": 2048,
+              "height": 2048
+            }
+          },
+          {
+            "ms": 192,
+            "bytes": 444319,
+            "dims": {
+              "width": 2048,
+              "height": 2048
+            }
+          },
+          {
+            "ms": 195,
+            "bytes": 444319,
+            "dims": {
+              "width": 2048,
+              "height": 2048
+            }
+          }
+        ]
+      },
+      "GLB": {
+        "ms": {
+          "runs": [
+            130,
+            118,
+            211
+          ],
+          "median": 130,
+          "min": 118,
+          "max": 211,
+          "spread": 93
+        },
+        "bytes": {
+          "runs": [
+            461900,
+            461900,
+            461900
+          ],
+          "median": 461900,
+          "min": 461900,
+          "max": 461900,
+          "spread": 0
+        },
+        "raw": [
+          {
+            "ms": 130,
+            "bytes": 461900
+          },
+          {
+            "ms": 118,
+            "bytes": 461900
+          },
+          {
+            "ms": 211,
+            "bytes": 461900
+          }
+        ]
+      },
+      "GLTF": {
+        "ms": {
+          "runs": [
+            139,
+            110,
+            109
+          ],
+          "median": 110,
+          "min": 109,
+          "max": 139,
+          "spread": 30
+        },
+        "bytes": {
+          "runs": [
+            618505,
+            618505,
+            618505
+          ],
+          "median": 618505,
+          "min": 618505,
+          "max": 618505,
+          "spread": 0
+        },
+        "raw": [
+          {
+            "ms": 139,
+            "bytes": 618505
+          },
+          {
+            "ms": 110,
+            "bytes": 618505
+          },
+          {
+            "ms": 109,
+            "bytes": 618505
+          }
+        ]
+      },
+      "Blender ZIP": {
+        "ms": {
+          "runs": [
+            378,
+            136,
+            131
+          ],
+          "median": 136,
+          "min": 131,
+          "max": 378,
+          "spread": 247
+        },
+        "bytes": {
+          "runs": [
+            1082444,
+            1082444,
+            1082444
+          ],
+          "median": 1082444,
+          "min": 1082444,
+          "max": 1082444,
+          "spread": 0
+        },
+        "raw": [
+          {
+            "ms": 378,
+            "bytes": 1082444
+          },
+          {
+            "ms": 136,
+            "bytes": 1082444
+          },
+          {
+            "ms": 131,
+            "bytes": 1082444
+          }
+        ]
+      },
+      "Turntable": {
+        "ms": {
+          "runs": [
+            969,
+            1235,
+            1256
+          ],
+          "median": 1235,
+          "min": 969,
+          "max": 1256,
+          "spread": 287
+        },
+        "bytes": {
+          "runs": [
+            6253518,
+            6253518,
+            6253518
+          ],
+          "median": 6253518,
+          "min": 6253518,
+          "max": 6253518,
+          "spread": 0
+        },
+        "raw": [
+          {
+            "ms": 969,
+            "bytes": 6253518
+          },
+          {
+            "ms": 1235,
+            "bytes": 6253518
+          },
+          {
+            "ms": 1256,
+            "bytes": 6253518
+          }
+        ]
+      }
+    },
+    "turntableChecks": [
+      {
+        "runIndex": 0,
+        "entryCount": 26,
+        "frameCount": 24,
+        "allEntryNames": [
+          "frame_0001.png",
+          "frame_0002.png",
+          "frame_0003.png",
+          "frame_0004.png",
+          "frame_0005.png",
+          "frame_0006.png",
+          "frame_0007.png",
+          "frame_0008.png",
+          "frame_0009.png",
+          "frame_0010.png",
+          "frame_0011.png",
+          "frame_0012.png",
+          "frame_0013.png",
+          "frame_0014.png",
+          "frame_0015.png",
+          "frame_0016.png",
+          "frame_0017.png",
+          "frame_0018.png",
+          "frame_0019.png",
+          "frame_0020.png",
+          "frame_0021.png",
+          "frame_0022.png",
+          "frame_0023.png",
+          "frame_0024.png",
+          "studio-web-receipt.json",
+          "LICENCE.txt"
+        ],
+        "all1024": true,
+        "dims": [
+          {
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "width": 1024,
+            "height": 1024
+          }
+        ]
+      },
+      {
+        "runIndex": 1,
+        "entryCount": 26,
+        "frameCount": 24,
+        "allEntryNames": [
+          "frame_0001.png",
+          "frame_0002.png",
+          "frame_0003.png",
+          "frame_0004.png",
+          "frame_0005.png",
+          "frame_0006.png",
+          "frame_0007.png",
+          "frame_0008.png",
+          "frame_0009.png",
+          "frame_0010.png",
+          "frame_0011.png",
+          "frame_0012.png",
+          "frame_0013.png",
+          "frame_0014.png",
+          "frame_0015.png",
+          "frame_0016.png",
+          "frame_0017.png",
+          "frame_0018.png",
+          "frame_0019.png",
+          "frame_0020.png",
+          "frame_0021.png",
+          "frame_0022.png",
+          "frame_0023.png",
+          "frame_0024.png",
+          "studio-web-receipt.json",
+          "LICENCE.txt"
+        ],
+        "all1024": true,
+        "dims": [
+          {
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "width": 1024,
+            "height": 1024
+          }
+        ]
+      },
+      {
+        "runIndex": 2,
+        "entryCount": 26,
+        "frameCount": 24,
+        "allEntryNames": [
+          "frame_0001.png",
+          "frame_0002.png",
+          "frame_0003.png",
+          "frame_0004.png",
+          "frame_0005.png",
+          "frame_0006.png",
+          "frame_0007.png",
+          "frame_0008.png",
+          "frame_0009.png",
+          "frame_0010.png",
+          "frame_0011.png",
+          "frame_0012.png",
+          "frame_0013.png",
+          "frame_0014.png",
+          "frame_0015.png",
+          "frame_0016.png",
+          "frame_0017.png",
+          "frame_0018.png",
+          "frame_0019.png",
+          "frame_0020.png",
+          "frame_0021.png",
+          "frame_0022.png",
+          "frame_0023.png",
+          "frame_0024.png",
+          "studio-web-receipt.json",
+          "LICENCE.txt"
+        ],
+        "all1024": true,
+        "dims": [
+          {
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "width": 1024,
+            "height": 1024
+          },
+          {
+            "width": 1024,
+            "height": 1024
+          }
+        ]
+      }
+    ]
+  },
+  "autosave": {
+    "raw": [
+      {
+        "present": true,
+        "length": 41399,
+        "savedAt": "2026-09-04T20:18:04.275Z"
+      },
+      {
+        "present": true,
+        "length": 41399,
+        "savedAt": "2026-09-04T20:18:08.790Z"
+      },
+      {
+        "present": true,
+        "length": 41399,
+        "savedAt": "2026-09-04T20:18:12.894Z"
+      }
+    ],
+    "recordBytes": {
+      "runs": [
+        41399,
+        41399,
+        41399
+      ],
+      "median": 41399,
+      "min": 41399,
+      "max": 41399,
+      "spread": 0
+    }
+  }
+}

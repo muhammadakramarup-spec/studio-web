@@ -1,0 +1,16 @@
+=== dist file count ===
+2323
+=== *.map count (expect 0) ===
+0
+=== largest file ===
+1959488 dist/assets/hdri/autumn_forest_04.hdr
+1697028 dist/assets/hdri/small_hangar_01.hdr
+1686299 dist/assets/hdri/studio_small_03.hdr
+1676014 dist/assets/hdri/royal_esplanade.hdr
+1674694 dist/assets/hdri/sunflowers.hdr
+=== dist top-level asset sizes ===
+-rw-r--r-- 1 muazz 197609 754423 Sep  5 00:59 dist/assets/index-DaOQnR2w.js
+-rw-r--r-- 1 muazz 197609  10172 Sep  5 00:59 dist/assets/index-V8chZ5rB.css
+-rw-r--r-- 1 muazz 197609   3613 Sep  5 00:59 dist/index.html
+=== total dist size ===
+78M	dist

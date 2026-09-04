@@ -1,0 +1,8 @@
+=== studio-web-export-receipt occurrences ===
+1
+=== 0.1.0 occurrences near receipt/version context ===
+1
+=== package.json version ===
+0.1.0
+=== context snippet around studio-web-export-receipt ===
+ourceUrl,`assets[].sourceUrl ("${t.name}")`);return{format:"studio-web-export-receipt",version:1,app:{name:"Studio Web",version:i.appVersion},exp

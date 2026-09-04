@@ -1,0 +1,4 @@
+s1.spec.ts run 1: 5 passed, 1 failed (setRenderHook render-loop seam: rendersAfterNull=2, expected >=5)
+s1.spec.ts run 2 (rerun): 5 passed, 1 failed (same assertion: rendersAfterNull=2, expected >=5)
+s1.spec.ts run 3 (rerun2): 6 passed, 0 failed (rendersAfterNull=19, expected >=5)
+Conclusion: flaky/timing-sensitive test, not a deterministic regression. See Reliability findings section.
