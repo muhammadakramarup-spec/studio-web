@@ -972,8 +972,12 @@ async function buildProjectDocument(): Promise<ProjectDocumentV2 | null> {
 
 // Wraps buildProjectDocument for the autosaver only, so a successful capture can be timestamped
 // for the WebGL-context-loss message ("your work was autosaved at HH:MM") without the explicit
-// Save button's flow (which does not need that bookkeeping) sharing the same wrapper.
-async function captureForAutosave(): Promise<ProjectDocumentV2 | null> {
+// Save button's flow (which does not need that bookkeeping) sharing the same wrapper. Returns
+// "busy" (not null) while an export is rendering (D-2, status/warden-log.md "defect D-2 opened")
+// so createAutosaver re-arms the debounce instead of treating an in-progress export as "nothing
+// to save"; still returns null when no model is loaded.
+async function captureForAutosave(): Promise<ProjectDocumentV2 | null | "busy"> {
+  if (studio.debug.state().busy) return "busy";
   const doc = await buildProjectDocument();
   if (doc) lastAutosaveAt = new Date();
   return doc;

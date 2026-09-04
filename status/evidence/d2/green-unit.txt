@@ -1,0 +1,31 @@
+
+> studio-web@0.1.0 test:unit
+> node --test tests/unit/*.test.ts
+
+✔ planSequence samples over the max authored key time, not state.duration (1.9373ms)
+✔ planSequence on an empty timeline yields default-sweep with a full-length times array (0.1602ms)
+✔ planSequence uses the max key t even when keys live only on a non-pivot track (1.1099ms)
+✔ a busy capture re-arms the debounce and saves once the viewer is free (132.8309ms)
+✔ a null capture does not save and does not re-arm (94.2571ms)
+✔ dispose stops a pending busy retry (79.8017ms)
+✔ project round-trip preserves the active model, view, and timeline (2.7911ms)
+✔ project parser rejects unsupported versions and malformed model data (0.9243ms)
+✔ v2 round-trips scene objects, modifiers, asset identity, environment, and view (2.163ms)
+✔ committed v1 fixture parses and upgrades to v2 defaults (0.6421ms)
+✔ rejects version 3 as newer and version 0 or 'x' as not a project (1.2755ms)
+✔ rejects an hdri fileUrl outside /assets/ and a non-https sourceUrl (0.2812ms)
+✔ receipt carries app version, kind, ISO timestamp, frames, and CC0 asset provenance (2.0659ms)
+✔ licence text names the asset, its source URL, CC0 1.0, and the app version (0.2694ms)
+✔ receiptFiles yields studio-web-receipt.json and LICENCE.txt whose JSON parses back to the receipt (0.4949ms)
+✔ privacy guard rejects local paths and non-https sources (0.3538ms)
+✔ registry lists model then hdri, replaces on set, clears on null (0.2053ms)
+✔ telemetry payload keeps only the allowlisted fields for its event (1.2376ms)
+✔ telemetry payload rejects free text, non-finite durations, and unknown events (0.2011ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 450.9516

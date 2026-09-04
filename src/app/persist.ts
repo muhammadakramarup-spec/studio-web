@@ -89,7 +89,13 @@ export async function openRecoveryStore(): Promise<RecoveryStore | null> {
 
 export interface AutosaverOptions {
   store: RecoveryStore;
-  capture: () => Promise<ProjectDocumentV2 | null>;
+  /**
+   * Return the document to save, `null` when there is nothing to save (no model loaded), or the
+   * literal string `"busy"` when the app cannot capture right now (e.g. an export is rendering).
+   * `runSave` re-arms the debounce on `"busy"` instead of treating it as "nothing to save" — see
+   * D-2, status/warden-log.md "defect D-2 opened".
+   */
+  capture: () => Promise<ProjectDocumentV2 | null | "busy">;
   debounceMs?: number;
   onStatus?: (message: string) => void;
 }
@@ -122,12 +128,27 @@ export function createAutosaver(options: AutosaverOptions): Autosaver {
     }
   }
 
+  function armRetry(): void {
+    clearTimer();
+    timer = setTimeout(() => {
+      timer = null;
+      void runSave();
+    }, debounceMs);
+  }
+
   async function runSave(): Promise<void> {
     if (disposed || quotaExceeded) return;
-    let doc: ProjectDocumentV2 | null;
+    let doc: ProjectDocumentV2 | null | "busy";
     try {
       doc = await capture();
     } catch {
+      return;
+    }
+    // Re-check after the async capture: dispose()/quotaExceeded may have changed while it was in
+    // flight, and a "busy" result must not re-arm a timer past either of those.
+    if (disposed || quotaExceeded) return;
+    if (doc === "busy") {
+      armRetry();
       return;
     }
     if (!doc) return;
@@ -144,11 +165,7 @@ export function createAutosaver(options: AutosaverOptions): Autosaver {
 
   function markDirty(): void {
     if (disposed || quotaExceeded) return;
-    clearTimer();
-    timer = setTimeout(() => {
-      timer = null;
-      void runSave();
-    }, debounceMs);
+    armRetry();
   }
 
   async function flush(): Promise<void> {

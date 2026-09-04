@@ -1,0 +1,6 @@
+
+Running 2 tests using 1 worker
+
+[1/2] tests\studio-shell.spec.ts:3:1 › Studio Shell keeps the load-to-export workflow focused and discoverable
+[2/2] tests\studio-shell.spec.ts:45:1 › Studio Shell keeps the desktop toolbar readable without horizontal scrolling
+  2 passed (7.5s)
