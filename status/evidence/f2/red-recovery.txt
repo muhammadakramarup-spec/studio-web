@@ -1,0 +1,98 @@
+
+Running 4 tests using 1 worker
+
+[1/4] tests\project-recovery.spec.ts:25:1 › P1 persist round-trips a v2 document through IndexedDB across a reload
+  1) tests\project-recovery.spec.ts:25:1 › P1 persist round-trips a v2 document through IndexedDB across a reload 
+
+    Error: page.evaluate: TypeError: Failed to fetch dynamically imported module: http://localhost:5173/src/app/persist.ts
+
+      47 |   });
+      48 |
+    > 49 |   await page.evaluate(async (docArg) => {
+         |              ^
+      50 |     const persist = await import("/src/app/persist.ts");
+      51 |     const store = await persist.openRecoveryStore();
+      52 |     if (!store) throw new Error("recovery store unavailable");
+        at C:\3D-Studio\02_projects\studio-web\.worktrees\claude-design-product-v1\tests\project-recovery.spec.ts:49:14
+
+    Error Context: test-results\project-recovery-P1-persis-b2fb4-h-IndexedDB-across-a-reload\error-context.md
+
+
+[2/4] tests\project-recovery.spec.ts:80:1 › P2 editing then reload offers Restore and rebuilds the scene
+  2) tests\project-recovery.spec.ts:80:1 › P2 editing then reload offers Restore and rebuilds the scene 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('button', { name: 'Restore' })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for getByRole('button', { name: 'Restore' })
+
+
+      103 |   await page.reload();
+      104 |
+    > 105 |   await expect(page.getByRole("button", { name: "Restore" })).toBeVisible({ timeout: 10_000 });
+          |                                                               ^
+      106 |   await page.getByRole("button", { name: "Restore" }).click();
+      107 |
+      108 |   await expect(page.locator("#viewport-hint")).toHaveAttribute("data-state", "loaded", { timeout: 10_000 });
+        at C:\3D-Studio\02_projects\studio-web\.worktrees\claude-design-product-v1\tests\project-recovery.spec.ts:105:63
+
+    Error Context: test-results\project-recovery-P2-editin-74f78-tore-and-rebuilds-the-scene\error-context.md
+
+
+[3/4] tests\project-recovery.spec.ts:126:1 › P3 simulated context loss shows a recoverable message and clears on restore
+  3) tests\project-recovery.spec.ts:126:1 › P3 simulated context loss shows a recoverable message and clears on restore 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator:  locator('#viewport-error')
+    Expected: visible
+    Received: hidden
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('#viewport-error')
+        13 × locator resolved to <div hidden="" role="alert" id="viewport-error"></div>
+           - unexpected value "hidden"
+
+
+      137 |
+      138 |   const error = page.locator("#viewport-error");
+    > 139 |   await expect(error).toBeVisible({ timeout: 5_000 });
+          |                       ^
+      140 |   await expect(error).toContainText(/context lost/i);
+      141 |
+      142 |   await page.evaluate(() => {
+        at C:\3D-Studio\02_projects\studio-web\.worktrees\claude-design-product-v1\tests\project-recovery.spec.ts:139:23
+
+    Error Context: test-results\project-recovery-P3-simula-66f82-ssage-and-clears-on-restore\error-context.md
+
+
+[4/4] tests\project-recovery.spec.ts:152:1 › P4 a locally opened GLB never leaks its filename or path into the recovery record
+  4) tests\project-recovery.spec.ts:152:1 › P4 a locally opened GLB never leaks its filename or path into the recovery record 
+
+    Error: page.evaluate: TypeError: Failed to fetch dynamically imported module: http://localhost:5173/src/app/persist.ts
+
+      165 |   await page.waitForTimeout(3_000);
+      166 |
+    > 167 |   const recordText = await page.evaluate(async () => {
+          |                                 ^
+      168 |     const persist = await import("/src/app/persist.ts");
+      169 |     const store = await persist.openRecoveryStore();
+      170 |     if (!store) return null;
+        at C:\3D-Studio\02_projects\studio-web\.worktrees\claude-design-product-v1\tests\project-recovery.spec.ts:167:33
+
+    Error Context: test-results\project-recovery-P4-a-loca-bed85-th-into-the-recovery-record\error-context.md
+
+
+  4 failed
+    tests\project-recovery.spec.ts:25:1 › P1 persist round-trips a v2 document through IndexedDB across a reload 
+    tests\project-recovery.spec.ts:80:1 › P2 editing then reload offers Restore and rebuilds the scene 
+    tests\project-recovery.spec.ts:126:1 › P3 simulated context loss shows a recoverable message and clears on restore 
+    tests\project-recovery.spec.ts:152:1 › P4 a locally opened GLB never leaks its filename or path into the recovery record 

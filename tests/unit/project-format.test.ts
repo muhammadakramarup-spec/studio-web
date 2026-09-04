@@ -38,7 +38,14 @@ test("project round-trip preserves the active model, view, and timeline", async 
 
   const parsed = parseProjectDocument(JSON.stringify(document));
   assert.equal(parsed.format, "studio-web-project");
-  assert.equal(parsed.version, 1);
+  // Format v2 (see tests/unit/project-v2.test.ts): createProjectDocument now always stamps the
+  // current PROJECT_VERSION (2) on freshly created documents, and parseProjectDocument always
+  // returns the upgraded v2 shape — a document built moments ago from live app state is never
+  // "version 1" once it has round-tripped through the parser. Only a file actually saved under
+  // the old format (see tests/fixtures/project-v1.studio.json, pinned forever) still carries a
+  // literal version:1 on disk; parsing that also upgrades it to version 2 in memory (proven by
+  // the "committed v1 fixture parses and upgrades to v2 defaults" test).
+  assert.equal(parsed.version, 2);
   assert.equal(parsed.name, "Coffee table study");
   assert.deepEqual(parsed.viewer, viewer);
   assert.deepEqual(parsed.timeline, { duration: 6, fps: 30, tracks: [] });
@@ -57,8 +64,11 @@ test("project parser rejects unsupported versions and malformed model data", () 
     savedAt: "2026-09-04T12:00:00.000Z",
   });
 
+  // Format v2: version 2 is now the current, accepted version (PROJECT_VERSION), so the "needs a
+  // newer version" rejection now has to reach one version past it — 3, not 2 — to still exercise
+  // the same code path.
   assert.throws(
-    () => parseProjectDocument(JSON.stringify({ ...valid, version: 2 })),
+    () => parseProjectDocument(JSON.stringify({ ...valid, version: 3 })),
     /newer version of Studio Web/,
   );
   assert.throws(
