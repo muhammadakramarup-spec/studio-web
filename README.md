@@ -1,5 +1,12 @@
 # studio-web
 
+Public repository: <https://github.com/muhammadakramarup-spec/studio-web>
+
+Live application: <https://studio-web-6ms.pages.dev/>
+
+For Claude Design or Claude Code, start with `CLAUDE.md` and execute the linked step-by-step plan on
+the `claude/design-product-v1` branch.
+
 Free web 3D studio, built in one multi-agent session from the verified viewer in `reference/`.
 
 - `HANDOFF_OPUS.md` — start here. The one-day plan: Warden, six parallel silos, Codex CLI as developer + reviewer, assembly, ship.
