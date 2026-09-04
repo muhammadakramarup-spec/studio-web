@@ -158,3 +158,20 @@ The shared dev server on 5173 is stopped at Gate 3. The performance/reliability 
 from a clean clone in the session scratchpad and lets Playwright start and stop its own server;
 the accessibility/responsive QA agent serves the worktree's production build with
 `vite preview --port 4174` and stops it when done.
+
+## 2026-09-05 — Wave 4 accessibility/responsive QA accepted; defect D-2 opened
+
+`docs/qa/accessibility-responsive-qa.md`: 45 after-captures (7 states × 5 viewports + restore-prompt
+and context-lost), 15 of 35 before/after pairs above 1 % all explained (export-angle timing race,
+narrow-viewport scroll state, longer turntable status text), keyboard journey 10/10 with visible
+focus, contrast 0/12 failures, axe 2 critical (both pre-existing library-grid ARIA, 0 new), touch
+targets at 390×844: 43/139 under the product's 44 px floor and 17/139 under the WCAG 24 px floor
+(pre-existing, deferred to the visual waves).
+
+**Defect D-2 (new in this branch):** `createAutosaver` treats a `null` capture as "nothing to
+save". The shell's capture returns `null` while the viewer is exporting, so an edit followed
+within the 2 s debounce by an export is never autosaved until the next edit; Restore can then be
+missing after a reload. Fix assigned: capture may return `"busy"`, on which the autosaver re-arms
+the debounce; the shell returns `"busy"` instead of `null` when `studio.debug.state().busy`.
+Red evidence required from a Node unit test (fake store, short debounce) and a browser test that
+starts a 72-frame export straight after an edit. Runs after the performance QA releases port 5173.
