@@ -12,3 +12,6 @@ playwright-report/
 .worktrees/
 __pycache__/
 status/devserver.log
+
+# Raw export downloads captured by QA scripts (sizes are logged; the bytes are not history)
+status/evidence/**/downloads/

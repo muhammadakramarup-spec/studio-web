@@ -6,7 +6,11 @@
 // tests/s4.spec.ts, which import this module directly.
 
 import type { Channel, ChannelId, Keyframe, SampledFrame, Track, TimelineState } from "./types";
-import { ease } from "./easing";
+// Explicit .ts extension (tsconfig's allowImportingTsExtensions): required for this module to
+// resolve under plain `node --test` (tests/unit/export-plan.test.ts imports sampleState via
+// src/timeline/export-plan.ts's value import of this file) — Vite's browser bundler resolves the
+// extension-less form fine, but Node's own ESM loader does not.
+import { ease } from "./easing.ts";
 
 type Vec3 = [number, number, number];
 type Vec4 = [number, number, number, number];

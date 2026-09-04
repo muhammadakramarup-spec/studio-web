@@ -1,0 +1,6 @@
+s6.spec.ts run 1: 3 passed, 1 failed (avatar test lost browser execution context during navigation)
+s6.spec.ts run 2 (rerun): 4 passed, 0 failed
+Conclusion: matches the exact flake pattern already documented in status/baseline.md ("The first
+grouped S6 run passed three tests and lost the browser execution context during the avatar test
+navigation. A fresh isolated rerun passed all four"). Pre-existing, environment-level flake, not a
+Wave 3/4 regression.

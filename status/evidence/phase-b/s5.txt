@@ -1,0 +1,40 @@
+
+Running 8 tests using 1 worker
+
+[1/8] tests\s5.spec.ts:11:3 › S5 account/pro/ads/telemetry › 1. zero-env boot: 0 console errors from src/account/** while mounting every export
+tests\s5.spec.ts:11:3 › S5 account/pro/ads/telemetry › 1. zero-env boot: 0 console errors from src/account/** while mounting every export
+MEASURED zero-env boot: consoleErrors=0 pageErrors=0 status=signed-out isPro=false
+
+[2/8] tests\s5.spec.ts:41:3 › S5 account/pro/ads/telemetry › 2. signed-out auth panel: 'Sign in' affordance + Signed out text/testid in 1/1 zero-env loads
+tests\s5.spec.ts:41:3 › S5 account/pro/ads/telemetry › 2. signed-out auth panel: 'Sign in' affordance + Signed out text/testid in 1/1 zero-env loads
+MEASURED signed-out panel: statusText="Signed out" statusAttr="signed-out" signInText="Sign in"
+
+[3/8] tests\s5.spec.ts:64:3 › S5 account/pro/ads/telemetry › 3. useAccount() resolves synchronously: isPro===false, status settled (never stuck loading), <=500ms
+tests\s5.spec.ts:64:3 › S5 account/pro/ads/telemetry › 3. useAccount() resolves synchronously: isPro===false, status settled (never stuck loading), <=500ms
+MEASURED useAccount sync resolve: status=signed-out isPro=false user=null elapsedMs=254.900
+
+[4/8] tests\s5.spec.ts:86:3 › S5 account/pro/ads/telemetry › 4. AdSlot: house placeholder in 100% of loads, no layout shift, 0 requests to ethicalads.io
+tests\s5.spec.ts:86:3 › S5 account/pro/ads/telemetry › 4. AdSlot: house placeholder in 100% of loads, no layout shift, 0 requests to ethicalads.io
+MEASURED AdSlot: ethicalAdsRequests=0 sizes={"300x250":{"mode":"house","w":300,"h":250,"wAfter":300,"hAfter":250},"728x90":{"mode":"house","w":728,"h":90,"wAfter":728,"hAfter":90},"160x600":{"mode":"house","w":160,"h":600,"wAfter":160,"hAfter":600}}
+
+[5/8] tests\s5.spec.ts:145:3 › S5 account/pro/ads/telemetry › 5. checkout stub: SANDBOX/TEST MODE literal present, 0 requests to lemonsqueezy.com when unset, appendTestMode is correct
+tests\s5.spec.ts:145:3 › S5 account/pro/ads/telemetry › 5. checkout stub: SANDBOX/TEST MODE literal present, 0 requests to lemonsqueezy.com when unset, appendTestMode is correct
+MEASURED checkout stub: lemonSqueezyRequests=0 modalHidden=false labelText="SANDBOX / TEST MODE"
+
+[6/8] tests\s5.spec.ts:201:3 › S5 account/pro/ads/telemetry › 6. telemetry: 0 pre-consent POSTs, exactly 3 opted-in schema-valid POSTs, stays at 3 after opt-out
+tests\s5.spec.ts:201:3 › S5 account/pro/ads/telemetry › 6. telemetry: 0 pre-consent POSTs, exactly 3 opted-in schema-valid POSTs, stays at 3 after opt-out
+MEASURED telemetry: afterPreConsent=0 afterOptIn=3 afterOptOut=3 schemaValidCount=3 eventTypeUnionSize=6
+
+[7/8] tests\s5.spec.ts:290:3 › S5 account/pro/ads/telemetry › 7. localStorage throws: useAccount() still returns the signed-out ready state and does not throw
+tests\s5.spec.ts:290:3 › S5 account/pro/ads/telemetry › 7. localStorage throws: useAccount() still returns the signed-out ready state and does not throw
+MEASURED localStorage-throws robustness: threw=false status=signed-out isPro=false pageErrors=0
+
+[8/8] tests\s5.spec.ts:351:3 › S5 account/pro/ads/telemetry › 8. no secrets in the built bundle: grep for sk_/service_role/sb_secret (>20 chars) over an isolated zero-env build of src/account/index.ts
+tests\s5.spec.ts:351:3 › S5 account/pro/ads/telemetry › 8. no secrets in the built bundle: grep for sk_/service_role/sb_secret (>20 chars) over an isolated zero-env build of src/account/index.ts
+MEASURED secrets check: builtOk=true jsFiles=1 secretMatches=0
+
+(node:16096) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+  8 passed (19.7s)
+exit:0

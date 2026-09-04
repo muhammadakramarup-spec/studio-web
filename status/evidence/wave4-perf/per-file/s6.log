@@ -1,0 +1,38 @@
+
+Running 4 tests using 1 worker
+
+[1/4] tests\s6.spec.ts:11:3 › S6 — AI + avatars › Worker stub: HTTP 200, mock:true, <200ms, 10/10 runs, 0 env vars
+tests\s6.spec.ts:11:3 › S6 — AI + avatars › Worker stub: HTTP 200, mock:true, <200ms, 10/10 runs, 0 env vars
+[S6] worker stub durations (ms): [
+  1, 0, 0, 1, 0,
+  0, 0, 0, 0, 0
+] max: 1
+
+[2/4] tests\s6.spec.ts:40:3 › S6 — AI + avatars › Generation panel round-trip: idle→queued→running→done <3000ms, 0 network calls, MOCK label in DOM
+tests\s6.spec.ts:40:3 › S6 — AI + avatars › Generation panel round-trip: idle→queued→running→done <3000ms, 0 network calls, MOCK label in DOM
+[S6] generation round-trip elapsed (ms): 327.69999999925494 network calls: 0
+
+[3/4] tests\s6.spec.ts:98:3 › S6 — AI + avatars › Credits gate: 4th requestGeneration() in-session returns error synchronously <50ms, no state transition
+tests\s6.spec.ts:98:3 › S6 — AI + avatars › Credits gate: 4th requestGeneration() in-session returns error synchronously <50ms, no state transition
+[S6] credits gate 4th-call elapsed (ms): 0
+
+[4/4] tests\s6.spec.ts:154:3 › S6 — AI + avatars › Avatar tile: onAvatarReady → studio.loadModel → visible mesh <2000ms, 256×256 capture differs ≥1000px from baseline
+  1) tests\s6.spec.ts:154:3 › S6 — AI + avatars › Avatar tile: onAvatarReady → studio.loadModel → visible mesh <2000ms, 256×256 capture differs ≥1000px from baseline 
+
+    Error: page.evaluate: Execution context was destroyed, most likely because of a navigation.
+
+      157 |     await page.goto('/');
+      158 |
+    > 159 |     const result = await page.evaluate(async () => {
+          |                               ^
+      160 |       // server at runtime in the browser, not by tsc's module graph (Testing section pattern).
+      161 |       const mod = await import('/src/ai/index.ts');
+      162 |       // server at runtime in the browser, not by tsc's module graph (Testing section pattern).
+        at C:\Users\muazz\AppData\Local\Temp\claude\C--Users-muazz\78586e40-2737-44ef-9d12-735f288d9ce0\scratchpad\studio-web-clean\tests\s6.spec.ts:159:31
+
+    Error Context: test-results\s6-S6-—-AI-avatars-Avatar--688b7-ffers-≥1000px-from-baseline\error-context.md
+
+
+  1 failed
+    tests\s6.spec.ts:154:3 › S6 — AI + avatars › Avatar tile: onAvatarReady → studio.loadModel → visible mesh <2000ms, 256×256 capture differs ≥1000px from baseline 
+  3 passed (12.5s)

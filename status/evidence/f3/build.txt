@@ -1,0 +1,56 @@
+
+> studio-web@0.1.0 build
+> tsc --noEmit && vite build
+
+tests/project-recovery.spec.ts(50,34): error TS2307: Cannot find module '/src/app/persist.ts' or its corresponding type declarations.
+tests/project-recovery.spec.ts(59,34): error TS2307: Cannot find module '/src/app/persist.ts' or its corresponding type declarations.
+tests/project-recovery.spec.ts(70,34): error TS2307: Cannot find module '/src/app/persist.ts' or its corresponding type declarations.
+tests/project-recovery.spec.ts(168,34): error TS2307: Cannot find module '/src/app/persist.ts' or its corresponding type declarations.
+tests/unit/project-v2.test.ts(99,27): error TS2339: Property 'asset' does not exist on type 'ProjectDocumentV1'.
+tests/unit/project-v2.test.ts(100,27): error TS2339: Property 'environment' does not exist on type 'ProjectDocumentV1'.
+tests/unit/project-v2.test.ts(101,27): error TS2339: Property 'view' does not exist on type 'ProjectDocumentV1'.
+tests/unit/project-v2.test.ts(102,27): error TS2339: Property 'scene' does not exist on type 'ProjectDocumentV1'.
+tests/unit/project-v2.test.ts(116,23): error TS2339: Property 'asset' does not exist on type 'ProjectDocumentV1'.
+tests/unit/project-v2.test.ts(117,27): error TS2339: Property 'scene' does not exist on type 'ProjectDocumentV1'.
+tests/unit/project-v2.test.ts(118,23): error TS2339: Property 'environment' does not exist on type 'ProjectDocumentV1'.
+tests/unit/project-v2.test.ts(119,23): error TS2339: Property 'view' does not exist on type 'ProjectDocumentV1'.
+[36mvite v5.4.21 [32mbuilding for production...[36m[39m
+transforming...
+[32m✓[39m 48 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist/[22m[32mindex.html                 [39m[1m[2m  3.59 kB[22m[1m[22m[2m │ gzip:   1.35 kB[22m
+[2mdist/[22m[35massets/index-V8chZ5rB.css  [39m[1m[2m 10.17 kB[22m[1m[22m[2m │ gzip:   2.83 kB[22m
+[2mdist/[22m[36massets/index-BL4cZhDT.js   [39m[1m[33m737.83 kB[39m[22m[2m │ gzip: 195.53 kB[22m
+[33m
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[32m✓ built in 4.90s[39m
+EXIT:0
+--- version string check ---
+match count: 0
+--- .map file check ---
+map count: 0
+
+--- __APP_VERSION__ define smoke test (isolated entry, not part of dist) ---
+Resolved vite config define: { "__APP_VERSION__": "\"0.1.0\"" }
+Isolated build of a throwaway entry referencing __APP_VERSION__ produced:
+  globalThis.__smokeVersion="0.1.0";console.log("smoke version:","0.1.0");
+Confirms the define substitutes package.json's real version at build time.
+The main dist/assets/index-*.js bundle does not yet contain "0.1.0" literally
+because no source file references __APP_VERSION__ today — that wiring is
+Phase B (src/app/main.ts), owned by the Shell agent per requests.md.
+
+--- npm run build (whole-project gate) ---
+`tsc --noEmit && vite build` currently fails at the tsc step due to
+tests/project-recovery.spec.ts and tests/unit/project-v2.test.ts referencing
+src/app/persist.ts and ProjectDocumentV1 fields that silo F2 has not yet
+implemented (Phase A, concurrent work, status/warden-log.md Decision W-2).
+Confirmed by rerunning tsc --noEmit: none of the reported errors touch any
+file F3 owns (src/viewer/receipt.ts, vite.config.ts, src/vite-env.d.ts,
+tests/exports.spec.ts, tests/unit/receipt.test.ts). Ran `vite build` alone
+(bypassing the blocked tsc gate) instead to verify F3's part of the build —
+see the vite build output above: exit 0, no .map files, bundle unchanged in
+shape. `npm run build` should be rerun once F2's Phase A lands.

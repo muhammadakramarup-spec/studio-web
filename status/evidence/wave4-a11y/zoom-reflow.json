@@ -1,0 +1,76 @@
+[
+  {
+    "label": "640x360 @ dsf2 (≈200% of 1280x720)",
+    "width": 640,
+    "height": 360,
+    "deviceScaleFactor": 2,
+    "measurements": {
+      "scrollWidth": 640,
+      "innerWidth": 640,
+      "noHorizontalScroll": true,
+      "exportGroup": {
+        "present": true,
+        "visible": true,
+        "withinViewportWidth": false,
+        "overflowY": "visible"
+      },
+      "toolbar": {
+        "present": true,
+        "visible": true,
+        "withinViewportWidth": true,
+        "overflowY": "auto"
+      },
+      "inspectorOutliner": {
+        "present": true,
+        "visible": true,
+        "withinViewportWidth": true,
+        "overflowY": "visible"
+      },
+      "inspectorMaterial": {
+        "present": true,
+        "visible": true,
+        "withinViewportWidth": true,
+        "overflowY": "visible"
+      },
+      "sidebarRightOverflowY": "visible"
+    },
+    "screenshot": "status\\evidence\\wave4-a11y\\zoom-640x360.png"
+  },
+  {
+    "label": "768x432 @ dsf2 (≈200% of 1536x864)",
+    "width": 768,
+    "height": 432,
+    "deviceScaleFactor": 2,
+    "measurements": {
+      "scrollWidth": 768,
+      "innerWidth": 768,
+      "noHorizontalScroll": true,
+      "exportGroup": {
+        "present": true,
+        "visible": true,
+        "withinViewportWidth": false,
+        "overflowY": "visible"
+      },
+      "toolbar": {
+        "present": true,
+        "visible": true,
+        "withinViewportWidth": true,
+        "overflowY": "auto"
+      },
+      "inspectorOutliner": {
+        "present": true,
+        "visible": true,
+        "withinViewportWidth": true,
+        "overflowY": "visible"
+      },
+      "inspectorMaterial": {
+        "present": true,
+        "visible": true,
+        "withinViewportWidth": true,
+        "overflowY": "visible"
+      },
+      "sidebarRightOverflowY": "visible"
+    },
+    "screenshot": "status\\evidence\\wave4-a11y\\zoom-768x432.png"
+  }
+]

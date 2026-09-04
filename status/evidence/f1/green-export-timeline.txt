@@ -1,0 +1,25 @@
+
+Running 3 tests using 1 worker
+
+[1/3] tests\export-timeline.spec.ts:85:1 › exported frames follow authored non-linear timeline keys within 1e-6
+tests\export-timeline.spec.ts:85:1 › exported frames follow authored non-linear timeline keys within 1e-6
+[export-timeline A] entries=24 bytes=3185900
+
+[export-timeline A] frame dims: frame_0001.png=1024x1024 ... frame_0024.png=1024x1024
+
+[export-timeline A] worstQuatDiff=0 worstPosDiff=0
+
+[export-timeline A] pivotRestoreDiff=0
+
+[2/3] tests\export-timeline.spec.ts:253:1 › exportSequence appends extraFiles after the frames and exportBlenderPackage appends extras
+tests\export-timeline.spec.ts:253:1 › exportSequence appends extraFiles after the frames and exportBlenderPackage appends extras
+[export-timeline B] seq entries=25 last=studio-web-receipt.json
+
+[export-timeline B] blender entries=studio-scene.glb, studio-scene.gltf, README-Blender.txt, LICENCE.txt
+
+[3/3] tests\export-timeline.spec.ts:302:1 › legacy 3-argument exportSequence call still yields the linear sweep
+tests\export-timeline.spec.ts:302:1 › legacy 3-argument exportSequence call still yields the linear sweep
+[export-timeline C] entries=24 progressCalls=25
+
+  3 passed (9.2s)
+EXIT CODE: 0

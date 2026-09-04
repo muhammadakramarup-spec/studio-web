@@ -1,0 +1,7 @@
+
+Running 3 tests using 1 worker
+
+[1/3] tests\exports.spec.ts:106:1 › X1 — all five exports download as valid artifacts
+[2/3] tests\exports.spec.ts:160:1 › X2 — package exports after a library pick carry a receipt and licence
+[3/3] tests\exports.spec.ts:198:1 › X3 — a locally opened GLB exports without a receipt and without its filename
+  3 passed (10.8s)

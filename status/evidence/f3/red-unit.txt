@@ -1,0 +1,43 @@
+
+> studio-web@0.1.0 test:unit
+> node --test tests/unit/*.test.ts
+
+✔ project round-trip preserves the active model, view, and timeline (2.66ms)
+✔ project parser rejects unsupported versions and malformed model data (0.862ms)
+node:internal/modules/esm/resolve:271
+    throw new ERR_MODULE_NOT_FOUND(
+          ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module 'C:\3D-Studio\02_projects\studio-web\.worktrees\claude-design-product-v1\src\viewer\receipt.ts' imported from C:\3D-Studio\02_projects\studio-web\.worktrees\claude-design-product-v1\tests\unit\receipt.test.ts
+    at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+    at moduleResolve (node:internal/modules/esm/resolve:865:10)
+    at defaultResolve (node:internal/modules/esm/resolve:992:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+    at #resolve (node:internal/modules/esm/loader:683:17)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+    at ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33)
+    at ModuleJob.link (node:internal/modules/esm/module_job:253:17) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///C:/3D-Studio/02_projects/studio-web/.worktrees/claude-design-product-v1/src/viewer/receipt.ts'
+}
+
+Node.js v24.19.0
+✖ tests\unit\receipt.test.ts (99.9196ms)
+✔ telemetry payload keeps only the allowlisted fields for its event (1.2973ms)
+✔ telemetry payload rejects free text, non-finite durations, and unknown events (0.2131ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 4
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 117.4578
+
+✖ failing tests:
+
+test at tests\unit\receipt.test.ts:1:1
+✖ tests\unit\receipt.test.ts (99.9196ms)
+  'test failed'

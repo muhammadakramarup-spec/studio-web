@@ -1,0 +1,766 @@
+✔ planSequence samples over the max authored key time, not state.duration (4.376ms)
+✔ planSequence on an empty timeline yields default-sweep with a full-length times array (0.3551ms)
+✔ planSequence uses the max key t even when keys live only on a non-pivot track (0.3886ms)
+✔ project round-trip preserves the active model, view, and timeline (2.6952ms)
+✔ project parser rejects unsupported versions and malformed model data (1.1832ms)
+✔ v2 round-trips scene objects, modifiers, asset identity, environment, and view (2.4339ms)
+✔ committed v1 fixture parses and upgrades to v2 defaults (1.6534ms)
+✔ rejects version 3 as newer and version 0 or 'x' as not a project (1.0679ms)
+✔ rejects an hdri fileUrl outside /assets/ and a non-https sourceUrl (0.9077ms)
+✔ receipt carries app version, kind, ISO timestamp, frames, and CC0 asset provenance (1.3032ms)
+✔ licence text names the asset, its source URL, CC0 1.0, and the app version (0.636ms)
+✔ receiptFiles yields studio-web-receipt.json and LICENCE.txt whose JSON parses back to the receipt (0.6648ms)
+✔ privacy guard rejects local paths and non-https sources (0.4698ms)
+✔ registry lists model then hdri, replaces on set, clears on null (0.2269ms)
+✔ telemetry payload keeps only the allowlisted fields for its event (0.5814ms)
+✔ telemetry payload rejects free text, non-finite durations, and unknown events (0.2417ms)
+
+Running 55 tests using 1 worker
+
+[1/55] tests\e2e.spec.ts:103:1 › E2E — common 3D export formats are real downloadable artifacts
+[2/55] tests\e2e.spec.ts:136:1 › E2E — six silos, one studio (SCOPE.md §6 definition of done)
+tests\e2e.spec.ts:136:1 › E2E — six silos, one studio (SCOPE.md §6 definition of done)
+[E2E] step1 load: loadMs=1375.6 ready=true
+
+[E2E] step2 pick: manifestAssets=2280 tileFound=true pickedAssetId=kenney/car-kit/ambulance loadResolved=true loadError=null
+
+[E2E] step3 light: lightCountDelta=1 movedPct=31.37%
+
+[E2E] step4 turntable: keyCount=3 keyTs=[0,3,6] angle=3.141592653589793 diffFromPi=0 pivotAngleAfterScrub=3.141592653589793
+
+[E2E] step5 export: framesLength=24 tMismatches=0 zipBytes=3956206 progressCalls=25
+
+[E2E] step6 assert: entries=24 namesMatch=true firstDim=1024x1024 lastDim=1024x1024 allCorrectSize=true
+
+[E2E] SUMMARY loadMs=1375.6 pickedAssetId=kenney/car-kit/ambulance lightDelta=1 turntableAngle=3.141592653589793 exportFrames=24 zipEntries=24 allFrames1024=true
+
+[3/55] tests\e2e.spec.ts:413:1 › E2E regression — real app shell: #viewport-hint reflects actual ready/loaded state
+tests\e2e.spec.ts:413:1 › E2E regression — real app shell: #viewport-hint reflects actual ready/loaded state
+[E2E] hint before any model load: hidden=false state=idle text="Start with a GLBDrop it here, open a file, or choose from the library.Open a GLB"
+
+[E2E] hint after a real library pick loads a model: hidden=true state=loaded
+
+[4/55] tests\e2e.spec.ts:468:1 › E2E regression — default Bloom stays readable on a plain white Kenney model (no full clip)
+tests\e2e.spec.ts:468:1 › E2E regression — default Bloom stays readable on a plain white Kenney model (no full clip)
+[E2E] bloom clip check: region=[275,73,565,449] totalPx=109040 clippedPx=0 clippedPct=0.000%
+
+[5/55] tests\export-timeline.spec.ts:85:1 › exported frames follow authored non-linear timeline keys within 1e-6
+tests\export-timeline.spec.ts:85:1 › exported frames follow authored non-linear timeline keys within 1e-6
+[export-timeline A] entries=24 bytes=3185900
+
+[export-timeline A] frame dims: frame_0001.png=1024x1024 ... frame_0024.png=1024x1024
+
+[export-timeline A] worstQuatDiff=0 worstPosDiff=0
+
+[export-timeline A] pivotRestoreDiff=0
+
+[6/55] tests\export-timeline.spec.ts:253:1 › exportSequence appends extraFiles after the frames and exportBlenderPackage appends extras
+tests\export-timeline.spec.ts:253:1 › exportSequence appends extraFiles after the frames and exportBlenderPackage appends extras
+[export-timeline B] seq entries=25 last=studio-web-receipt.json
+
+[export-timeline B] blender entries=studio-scene.glb, studio-scene.gltf, README-Blender.txt, LICENCE.txt
+
+[7/55] tests\export-timeline.spec.ts:302:1 › legacy 3-argument exportSequence call still yields the linear sweep
+tests\export-timeline.spec.ts:302:1 › legacy 3-argument exportSequence call still yields the linear sweep
+[export-timeline C] entries=24 progressCalls=25
+
+[8/55] tests\exports.spec.ts:106:1 › X1 — all five exports download as valid artifacts
+[9/55] tests\exports.spec.ts:160:1 › X2 — package exports after a library pick carry a receipt and licence
+[10/55] tests\exports.spec.ts:198:1 › X3 — a locally opened GLB exports without a receipt and without its filename
+[11/55] tests\project-recovery.spec.ts:25:1 › P1 persist round-trips a v2 document through IndexedDB across a reload
+[12/55] tests\project-recovery.spec.ts:80:1 › P2 editing then reload offers Restore and rebuilds the scene
+[13/55] tests\project-recovery.spec.ts:144:1 › P3 simulated context loss shows a recoverable message and clears on restore
+[14/55] tests\project-recovery.spec.ts:178:1 › P4 a locally opened GLB never leaks its filename or path into the recovery record
+[15/55] tests\s1.spec.ts:176:1 › Target 1 — load + ready + fps
+tests\s1.spec.ts:176:1 › Target 1 — load + ready + fps
+[console] debug [vite] connecting...
+
+[console] debug [vite] connected.
+
+[console] info [app] studio ready: load, edit, save, and export
+
+[console] debug [vite] connecting...
+
+[console] debug [vite] connected.
+
+[console] info [app] studio ready: load, edit, save, and export
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[S1 T1] loadMs=985.2 readyAfterLoad=true fps=60 renderer=ANGLE (Intel, Intel(R) UHD Graphics (0x000046A3) Direct3D11 vs_5_0 ps_5_0, D3D11) canvasSize={"w":840,"h":463,"cw":840,"ch":463}
+
+
+[16/55] tests\s1.spec.ts:224:1 › Target 2 & 6 — framing (10 files x5 views) + metallicFactor hint + de-metal
+tests\s1.spec.ts:224:1 › Target 2 & 6 — framing (10 files x5 views) + metallicFactor hint + de-metal
+[console] debug [vite] connecting...
+
+[console] debug [vite] connected.
+
+[console] info [app] studio ready: load, edit, save, and export
+
+[console] debug [vite] connecting...
+
+[console] debug [vite] connected.
+
+[console] info [app] studio ready: load, edit, save, and export
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[S1 T2] files=10 views=5 each; frame fractions:
+  coffee-table-10.glb view=0 frac=67.3% PASS
+  coffee-table-10.glb view=90 frac=67.0% PASS
+  coffee-table-10.glb view=180 frac=67.7% PASS
+  coffee-table-10.glb view=270 frac=67.0% PASS
+  coffee-table-10.glb view=top frac=68.3% PASS
+  coffee-table-15.glb view=0 frac=67.3% PASS
+  coffee-table-15.glb view=90 frac=67.7% PASS
+  coffee-table-15.glb view=180 frac=67.7% PASS
+  coffee-table-15.glb view=270 frac=67.7% PASS
+  coffee-table-15.glb view=top frac=68.7% PASS
+  console-11.glb view=0 frac=67.3% PASS
+  console-11.glb view=90 frac=68.0% PASS
+  console-11.glb view=180 frac=67.3% PASS
+  console-11.glb view=270 frac=67.7% PASS
+  console-11.glb view=top frac=68.3% PASS
+  console-6.glb view=0 frac=67.7% PASS
+  console-6.glb view=90 frac=67.3% PASS
+  console-6.glb view=180 frac=67.0% PASS
+  console-6.glb view=270 frac=67.3% PASS
+  console-6.glb view=top frac=67.3% PASS
+  credenza-10.glb view=0 frac=67.3% PASS
+  credenza-10.glb view=90 frac=67.0% PASS
+  credenza-10.glb view=180 frac=68.0% PASS
+  credenza-10.glb view=270 frac=67.0% PASS
+  credenza-10.glb view=top frac=68.0% PASS
+  credenza-9.glb view=0 frac=67.7% PASS
+  credenza-9.glb view=90 frac=68.0% PASS
+  credenza-9.glb view=180 frac=67.7% PASS
+  credenza-9.glb view=270 frac=68.7% PASS
+  credenza-9.glb view=top frac=68.0% PASS
+  dining-table-10.glb view=0 frac=67.3% PASS
+  dining-table-10.glb view=90 frac=68.3% PASS
+  dining-table-10.glb view=180 frac=67.3% PASS
+  dining-table-10.glb view=270 frac=68.3% PASS
+  dining-table-10.glb view=top frac=68.3% PASS
+  foyer-table-11.glb view=0 frac=67.0% PASS
+  foyer-table-11.glb view=90 frac=67.3% PASS
+  foyer-table-11.glb view=180 frac=68.3% PASS
+  foyer-table-11.glb view=270 frac=68.0% PASS
+  foyer-table-11.glb view=top frac=68.7% PASS
+  tv-console-14.glb view=0 frac=68.0% PASS
+  tv-console-14.glb view=90 frac=68.3% PASS
+  tv-console-14.glb view=180 frac=68.0% PASS
+  tv-console-14.glb view=270 frac=68.3% PASS
+  tv-console-14.glb view=top frac=68.3% PASS
+  end-tables-11.glb view=0 frac=67.7% PASS
+  end-tables-11.glb view=90 frac=68.3% PASS
+  end-tables-11.glb view=180 frac=67.7% PASS
+  end-tables-11.glb view=270 frac=68.0% PASS
+  end-tables-11.glb view=top frac=68.3% PASS
+
+[S1 T2] files with >=1 failing view: 0/10
+
+[S1 T6] metallic hint:
+  coffee-table-10.glb hand=1 flagged=1 PASS
+  coffee-table-15.glb hand=1 flagged=1 PASS
+  console-11.glb hand=1 flagged=1 PASS
+  console-6.glb hand=1 flagged=1 PASS
+  credenza-10.glb hand=1 flagged=1 PASS
+  credenza-9.glb hand=1 flagged=1 PASS
+  dining-table-10.glb hand=1 flagged=1 PASS
+  foyer-table-11.glb hand=1 flagged=1 PASS
+  tv-console-14.glb hand=1 flagged=1 PASS
+  end-tables-11.glb hand=1 flagged=1 PASS
+
+[S1 T6] false negatives: 0/10
+
+[S1 T6] de-metal pixel diff (files where flag fired):
+  coffee-table-10.glb moved=26.51% PASS
+  coffee-table-15.glb moved=55.28% PASS
+  console-11.glb moved=37.75% PASS
+  console-6.glb moved=20.26% PASS
+  credenza-10.glb moved=66.88% PASS
+  credenza-9.glb moved=38.57% PASS
+  dining-table-10.glb moved=38.35% PASS
+  foyer-table-11.glb moved=25.53% PASS
+  tv-console-14.glb moved=60.45% PASS
+  end-tables-11.glb moved=8.09% PASS
+
+
+[console] warning WebGL: too many errors, no more errors will be reported to the console for this context.
+
+[17/55] tests\s1.spec.ts:370:1 › Target 3 — environment switch + rotation + PMREM timing + HDR path
+tests\s1.spec.ts:370:1 › Target 3 — environment switch + rotation + PMREM timing + HDR path
+[S1 T3] source check: hdr branch uses fromEquirectangular=true uses fromScene=false
+
+[S1 T3] HDR fixture available: true (1615248 bytes)
+
+[S1 T3] room->studio moved=47.66% rotation0->140 moved=47.50% pmremSceneMs=3.00 hdrLoaded=true pmremHdrMs=1.30 hdrVsStudioMoved=47.91%
+
+[18/55] tests\s1.spec.ts:489:1 › Target 4 — shadow catcher / transparent export
+tests\s1.spec.ts:489:1 › Target 4 — shadow catcher / transparent export
+[S1 T4] alpha==0: 61.60% alpha==255: 19.39% shadow-toggle change outside opaque mask: 18.73% (of 1048576 px, 845287 outside mask)
+
+[19/55] tests\s1.spec.ts:569:1 › Target 5 — PNG export dims + 24-frame 1024x1024 ZIP turntable + exportWebM contract
+tests\s1.spec.ts:569:1 › Target 5 — PNG export dims + 24-frame 1024x1024 ZIP turntable + exportWebM contract
+[S1 T5] PNG dims: 2048x2048
+
+[S1 T5] ZIP entries: 24 (4436867 bytes, progress callbacks: 25)
+
+[S1 T5] ZIP frame dims: frame_0001.png=1024x1024 ... frame_0024.png=1024x1024 (all24 correct=true)
+
+[S1 T5] exportWebM: threw=false result=null gate=null (nothing produced)
+
+[20/55] tests\s1.spec.ts:666:1 › setRenderHook — render-loop seam
+tests\s1.spec.ts:666:1 › setRenderHook — render-loop seam
+[S1 renderHook] hookCalls(300ms)=20 defaultRenders-while-hooked=0 defaultRenders-after-null(300ms)=12
+
+[21/55] tests\s2.spec.ts:29:1 › 1a. history stack in isolation: execute/undo/redo a trivial op with no editor wiring
+tests\s2.spec.ts:29:1 › 1a. history stack in isolation: execute/undo/redo a trivial op with no editor wiring
+MEASURED history-isolation: afterExecute=5 afterUndo=0 afterRedo=5
+
+[22/55] tests\s2.spec.ts:67:1 › 1. undo/redo: 50-op canonical-state round trip (undo x50, redo x50)
+tests\s2.spec.ts:67:1 › 1. undo/redo: 50-op canonical-state round trip (undo x50, redo x50)
+MEASURED undo-redo-50: undoCount=50 redoCount=50 undoMatchesInitial=true redoMatchesPreUndo=true initialObjs=1 afterOpsObjs=3
+
+[23/55] tests\s2.spec.ts:191:1 › 2. selection: outliner 5/5, row-select 5/5, canvas-pick 3/3, blank -> null
+tests\s2.spec.ts:191:1 › 2. selection: outliner 5/5, row-select 5/5, canvas-pick 3/3, blank -> null
+MEASURED selection: outlinerSetMatches=true rowSelectHits=5/5 canvasPickHits=3/3 blankReturnsNull=true
+
+[24/55] tests\s2.spec.ts:291:1 › 3. gizmo: translate/rotate/scale deltas within 1e-3 of an independent oracle + canvas changed()
+tests\s2.spec.ts:291:1 › 3. gizmo: translate/rotate/scale deltas within 1e-3 of an independent oracle + canvas changed()
+MEASURED gizmo-translate: pos.x=0.6994614872324979 expected=0.6994614872324978 moved=8.07%
+
+MEASURED gizmo-rotate: rot.x=-2.7978459489299916 expected=-2.7978459489299916 moved=6.02%
+
+MEASURED gizmo-scale: scale.x=2 expected=2.0000000000000004 moved=3.75%
+
+[25/55] tests\s2.spec.ts:452:1 › 4. add: light/camera/primitive each +1 object count; light+primitive pass changed()
+tests\s2.spec.ts:452:1 › 4. add: light/camera/primitive each +1 object count; light+primitive pass changed()
+MEASURED add: lightDelta=1 lightMoved=13.20% meshDelta=1 primMoved=5.68% camDelta=1
+
+[26/55] tests\s2.spec.ts:550:1 › 5. material: roughness drag passes changed(); reset-to-original passes same()
+tests\s2.spec.ts:550:1 › 5. material: roughness drag passes changed(); reset-to-original passes same()
+MEASURED material: editMoved=9.28% resetMean=0.000
+
+[27/55] tests\s2.spec.ts:629:1 › 6. mirror: triangle count exactly 2x; mirrored bbox negated within 1e-4
+tests\s2.spec.ts:629:1 › 6. mirror: triangle count exactly 2x; mirrored bbox negated within 1e-4
+MEASURED mirror: triBefore=12 triAfter=24 (x2) triAfterUndo=12 negatedMin=true negatedMax=true
+
+[28/55] tests\s2.spec.ts:683:1 › 7. array: count = N total visible instances incl. source; changed() between count 1 and 5
+tests\s2.spec.ts:683:1 › 7. array: count = N total visible instances incl. source; changed() between count 1 and 5
+MEASURED array: countAt1=1 sceneCountAt1=1 countAt5=5 sceneCountAt5=5 moved(1->5)=5.45%
+
+[29/55] tests\s2.spec.ts:764:1 › 8. bloom: toggling on passes changed() restricted to the emissive object's screen bounds
+tests\s2.spec.ts:764:1 › 8. bloom: toggling on passes changed() restricted to the emissive object's screen bounds
+MEASURED bloom: movedInBounds=94.32% region=256x256 bloomEnabled=true
+
+[30/55] tests\s3.spec.ts:8:3 › S3 Library manifest › manifest.assets root shape, counts, and licence coverage
+[31/55] tests\s3.spec.ts:30:3 › S3 Library manifest › both S6-contractual asset ids are present (decision #16)
+[32/55] tests\s3.spec.ts:52:3 › S3 Library manifest › 20 kit-level thumbnails: 256x256, <=50KB each
+[33/55] tests\s3.spec.ts:83:3 › S3 Library GLB spot-check › ≥20 GLBs across ≥10 kits open in GLTFLoader with 0 console errors
+[34/55] tests\s3.spec.ts:134:3 › S3 LibraryPanel › renders manifest grid and emits onAssetPicked on tile click
+[35/55] tests\s4.spec.ts:9:1 › 1. easing: 8 presets x 5 samples within 1e-3 of the committed fixture, f(0)=0 and f(1)=1 exactly
+tests\s4.spec.ts:9:1 › 1. easing: 8 presets x 5 samples within 1e-3 of the committed fixture, f(0)=0 and f(1)=1 exactly
+MEASURED easing: total=40 withinTolerance=40 endpointFailures=0
+
+[36/55] tests\s4.spec.ts:46:1 › 2. sampleAt(t) is pure: 100 calls at t=1.234 are byte-identical
+tests\s4.spec.ts:46:1 › 2. sampleAt(t) is pure: 100 calls at t=1.234 are byte-identical
+MEASURED purity: distinctOutputs=1 of 100 calls
+
+[37/55] tests\s4.spec.ts:89:1 › 3. exportRange(duration,36) yields exactly 36 frames at the exact expected t
+tests\s4.spec.ts:89:1 › 3. exportRange(duration,36) yields exactly 36 frames at the exact expected t
+MEASURED exportRange: frames.length=36 tMismatches=0 renderCallsDuringExport=0
+
+[38/55] tests\s4.spec.ts:116:1 › 4. scrub is not circular: independent scene assertion + renderNow called exactly once
+tests\s4.spec.ts:116:1 › 4. scrub is not circular: independent scene assertion + renderNow called exactly once
+MEASURED scrub: position=[1,2,3] renderCalls=1
+
+[39/55] tests\s4.spec.ts:146:1 › 5. 50-key JSON round-trip is bit-identical
+tests\s4.spec.ts:146:1 › 5. 50-key JSON round-trip is bit-identical
+MEASURED roundtrip: bitIdentical=true beforeLen=5117
+
+[40/55] tests\s4.spec.ts:191:1 › 6. scrub performance: sampleAt < 2ms for 20 tracks x 4 channels x 50 keys
+tests\s4.spec.ts:191:1 › 6. scrub performance: sampleAt < 2ms for 20 tracks x 4 channels x 50 keys
+MEASURED perf: meanMs=0.0159 over 1000 iterations, totalMs=15.90
+
+[41/55] tests\s4.spec.ts:232:1 › 7. turntable: 3 quaternion keys, sample at duration/2 yields rotation pi within 1e-6
+tests\s4.spec.ts:232:1 › 7. turntable: 3 quaternion keys, sample at duration/2 yields rotation pi within 1e-6
+MEASURED turntable: keyCount=3 angle=3.141592653589793 diffFromPi=0
+
+[42/55] tests\s5.spec.ts:11:3 › S5 account/pro/ads/telemetry › 1. zero-env boot: 0 console errors from src/account/** while mounting every export
+tests\s5.spec.ts:11:3 › S5 account/pro/ads/telemetry › 1. zero-env boot: 0 console errors from src/account/** while mounting every export
+MEASURED zero-env boot: consoleErrors=0 pageErrors=0 status=signed-out isPro=false
+
+[43/55] tests\s5.spec.ts:41:3 › S5 account/pro/ads/telemetry › 2. signed-out auth panel: 'Sign in' affordance + Signed out text/testid in 1/1 zero-env loads
+tests\s5.spec.ts:41:3 › S5 account/pro/ads/telemetry › 2. signed-out auth panel: 'Sign in' affordance + Signed out text/testid in 1/1 zero-env loads
+MEASURED signed-out panel: statusText="Signed out" statusAttr="signed-out" signInText="Sign in"
+
+[44/55] tests\s5.spec.ts:64:3 › S5 account/pro/ads/telemetry › 3. useAccount() resolves synchronously: isPro===false, status settled (never stuck loading), <=500ms
+tests\s5.spec.ts:64:3 › S5 account/pro/ads/telemetry › 3. useAccount() resolves synchronously: isPro===false, status settled (never stuck loading), <=500ms
+MEASURED useAccount sync resolve: status=signed-out isPro=false user=null elapsedMs=126.400
+
+[45/55] tests\s5.spec.ts:86:3 › S5 account/pro/ads/telemetry › 4. AdSlot: house placeholder in 100% of loads, no layout shift, 0 requests to ethicalads.io
+tests\s5.spec.ts:86:3 › S5 account/pro/ads/telemetry › 4. AdSlot: house placeholder in 100% of loads, no layout shift, 0 requests to ethicalads.io
+MEASURED AdSlot: ethicalAdsRequests=0 sizes={"300x250":{"mode":"house","w":300,"h":250,"wAfter":300,"hAfter":250},"728x90":{"mode":"house","w":728,"h":90,"wAfter":728,"hAfter":90},"160x600":{"mode":"house","w":160,"h":600,"wAfter":160,"hAfter":600}}
+
+[46/55] tests\s5.spec.ts:145:3 › S5 account/pro/ads/telemetry › 5. checkout stub: SANDBOX/TEST MODE literal present, 0 requests to lemonsqueezy.com when unset, appendTestMode is correct
+tests\s5.spec.ts:145:3 › S5 account/pro/ads/telemetry › 5. checkout stub: SANDBOX/TEST MODE literal present, 0 requests to lemonsqueezy.com when unset, appendTestMode is correct
+MEASURED checkout stub: lemonSqueezyRequests=0 modalHidden=false labelText="SANDBOX / TEST MODE"
+
+[47/55] tests\s5.spec.ts:201:3 › S5 account/pro/ads/telemetry › 6. telemetry: 0 pre-consent POSTs, exactly 3 opted-in schema-valid POSTs, stays at 3 after opt-out
+tests\s5.spec.ts:201:3 › S5 account/pro/ads/telemetry › 6. telemetry: 0 pre-consent POSTs, exactly 3 opted-in schema-valid POSTs, stays at 3 after opt-out
+MEASURED telemetry: afterPreConsent=0 afterOptIn=3 afterOptOut=3 schemaValidCount=3 eventTypeUnionSize=6
+
+[48/55] tests\s5.spec.ts:290:3 › S5 account/pro/ads/telemetry › 7. localStorage throws: useAccount() still returns the signed-out ready state and does not throw
+tests\s5.spec.ts:290:3 › S5 account/pro/ads/telemetry › 7. localStorage throws: useAccount() still returns the signed-out ready state and does not throw
+MEASURED localStorage-throws robustness: threw=false status=signed-out isPro=false pageErrors=0
+
+[49/55] tests\s5.spec.ts:351:3 › S5 account/pro/ads/telemetry › 8. no secrets in the built bundle: grep for sk_/service_role/sb_secret (>20 chars) over an isolated zero-env build of src/account/index.ts
+tests\s5.spec.ts:351:3 › S5 account/pro/ads/telemetry › 8. no secrets in the built bundle: grep for sk_/service_role/sb_secret (>20 chars) over an isolated zero-env build of src/account/index.ts
+MEASURED secrets check: builtOk=true jsFiles=1 secretMatches=0
+
+(node:6960) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+[50/55] tests\s6.spec.ts:11:3 › S6 — AI + avatars › Worker stub: HTTP 200, mock:true, <200ms, 10/10 runs, 0 env vars
+tests\s6.spec.ts:11:3 › S6 — AI + avatars › Worker stub: HTTP 200, mock:true, <200ms, 10/10 runs, 0 env vars
+[S6] worker stub durations (ms): [
+  2, 1, 0, 0, 0,
+  0, 0, 0, 1, 0
+] max: 2
+
+[51/55] tests\s6.spec.ts:40:3 › S6 — AI + avatars › Generation panel round-trip: idle→queued→running→done <3000ms, 0 network calls, MOCK label in DOM
+tests\s6.spec.ts:40:3 › S6 — AI + avatars › Generation panel round-trip: idle→queued→running→done <3000ms, 0 network calls, MOCK label in DOM
+[S6] generation round-trip elapsed (ms): 353.59999999962747 network calls: 0
+
+[52/55] tests\s6.spec.ts:98:3 › S6 — AI + avatars › Credits gate: 4th requestGeneration() in-session returns error synchronously <50ms, no state transition
+tests\s6.spec.ts:98:3 › S6 — AI + avatars › Credits gate: 4th requestGeneration() in-session returns error synchronously <50ms, no state transition
+[S6] credits gate 4th-call elapsed (ms): 0
+
+[53/55] tests\s6.spec.ts:154:3 › S6 — AI + avatars › Avatar tile: onAvatarReady → studio.loadModel → visible mesh <2000ms, 256×256 capture differs ≥1000px from baseline
+tests\s6.spec.ts:154:3 › S6 — AI + avatars › Avatar tile: onAvatarReady → studio.loadModel → visible mesh <2000ms, 256×256 capture differs ≥1000px from baseline
+[S6] avatar tile elapsed (ms): 400.90000000037253 meshes: 2 tris: 465 diffCount: 3929
+
+[54/55] tests\studio-shell.spec.ts:3:1 › Studio Shell keeps the load-to-export workflow focused and discoverable
+[55/55] tests\studio-shell.spec.ts:45:1 › Studio Shell keeps the desktop toolbar readable without horizontal scrolling
+  55 passed (3.1m)

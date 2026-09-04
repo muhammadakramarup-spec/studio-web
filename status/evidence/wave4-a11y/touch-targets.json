@@ -1,0 +1,1646 @@
+{
+  "total": 139,
+  "failures": [
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "open-model-btn",
+      "name": "Open GLB",
+      "width": 77.66,
+      "height": 30,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "open-project-btn",
+      "name": "Open project",
+      "width": 95.3,
+      "height": 30,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "save-project-btn",
+      "name": "Save project",
+      "width": 90.25,
+      "height": 30,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Undo",
+      "width": 49.14,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Redo",
+      "width": 47.2,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "+ Light",
+      "width": 57.98,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "+ Camera",
+      "width": 71.92,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "+ Box",
+      "width": 50.92,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "+ Sphere",
+      "width": 68.45,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Mirror X",
+      "width": 63.59,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Array x5",
+      "width": 63.27,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Bloom",
+      "width": 54.19,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "PNG",
+      "width": 43.94,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "GLB",
+      "width": 40.77,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "GLTF",
+      "width": 45.22,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Blender ZIP",
+      "width": 80.42,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Turntable",
+      "width": 70.45,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "0°",
+      "width": 31,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "90°",
+      "width": 37.47,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "180°",
+      "width": 43.94,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "270°",
+      "width": 43.94,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Top",
+      "width": 39.2,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Spin",
+      "width": 43.14,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "HemisphereLight\nLight",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "DirectionalLight\nLight",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "DirectionalLight\nLight",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "DirectionalLight\nLight",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Mesh\nMesh",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "body\nMesh",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "wheel-front-right\nMesh",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "wheel-front-left\nMesh",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "wheel-back-right\nMesh",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "wheel-back-left\nMesh",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "door-right\nMesh",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "door-left\nMesh",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "PointLight\nLight",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Turn 360°",
+      "width": 69.27,
+      "height": 26,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Play",
+      "width": 39.55,
+      "height": 26,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Pause",
+      "width": 48.58,
+      "height": 26,
+      "fails44": true
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "",
+      "name": "Search assets",
+      "width": 119.33,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "INPUT",
+      "type": "range",
+      "id": "timeline-scrubber",
+      "name": "Timeline position in seconds",
+      "width": 180.61,
+      "height": 16,
+      "fails44": true
+    },
+    {
+      "tag": "SELECT",
+      "type": "",
+      "id": "",
+      "name": "Asset type",
+      "width": 119.33,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "SELECT",
+      "type": "",
+      "id": "",
+      "name": "Asset category",
+      "width": 119.34,
+      "height": 22,
+      "fails44": true
+    }
+  ],
+  "failureCount": 43,
+  "allRows": [
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "open-model-btn",
+      "name": "Open GLB",
+      "width": 77.66,
+      "height": 30,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "open-project-btn",
+      "name": "Open project",
+      "width": 95.3,
+      "height": 30,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "save-project-btn",
+      "name": "Save project",
+      "width": 90.25,
+      "height": 30,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Undo",
+      "width": 49.14,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Redo",
+      "width": 47.2,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "+ Light",
+      "width": 57.98,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "+ Camera",
+      "width": 71.92,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "+ Box",
+      "width": 50.92,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "+ Sphere",
+      "width": 68.45,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Mirror X",
+      "width": 63.59,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Array x5",
+      "width": 63.27,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Bloom",
+      "width": 54.19,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "PNG",
+      "width": 43.94,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "GLB",
+      "width": 40.77,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "GLTF",
+      "width": 45.22,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Blender ZIP",
+      "width": 80.42,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Turntable",
+      "width": 70.45,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "0°",
+      "width": 31,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "90°",
+      "width": 37.47,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "180°",
+      "width": 43.94,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "270°",
+      "width": 43.94,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Top",
+      "width": 39.2,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Spin",
+      "width": 43.14,
+      "height": 28,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Ambulance, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Box, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Cone Flat, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Cone, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Debris Bolt, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Debris Bumper, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Debris Door Window, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Debris Door, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Debris Drivetrain Axle, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Debris Drivetrain, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Debris Nut, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Debris Plate A, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Debris Plate B, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Debris Plate Small A, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Debris Plate Small B, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Debris Spoiler A, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Debris Spoiler B, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Debris Tire, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Delivery Flat, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Delivery, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Firetruck, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Garbage Truck, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Hatchback Sports, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Kart Oobi, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Kart Oodi, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Kart Ooli, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Kart Oopi, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Kart Oozi, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Police, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Race Future, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Race, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Sedan Sports, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Sedan, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Suv Luxury, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Suv, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Taxi, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Tractor Police, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Tractor Shovel, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Tractor, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Truck Flat, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Truck, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Van, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Wheel Dark, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Wheel Default, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Wheel Racing, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Wheel Tractor Back, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Wheel Tractor Dark Back, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Wheel Tractor Dark Front, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Wheel Tractor Front, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Wheel Truck, car-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Bridge Draw, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Bridge Straight Pillar, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Bridge Straight, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Door, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Flag Banner Long, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Flag Banner Short, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Flag Pennant, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Flag Wide, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Flag, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Gate, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Ground Hills, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Ground, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Metal Gate, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Rocks Large, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Rocks Small, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Siege Ballista Demolished, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Siege Ballista, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Siege Catapult Demolished, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Siege Catapult, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Siege Ram Demolished, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Siege Ram, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Siege Tower Demolished, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Siege Tower, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Siege Trebuchet Demolished, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Siege Trebuchet, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Stairs Stone Square, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Stairs Stone, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Tower Base, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Tower Hexagon Base, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Tower Hexagon Mid, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Tower Hexagon Roof Secondary, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Tower Hexagon Roof, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Tower Hexagon Top Wood, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Tower Hexagon Top, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Tower Slant Roof, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Tower Square Arch, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Tower Square Base Border, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Tower Square Base Color, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Tower Square Base, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Tower Square Mid Color, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Tower Square Mid Door, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Tower Square Mid Open Simple, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Tower Square Mid Open, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Tower Square Mid Windows, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Tower Square Mid, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Tower Square Roof, castle-kit, CC0",
+      "width": 118,
+      "height": 106,
+      "fails44": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "HemisphereLight\nLight",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "DirectionalLight\nLight",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "DirectionalLight\nLight",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "DirectionalLight\nLight",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Mesh\nMesh",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "body\nMesh",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "wheel-front-right\nMesh",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "wheel-front-left\nMesh",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "wheel-back-right\nMesh",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "wheel-back-left\nMesh",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "door-right\nMesh",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "door-left\nMesh",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "PointLight\nLight",
+      "width": 366,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Turn 360°",
+      "width": 69.27,
+      "height": 26,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Play",
+      "width": 39.55,
+      "height": 26,
+      "fails44": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "id": "",
+      "name": "Pause",
+      "width": 48.58,
+      "height": 26,
+      "fails44": true
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "",
+      "name": "Search assets",
+      "width": 119.33,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "INPUT",
+      "type": "range",
+      "id": "timeline-scrubber",
+      "name": "Timeline position in seconds",
+      "width": 180.61,
+      "height": 16,
+      "fails44": true
+    },
+    {
+      "tag": "SELECT",
+      "type": "",
+      "id": "",
+      "name": "Asset type",
+      "width": 119.33,
+      "height": 22,
+      "fails44": true
+    },
+    {
+      "tag": "SELECT",
+      "type": "",
+      "id": "",
+      "name": "Asset category",
+      "width": 119.34,
+      "height": 22,
+      "fails44": true
+    }
+  ]
+}

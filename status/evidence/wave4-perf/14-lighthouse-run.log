@@ -1,0 +1,8 @@
+Runtime error encountered: EPERM, Permission denied: \\?\C:\Users\muazz\AppData\Local\Temp\lighthouse.82189771 '\\?\C:\Users\muazz\AppData\Local\Temp\lighthouse.82189771'
+Error: EPERM, Permission denied: \\?\C:\Users\muazz\AppData\Local\Temp\lighthouse.82189771 '\\?\C:\Users\muazz\AppData\Local\Temp\lighthouse.82189771'
+    at rmSync (node:fs:1283:18)
+    at Launcher.destroyTmp (file:///C:/Users/muazz/AppData/Local/npm-cache/_npx/5390d7d89c0de19d/node_modules/chrome-launcher/dist/chrome-launcher.js:367:9)
+    at Launcher.kill (file:///C:/Users/muazz/AppData/Local/npm-cache/_npx/5390d7d89c0de19d/node_modules/chrome-launcher/dist/chrome-launcher.js:349:14)
+    at Object.kill (file:///C:/Users/muazz/AppData/Local/npm-cache/_npx/5390d7d89c0de19d/node_modules/chrome-launcher/dist/chrome-launcher.js:39:18)
+    at runLighthouse (file:///C:/Users/muazz/AppData/Local/npm-cache/_npx/5390d7d89c0de19d/node_modules/lighthouse/cli/run.js:217:21)
+    at async file:///C:/Users/muazz/AppData/Local/npm-cache/_npx/5390d7d89c0de19d/node_modules/lighthouse/cli/index.js:10:1

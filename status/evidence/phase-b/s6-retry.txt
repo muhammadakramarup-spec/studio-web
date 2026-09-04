@@ -1,0 +1,48 @@
+
+Running 4 tests using 1 worker
+
+[1/4] tests\s6.spec.ts:11:3 › S6 — AI + avatars › Worker stub: HTTP 200, mock:true, <200ms, 10/10 runs, 0 env vars
+tests\s6.spec.ts:11:3 › S6 — AI + avatars › Worker stub: HTTP 200, mock:true, <200ms, 10/10 runs, 0 env vars
+[S6] worker stub durations (ms): [
+  1, 0, 0, 1, 0,
+  0, 0, 0, 0, 1
+] max: 1
+
+[2/4] tests\s6.spec.ts:40:3 › S6 — AI + avatars › Generation panel round-trip: idle→queued→running→done <3000ms, 0 network calls, MOCK label in DOM
+  1) tests\s6.spec.ts:40:3 › S6 — AI + avatars › Generation panel round-trip: idle→queued→running→done <3000ms, 0 network calls, MOCK label in DOM 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 4
+
+    - Array []
+    + Array [
+    +   "http://localhost:5173/assets/kenney/thumbs/car-kit.png",
+    +   "http://localhost:5173/assets/kenney/thumbs/castle-kit.png",
+    + ]
+
+      91 |     expect(roundTrip.dataMock).toBe('true');
+      92 |     expect(roundTrip.readyUrls.length).toBe(1);
+    > 93 |     expect(requestsDuringGen).toEqual([]);
+         |                               ^
+      94 |
+      95 |     console.log('[S6] generation round-trip elapsed (ms):', roundTrip.elapsed, 'network calls:', requestsDuringGen.length);
+      96 |   });
+        at C:\3D-Studio\02_projects\studio-web\.worktrees\claude-design-product-v1\tests\s6.spec.ts:93:31
+
+    Error Context: test-results\s6-S6-—-AI-avatars-Generat-443e1-ork-calls-MOCK-label-in-DOM\error-context.md
+
+
+[3/4] tests\s6.spec.ts:98:3 › S6 — AI + avatars › Credits gate: 4th requestGeneration() in-session returns error synchronously <50ms, no state transition
+tests\s6.spec.ts:98:3 › S6 — AI + avatars › Credits gate: 4th requestGeneration() in-session returns error synchronously <50ms, no state transition
+[S6] credits gate 4th-call elapsed (ms): 0
+
+[4/4] tests\s6.spec.ts:154:3 › S6 — AI + avatars › Avatar tile: onAvatarReady → studio.loadModel → visible mesh <2000ms, 256×256 capture differs ≥1000px from baseline
+tests\s6.spec.ts:154:3 › S6 — AI + avatars › Avatar tile: onAvatarReady → studio.loadModel → visible mesh <2000ms, 256×256 capture differs ≥1000px from baseline
+[S6] avatar tile elapsed (ms): 574.0999999996275 meshes: 2 tris: 465 diffCount: 3929
+
+  1 failed
+    tests\s6.spec.ts:40:3 › S6 — AI + avatars › Generation panel round-trip: idle→queued→running→done <3000ms, 0 network calls, MOCK label in DOM 
+  3 passed (11.4s)
+exit:1

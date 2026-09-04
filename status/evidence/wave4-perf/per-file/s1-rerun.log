@@ -1,0 +1,668 @@
+
+Running 6 tests using 1 worker
+
+[1/6] tests\s1.spec.ts:176:1 › Target 1 — load + ready + fps
+tests\s1.spec.ts:176:1 › Target 1 — load + ready + fps
+[console] debug [vite] connecting...
+
+[console] debug [vite] connected.
+
+[console] info [app] studio ready: load, edit, save, and export
+
+[console] debug [vite] connecting...
+
+[console] debug [vite] connected.
+
+[console] info [app] studio ready: load, edit, save, and export
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[S1 T1] loadMs=620.5 readyAfterLoad=true fps=61 renderer=ANGLE (Intel, Intel(R) UHD Graphics (0x000046A3) Direct3D11 vs_5_0 ps_5_0, D3D11) canvasSize={"w":840,"h":463,"cw":840,"ch":463}
+
+
+[2/6] tests\s1.spec.ts:224:1 › Target 2 & 6 — framing (10 files x5 views) + metallicFactor hint + de-metal
+tests\s1.spec.ts:224:1 › Target 2 & 6 — framing (10 files x5 views) + metallicFactor hint + de-metal
+[console] debug [vite] connecting...
+
+[console] debug [vite] connected.
+
+[console] info [app] studio ready: load, edit, save, and export
+
+[console] debug [vite] connecting...
+
+[console] debug [vite] connected.
+
+[console] info [app] studio ready: load, edit, save, and export
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[S1 T2] files=10 views=5 each; frame fractions:
+  coffee-table-10.glb view=0 frac=67.3% PASS
+  coffee-table-10.glb view=90 frac=67.0% PASS
+  coffee-table-10.glb view=180 frac=67.7% PASS
+  coffee-table-10.glb view=270 frac=67.0% PASS
+  coffee-table-10.glb view=top frac=68.3% PASS
+  coffee-table-15.glb view=0 frac=67.3% PASS
+  coffee-table-15.glb view=90 frac=67.7% PASS
+  coffee-table-15.glb view=180 frac=67.7% PASS
+  coffee-table-15.glb view=270 frac=67.7% PASS
+  coffee-table-15.glb view=top frac=68.7% PASS
+  console-11.glb view=0 frac=67.3% PASS
+  console-11.glb view=90 frac=68.0% PASS
+  console-11.glb view=180 frac=67.3% PASS
+  console-11.glb view=270 frac=67.7% PASS
+  console-11.glb view=top frac=68.3% PASS
+  console-6.glb view=0 frac=67.7% PASS
+  console-6.glb view=90 frac=67.3% PASS
+  console-6.glb view=180 frac=67.0% PASS
+  console-6.glb view=270 frac=67.3% PASS
+  console-6.glb view=top frac=67.3% PASS
+  credenza-10.glb view=0 frac=67.3% PASS
+  credenza-10.glb view=90 frac=67.0% PASS
+  credenza-10.glb view=180 frac=68.0% PASS
+  credenza-10.glb view=270 frac=67.0% PASS
+  credenza-10.glb view=top frac=68.0% PASS
+  credenza-9.glb view=0 frac=67.7% PASS
+  credenza-9.glb view=90 frac=68.0% PASS
+  credenza-9.glb view=180 frac=67.7% PASS
+  credenza-9.glb view=270 frac=68.7% PASS
+  credenza-9.glb view=top frac=68.0% PASS
+  dining-table-10.glb view=0 frac=67.3% PASS
+  dining-table-10.glb view=90 frac=68.3% PASS
+  dining-table-10.glb view=180 frac=67.3% PASS
+  dining-table-10.glb view=270 frac=68.3% PASS
+  dining-table-10.glb view=top frac=68.3% PASS
+  foyer-table-11.glb view=0 frac=67.0% PASS
+  foyer-table-11.glb view=90 frac=67.3% PASS
+  foyer-table-11.glb view=180 frac=68.3% PASS
+  foyer-table-11.glb view=270 frac=68.0% PASS
+  foyer-table-11.glb view=top frac=68.7% PASS
+  tv-console-14.glb view=0 frac=68.0% PASS
+  tv-console-14.glb view=90 frac=68.3% PASS
+  tv-console-14.glb view=180 frac=68.0% PASS
+  tv-console-14.glb view=270 frac=68.3% PASS
+  tv-console-14.glb view=top frac=68.3% PASS
+  end-tables-11.glb view=0 frac=67.7% PASS
+  end-tables-11.glb view=90 frac=68.3% PASS
+  end-tables-11.glb view=180 frac=67.7% PASS
+  end-tables-11.glb view=270 frac=68.0% PASS
+  end-tables-11.glb view=top frac=68.3% PASS
+
+[S1 T2] files with >=1 failing view: 0/10
+
+[S1 T6] metallic hint:
+  coffee-table-10.glb hand=1 flagged=1 PASS
+  coffee-table-15.glb hand=1 flagged=1 PASS
+  console-11.glb hand=1 flagged=1 PASS
+  console-6.glb hand=1 flagged=1 PASS
+  credenza-10.glb hand=1 flagged=1 PASS
+  credenza-9.glb hand=1 flagged=1 PASS
+  dining-table-10.glb hand=1 flagged=1 PASS
+  foyer-table-11.glb hand=1 flagged=1 PASS
+  tv-console-14.glb hand=1 flagged=1 PASS
+  end-tables-11.glb hand=1 flagged=1 PASS
+
+[S1 T6] false negatives: 0/10
+
+[S1 T6] de-metal pixel diff (files where flag fired):
+  coffee-table-10.glb moved=26.51% PASS
+  coffee-table-15.glb moved=55.28% PASS
+  console-11.glb moved=37.75% PASS
+  console-6.glb moved=20.26% PASS
+  credenza-10.glb moved=66.88% PASS
+  credenza-9.glb moved=38.57% PASS
+  dining-table-10.glb moved=38.35% PASS
+  foyer-table-11.glb moved=25.53% PASS
+  tv-console-14.glb moved=60.45% PASS
+  end-tables-11.glb moved=8.09% PASS
+
+
+
+[console] warning WebGL: too many errors, no more errors will be reported to the console for this context.
+
+[3/6] tests\s1.spec.ts:370:1 › Target 3 — environment switch + rotation + PMREM timing + HDR path
+tests\s1.spec.ts:370:1 › Target 3 — environment switch + rotation + PMREM timing + HDR path
+[S1 T3] source check: hdr branch uses fromEquirectangular=true uses fromScene=false
+
+[S1 T3] HDR fixture available: true (1615248 bytes)
+
+[S1 T3] room->studio moved=47.66% rotation0->140 moved=47.50% pmremSceneMs=3.00 hdrLoaded=true pmremHdrMs=0.60 hdrVsStudioMoved=47.91%
+
+[4/6] tests\s1.spec.ts:489:1 › Target 4 — shadow catcher / transparent export
+tests\s1.spec.ts:489:1 › Target 4 — shadow catcher / transparent export
+[S1 T4] alpha==0: 61.60% alpha==255: 19.39% shadow-toggle change outside opaque mask: 18.73% (of 1048576 px, 845287 outside mask)
+
+[5/6] tests\s1.spec.ts:569:1 › Target 5 — PNG export dims + 24-frame 1024x1024 ZIP turntable + exportWebM contract
+tests\s1.spec.ts:569:1 › Target 5 — PNG export dims + 24-frame 1024x1024 ZIP turntable + exportWebM contract
+[S1 T5] PNG dims: 2048x2048
+
+[S1 T5] ZIP entries: 24 (4436867 bytes, progress callbacks: 25)
+
+[S1 T5] ZIP frame dims: frame_0001.png=1024x1024 ... frame_0024.png=1024x1024 (all24 correct=true)
+
+[S1 T5] exportWebM: threw=false result=null gate=null (nothing produced)
+
+[6/6] tests\s1.spec.ts:666:1 › setRenderHook — render-loop seam
+tests\s1.spec.ts:666:1 › setRenderHook — render-loop seam
+[S1 renderHook] hookCalls(300ms)=20 defaultRenders-while-hooked=0 defaultRenders-after-null(300ms)=3
+
+  1) tests\s1.spec.ts:666:1 › setRenderHook — render-loop seam ─────────────────────────────────────
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 5
+    Received:    3
+
+      704 |   expect(result.hookCalls).toBeGreaterThanOrEqual(5);
+      705 |   expect(result.rendersWhileHooked).toBe(0);
+    > 706 |   expect(result.rendersAfterNull).toBeGreaterThanOrEqual(5);
+          |                                   ^
+      707 | });
+      708 |
+        at C:\Users\muazz\AppData\Local\Temp\claude\C--Users-muazz\78586e40-2737-44ef-9d12-735f288d9ce0\scratchpad\studio-web-clean\tests\s1.spec.ts:706:35
+
+    Error Context: test-results\s1-setRenderHook-—-render-loop-seam\error-context.md
+
+
+  1 failed
+    tests\s1.spec.ts:666:1 › setRenderHook — render-loop seam ──────────────────────────────────────
+  5 passed (1.0m)

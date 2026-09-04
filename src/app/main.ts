@@ -12,12 +12,14 @@ import type { StudioHandle } from "../viewer/studio.ts";
 
 import { attachEditor } from "../editor/index.ts";
 import type { EditorHandle } from "../editor/index.ts";
+import type { ModifierRecord } from "../editor/state.ts";
 
 import { mountLibraryPanel } from "../library/index.ts";
 import type { LibraryAsset } from "../library/manifest";
 
 import { attachTimeline } from "../timeline/index.ts";
 import type { TimelineHandle, TimelineSceneAdapter, SampledFrame } from "../timeline/index.ts";
+import { planSequence, type ExportPlanMode } from "../timeline/export-plan.ts";
 
 import { track } from "../account/index.ts";
 import {
@@ -26,6 +28,18 @@ import {
   parseProjectDocument,
   projectModelBlob,
 } from "../project/format.ts";
+import type { ProjectAsset, ProjectEnvironment, ProjectHDRI, ProjectDocumentV2 } from "../project/format.ts";
+import { captureScene, restoreScene } from "../project/scene.ts";
+
+import { openRecoveryStore, createAutosaver } from "./persist.ts";
+import type { RecoveryStore, Autosaver } from "./persist.ts";
+
+import {
+  buildReceipt,
+  createProvenanceRegistry,
+  receiptFiles,
+  type ProvenanceAsset,
+} from "../viewer/receipt.ts";
 
 // -------------------------------------------------------------------- helpers
 
@@ -79,6 +93,14 @@ function showFatalBootError(error: unknown): void {
   app.appendChild(card);
 }
 
+// Runtime-only surface S2 attaches at src/editor/index.ts:221 (EditorTestHooks), not part of the
+// frozen EditorHandle type (src/editor/types.ts). This is the only way to reach the modifier
+// reader / bloom state needed to build a v2 project document — see status/evidence/f2/requests.md.
+interface EditorRuntimeHooks {
+  bloomState(): { enabled: boolean; strength: number; radius: number; threshold: number };
+  serializeState(): { objects: { uuid: string; modifiers: ModifierRecord | null }[] };
+}
+
 async function boot(): Promise<void> {
 
 // ============================================================== 1) S1 viewer
@@ -97,6 +119,33 @@ const studio: StudioHandle = createStudio({ canvas });
 // bloom clip regression. The silo tests (s1..s6) and the SCOPE §6 acceptance run build their own
 // studio via window.__e2e_studio instead. Do not remove this global — two tests read it.
 (window as unknown as { __studio?: StudioHandle }).__studio = studio;
+
+// Wave 3 Phase B: module-level state shared by save/autosave/export/provenance wiring below.
+// Declared here — before any `await` in this function — so the WebGL context-loss listeners
+// attached immediately below (which must survive a context loss arriving at any point after
+// __studio is exposed to the page, including during the async recovery-store lookup a few lines
+// down) always close over an already-initialized exportButtons/lastAutosaveAt, never one still in
+// its temporal dead zone.
+let currentAsset: ProjectAsset = null;
+let currentHdri: ProjectHDRI | null = null;
+let cachedModelBase64: { id: string; base64: string } | null = null;
+let lastAutosaveAt: Date | null = null;
+const exportButtons: HTMLButtonElement[] = [];
+const provenance = createProvenanceRegistry();
+
+canvas.addEventListener("webglcontextlost", (event) => {
+  event.preventDefault(); // three.js already does this internally; harmless to repeat here too.
+  const savedTime = lastAutosaveAt
+    ? lastAutosaveAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    : "not yet";
+  setWorkspaceStatus(`Graphics context lost — your work was autosaved at ${savedTime}. Reload to restore.`, true);
+  for (const button of exportButtons) button.disabled = true;
+});
+canvas.addEventListener("webglcontextrestored", () => {
+  setWorkspaceStatus("Graphics context restored");
+  studio.debug.renderOnce();
+  for (const button of exportButtons) button.disabled = !studio.getActiveModel();
+});
 
 function resizeViewport(): void {
   const wrap = canvas.parentElement as HTMLElement;
@@ -133,6 +182,29 @@ function setHint(state: "idle" | "loading" | "loaded", text?: string): void {
   button.type = "button";
   button.addEventListener("click", () => modelFileInput.click());
   viewportHint.appendChild(button);
+  // Wave 3 Phase B: a pending local-recovery record re-appends this line on every idle render
+  // (not just the first) so it survives a later setHint("idle") call — e.g. after a failed model
+  // load — until the visitor actually acts on it.
+  if (pendingRestore) {
+    const savedTime = new Date(pendingRestore.savedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    const message = `Unsaved work from ${savedTime} can be restored`;
+    const restoreLine = el("p", "restore-prompt");
+    restoreLine.appendChild(el("span", undefined, message));
+    const restoreBtn = el("button", undefined, "Restore");
+    restoreBtn.type = "button";
+    const discardBtn = el("button", undefined, "Discard");
+    discardBtn.type = "button";
+    restoreBtn.addEventListener("click", () => void restoreFromRecord(pendingRestore!));
+    discardBtn.addEventListener("click", () => {
+      pendingRestore = null;
+      void recoveryStore?.clear();
+      setHint("idle");
+    });
+    restoreLine.appendChild(restoreBtn);
+    restoreLine.appendChild(discardBtn);
+    viewportHint.appendChild(restoreLine);
+    setWorkspaceStatus(message);
+  }
 }
 
 function setWorkspaceStatus(message: string, error = false): void {
@@ -141,6 +213,34 @@ function setWorkspaceStatus(message: string, error = false): void {
   viewportError.hidden = !error;
   if (error) viewportError.textContent = message;
 }
+
+// Wave 3 Phase B: local recovery store / pending-restore / autosaver state. Declared as `let`
+// (not `const`) and initialized to null HERE — before setHint's first call below and before
+// refreshOutliner()/refreshMaterialPanel() make their first call further down (both of which call
+// autosaver?.markDirty(), safe as a no-op while still null) — then populated by the IIFE below
+// without blocking the rest of boot(). Blocking here (an early `await openRecoveryStore()`) was
+// tried and reverted: it measurably delayed every later synchronous step of boot(), including
+// mounting the S3 library panel, enough to shift its thumbnail image requests later — into the
+// network-recording window of an unrelated existing test (tests/s6.spec.ts's generation
+// round-trip, which asserts zero network calls during generation). IndexedDB opens fast enough
+// that the tiny delay before a real pending-restore record can show up costs nothing in practice.
+let recoveryStore: RecoveryStore | null = null;
+let pendingRestore: { savedAt: string; doc: ProjectDocumentV2 } | null = null;
+let autosaver: Autosaver | null = null;
+void (async () => {
+  recoveryStore = await openRecoveryStore();
+  if (!recoveryStore) return;
+  pendingRestore = await recoveryStore.load();
+  autosaver = createAutosaver({
+    store: recoveryStore,
+    capture: captureForAutosave,
+    onStatus: (message) => setWorkspaceStatus(message, true),
+  });
+  // Re-render the idle hint now that a pending restore is known, in case the first setHint("idle")
+  // call below already ran before this resolved. Guarded on the hint still being idle so this
+  // never clobbers a "loading"/"loaded" transition that happened in the meantime.
+  if (pendingRestore && viewportHint.dataset.state === "idle") setHint("idle");
+})();
 
 // createStudio() has no real async boot step — no network fetch happens until loadModel is
 // called — so the studio is genuinely ready as soon as this line runs. The hint reflects that
@@ -166,6 +266,7 @@ studio.loadModel = (async (source: File | Blob | string, name?: string) => {
     saveProjectBtn.disabled = false;
     for (const button of exportButtons) button.disabled = false;
     setWorkspaceStatus(`${handle.name} ready`);
+    autosaver?.markDirty();
     return handle;
   } catch (err) {
     setHint("idle");
@@ -184,7 +285,15 @@ function loadLocalModel(file: File): void {
     setWorkspaceStatus("That file is over the 50 MB local import limit.", true);
     return;
   }
+  // Decision W-5 (status/warden-log.md): a locally opened file's own name may live in the local
+  // project file / local recovery record (both stay on the user's machine) — File.name never
+  // carries a directory, only the basename — but the asset it came from is not a library pick, so
+  // it must never contribute provenance to an export receipt.
+  currentAsset = { origin: "local" };
+  currentHdri = null;
+  cachedModelBase64 = null;
   void studio.loadModel(file, file.name).then(() => {
+    provenance.setModel(null);
     refreshOutliner();
     refreshMaterialPanel();
   }).catch(() => {});
@@ -230,24 +339,28 @@ function refreshOutliner(): void {
   const rows = editor.outliner.list();
   if (rows.length === 0) {
     outlinerList.appendChild(el("li", "empty-hint", "Nothing in the scene yet"));
-    return;
+  } else {
+    for (const row of rows) {
+      const li = el("li");
+      const button = el("button", "outliner-row");
+      button.type = "button";
+      if (editor.selection === row.object) button.classList.add("selected");
+      button.appendChild(el("span", undefined, row.name || row.type));
+      button.appendChild(el("span", "type-badge", row.type));
+      button.addEventListener("click", () => {
+        editor.select(row.object);
+        refreshOutliner();
+        refreshMaterialPanel();
+        setSelectionActionState();
+      });
+      li.appendChild(button);
+      outlinerList.appendChild(li);
+    }
   }
-  for (const row of rows) {
-    const li = el("li");
-    const button = el("button", "outliner-row");
-    button.type = "button";
-    if (editor.selection === row.object) button.classList.add("selected");
-    button.appendChild(el("span", undefined, row.name || row.type));
-    button.appendChild(el("span", "type-badge", row.type));
-    button.addEventListener("click", () => {
-      editor.select(row.object);
-      refreshOutliner();
-      refreshMaterialPanel();
-      setSelectionActionState();
-    });
-    li.appendChild(button);
-    outlinerList.appendChild(li);
-  }
+  // Cheapest-correct autosave trigger (status/evidence/f2/requests.md (c)): refreshOutliner runs
+  // after nearly every scene-mutating action (add, undo/redo, mirror/array, project open/restore),
+  // so marking dirty here covers all of them from one place instead of every call site.
+  autosaver?.markDirty();
 }
 
 // -------- material panel (#panel-material)
@@ -263,6 +376,7 @@ function refreshMaterialPanel(): void {
   const sel = editor.selection as (THREE.Object3D & { isMesh?: boolean; material?: unknown }) | null;
   if (!sel || !sel.isMesh) {
     materialBody.appendChild(el("div", "empty-hint", "Select a mesh to edit its material"));
+    autosaver?.markDirty();
     return;
   }
   const mat = Array.isArray(sel.material) ? sel.material[0] : sel.material;
@@ -278,6 +392,8 @@ function refreshMaterialPanel(): void {
   colorInput.value = `#${std.color?.getHexString() ?? "ffffff"}`;
   colorInput.addEventListener("input", () => {
     editor.ops.setMaterial(sel, { color: parseInt(colorInput.value.slice(1), 16) });
+    cachedModelBase64 = null;
+    autosaver?.markDirty();
     track({ type: "effect_applied", effect: "material-color" });
   });
   colorRow.appendChild(colorInput);
@@ -295,7 +411,11 @@ function refreshMaterialPanel(): void {
     input.max = "1";
     input.step = "0.01";
     input.value = String(value);
-    input.addEventListener("input", () => onInput(parseFloat(input.value)));
+    input.addEventListener("input", () => {
+      onInput(parseFloat(input.value));
+      cachedModelBase64 = null;
+      autosaver?.markDirty();
+    });
     row.appendChild(input);
     materialBody.appendChild(row);
   }
@@ -305,9 +425,11 @@ function refreshMaterialPanel(): void {
   const resetBtn = el("button", "field-btn", "Reset material");
   resetBtn.addEventListener("click", () => {
     editor.ops.setMaterial(sel, { color: 0xffffff, roughness: 0.5, metalness: 0, emissiveIntensity: 0 });
+    cachedModelBase64 = null;
     refreshMaterialPanel();
   });
   materialBody.appendChild(resetBtn);
+  autosaver?.markDirty();
 }
 
 // Editor's own canvas picking listens on 'pointerdown'; a 'pointerup' listener added after
@@ -344,11 +466,13 @@ function tbButton(group: HTMLElement, label: string, onClick: () => void): HTMLB
 const histGroup = tbGroup("History");
 tbButton(histGroup, "Undo", () => {
   editor.undo();
+  cachedModelBase64 = null;
   refreshOutliner();
   refreshMaterialPanel();
 });
 tbButton(histGroup, "Redo", () => {
   editor.redo();
+  cachedModelBase64 = null;
   refreshOutliner();
   refreshMaterialPanel();
 });
@@ -390,6 +514,7 @@ const mirrorBtn = tbButton(modGroup, "Mirror X", () => {
   }
   mirrorOn = !mirrorOn;
   editor.ops.setMirror(editor.selection, "x", mirrorOn);
+  cachedModelBase64 = null;
   mirrorBtn.classList.toggle("active", mirrorOn);
   mirrorBtn.setAttribute("aria-pressed", String(mirrorOn));
   refreshOutliner();
@@ -401,6 +526,7 @@ const arrayBtn = tbButton(modGroup, "Array x5", () => {
     return;
   }
   editor.ops.setArray(editor.selection, 5, [1.2, 0, 0]);
+  cachedModelBase64 = null;
   refreshOutliner();
 });
 mirrorBtn.disabled = true;
@@ -429,12 +555,16 @@ const bloomBtn = tbButton(fxGroup, "Bloom", () => {
   bloomBtn.classList.toggle("active", bloomOn);
   bloomBtn.setAttribute("aria-pressed", String(bloomOn));
   track({ type: "effect_applied", effect: "bloom" });
+  autosaver?.markDirty();
 });
 bloomBtn.setAttribute("aria-pressed", "false");
 
 const viewGroup = tbGroup("View");
 for (const preset of [0, 90, 180, 270, "top"] as const) {
-  tbButton(viewGroup, typeof preset === "number" ? `${preset}°` : "Top", () => studio.setView(preset));
+  tbButton(viewGroup, typeof preset === "number" ? `${preset}°` : "Top", () => {
+    studio.setView(preset);
+    autosaver?.markDirty();
+  });
 }
 let spinOn = false;
 const spinBtn = tbButton(viewGroup, "Spin", () => {
@@ -442,6 +572,7 @@ const spinBtn = tbButton(viewGroup, "Spin", () => {
   studio.setSpin(spinOn, 30);
   spinBtn.classList.toggle("active", spinOn);
   spinBtn.setAttribute("aria-pressed", String(spinOn));
+  autosaver?.markDirty();
 });
 spinBtn.setAttribute("aria-pressed", "false");
 
@@ -451,13 +582,13 @@ exportStatus.id = "export-status";
 exportStatus.setAttribute("role", "status");
 exportStatus.setAttribute("aria-live", "polite");
 type ExportKind = "still" | "turntable" | "glb" | "gltf" | "blender-package";
-const exportButtons: HTMLButtonElement[] = [];
 
 function exportButton(
   label: string,
   kind: ExportKind,
   filename: string,
   makeBlob: () => Promise<Blob>,
+  readyText?: () => string,
 ): void {
   const button = tbButton(exportGroup, label, async () => {
     const t0 = performance.now();
@@ -467,8 +598,9 @@ function exportButton(
     try {
       const blob = await makeBlob();
       downloadBlob(blob, filename);
-      exportStatus.textContent = `${label} ready`;
-      setWorkspaceStatus(`${label} download ready`);
+      const message = readyText ? readyText() : `${label} ready`;
+      exportStatus.textContent = message;
+      setWorkspaceStatus(readyText ? message : `${label} download ready`);
       track({ type: "export_completed", exportKind: kind, ms: performance.now() - t0 });
     } catch (error) {
       exportStatus.textContent = "Export failed";
@@ -481,14 +613,69 @@ function exportButton(
   exportButtons.push(button);
 }
 
+// Wave 3 Function 3 (F3, status/evidence/f3/requests.md §6): attaches a machine- and
+// human-readable receipt (studio-web-receipt.json + LICENCE.txt) to a package export whenever it
+// used at least one CC0 library asset (model and/or HDRI). Returns [] — contributing zero extra
+// ZIP entries — when nothing in `provenance` was ever set, preserving the exact-3-entries /
+// exact-24-frames contract for a purely local/default session (tests/exports.spec.ts X3).
+function buildExportExtras(
+  kind: "blender-package" | "turntable",
+  files: string[],
+  frames?: { count: number; width: number; height: number; motion: ExportPlanMode },
+): { name: string; blob: Blob }[] {
+  const assets = provenance.list();
+  if (!assets.length) return [];
+  const receipt = buildReceipt({ appVersion: __APP_VERSION__, kind, files, frames, assets });
+  return receiptFiles(receipt);
+}
+
 exportButton("PNG", "still", "studio-export.png", () => studio.exportPNG("2048x2048"));
 exportButton("GLB", "glb", "studio-scene.glb", () => studio.exportGLB());
 exportButton("GLTF", "gltf", "studio-scene.gltf", () => studio.exportGLTF());
-exportButton("Blender ZIP", "blender-package", "studio-blender-package.zip", () => studio.exportBlenderPackage());
-exportButton("Turntable", "turntable", "studio-turntable.zip", () =>
-  studio.exportSequence("1024x1024", 24, (fraction) => {
-    exportStatus.textContent = `Exporting ${Math.round(fraction * 100)}%`;
-  }),
+exportButton("Blender ZIP", "blender-package", "studio-blender-package.zip", () => {
+  const extras = buildExportExtras("blender-package", [
+    "studio-scene.glb",
+    "studio-scene.gltf",
+    "README-Blender.txt",
+    "studio-web-receipt.json",
+    "LICENCE.txt",
+  ]);
+  return studio.exportBlenderPackage(extras);
+});
+
+// F1 wiring (status/evidence/f1/requests.md): the Turntable export samples the authored timeline
+// when any track/channel has a key, falling back to the built-in linear sweep otherwise. The
+// completion message reports which sweep actually ran, decided only at click time.
+let lastTurntableMode: ExportPlanMode = "default-sweep";
+exportButton(
+  "Turntable",
+  "turntable",
+  "studio-turntable.zip",
+  () => {
+    const plan = planSequence(timeline.getState(), 24);
+    lastTurntableMode = plan.mode;
+    const frameNames = Array.from({ length: 24 }, (_, i) => `frame_${String(i + 1).padStart(4, "0")}.png`);
+    const extras = buildExportExtras(
+      "turntable",
+      [...frameNames, "studio-web-receipt.json", "LICENCE.txt"],
+      { count: 24, width: 1024, height: 1024, motion: plan.mode },
+    );
+    return studio.exportSequence(
+      "1024x1024",
+      24,
+      (fraction) => {
+        exportStatus.textContent = `Exporting ${Math.round(fraction * 100)}%`;
+      },
+      {
+        applyFrame: plan.mode === "timeline" ? (i: number) => sceneAdapter.applySampledFrame(plan.frames[i]) : undefined,
+        extraFiles: extras,
+      },
+    );
+  },
+  () =>
+    lastTurntableMode === "timeline"
+      ? "Turntable ready (timeline)"
+      : "Turntable ready (default 360° sweep — add keys with Turn 360°)",
 );
 exportGroup.appendChild(el("span", "export-note", "GIF / native .blend: use PNG ZIP or Blender import"));
 exportGroup.appendChild(exportStatus);
@@ -505,6 +692,23 @@ const libraryRoot = byId<HTMLElement>("panel-library");
 const libraryMount = el("div");
 libraryRoot.appendChild(libraryMount);
 
+// F3 wiring (status/evidence/f3/requests.md §2): every field buildReceipt's privacy guard checks
+// (id, name, sourceUrl) is safe to pass straight from a LibraryAsset — verified against the live
+// manifest (status/evidence/f3/requests.md).
+function libraryAssetToProvenance(asset: LibraryAsset): ProvenanceAsset {
+  return {
+    id: asset.id,
+    name: asset.name,
+    kind: asset.kind as "model" | "hdri", // only reached for kind "model" | "hdri" below
+    source: asset.source,
+    sourceUrl: asset.sourceUrl,
+    licence: asset.licence,
+    category: asset.category,
+    fileBytes: asset.fileBytes,
+    triangles: asset.triangles,
+  };
+}
+
 mountLibraryPanel(libraryMount, {
   onAssetPicked: async (asset: LibraryAsset) => {
     try {
@@ -512,8 +716,29 @@ mountLibraryPanel(libraryMount, {
         setWorkspaceStatus(`Loading ${asset.name} lighting…`);
         await studio.loadEnvironment(asset.fileUrl, asset.name);
         setWorkspaceStatus(`${asset.name} lighting applied`);
+        currentHdri = {
+          id: asset.id,
+          name: asset.name,
+          source: asset.source,
+          sourceUrl: asset.sourceUrl,
+          licence: asset.licence,
+          fileUrl: asset.fileUrl,
+        };
+        provenance.setEnvironment(libraryAssetToProvenance(asset));
       } else if (asset.kind === "model") {
         await studio.loadModel(asset.fileUrl, asset.name);
+        currentAsset = {
+          origin: "library",
+          id: asset.id,
+          name: asset.name,
+          kind: "model",
+          source: asset.source,
+          sourceUrl: asset.sourceUrl,
+          licence: asset.licence,
+          category: asset.category,
+        };
+        cachedModelBase64 = null;
+        provenance.setModel(libraryAssetToProvenance(asset));
       } else {
         setWorkspaceStatus("Material-library application is not available in this alpha yet.", true);
         return;
@@ -627,7 +852,10 @@ function renderTimelineKeys(): void {
     }
   }
 }
-timeline.onChange(() => renderTimelineKeys());
+timeline.onChange(() => {
+  renderTimelineKeys();
+  autosaver?.markDirty();
+});
 renderTimelineKeys();
 
 // ===================================================== local project lifecycle
@@ -650,28 +878,187 @@ function currentViewerState() {
   };
 }
 
+// F3 wiring (status/evidence/f3/requests.md §7): map a saved v2 project's asset/HDRI identity
+// back to the receipt/provenance shape. Only a "library" origin asset carries provenance — a
+// local file's asset is `{ origin: "local" }` and must never seed a receipt.
+function projectAssetToProvenance(asset: ProjectAsset): ProvenanceAsset | null {
+  if (!asset || asset.origin !== "library") return null;
+  return {
+    id: asset.id,
+    name: asset.name,
+    kind: "model",
+    source: asset.source,
+    sourceUrl: asset.sourceUrl,
+    licence: asset.licence,
+    category: asset.category,
+  };
+}
+
+function hdriToProvenance(hdri: ProjectHDRI): ProvenanceAsset {
+  return {
+    id: hdri.id,
+    name: hdri.name,
+    kind: "hdri",
+    source: hdri.source,
+    sourceUrl: hdri.sourceUrl,
+    licence: hdri.licence,
+  };
+}
+
+// F2 wiring (status/evidence/f2/requests.md "getActiveModelBase64"): avoids re-running
+// studio.exportActiveGLB() (a real geometry re-serialize) on every autosave tick when nothing
+// about the active model's own bytes has changed. Keyed by activeModelId (a model swap
+// invalidates it automatically) and explicitly cleared at every call site above that can change
+// the exported model's own bytes (material edits, mirror/array, undo/redo, model change).
+async function getActiveModelBase64(): Promise<string | null> {
+  const active = studio.getActiveModel();
+  if (!active) return null;
+  if (cachedModelBase64 && cachedModelBase64.id === active.id) return cachedModelBase64.base64;
+  const blob = await studio.exportActiveGLB();
+  const base64 = await blobToBase64(blob);
+  cachedModelBase64 = { id: active.id, base64 };
+  return base64;
+}
+
+// F2 wiring (status/evidence/f2/requests.md "(a) Shared document builder"): the one place that
+// builds a v2 project document, reused by the explicit Save button and by autosave so the two can
+// never drift apart. Skips capture while an export is in flight and returns null when no model is
+// loaded (both per the task brief's capture contract).
+async function buildProjectDocument(): Promise<ProjectDocumentV2 | null> {
+  const active = studio.getActiveModel();
+  if (!active) return null;
+  const vstate = studio.debug.state();
+  if (vstate.busy) return null;
+  const base64 = await getActiveModelBase64();
+  if (base64 === null) return null;
+
+  const envKind = vstate.envKind as "room" | "studio" | "hdr";
+  const environment: ProjectEnvironment = {
+    kind: envKind,
+    rotation: vstate.envRot as number,
+    intensity: vstate.envInt as number,
+    ...(envKind === "hdr" && currentHdri ? { hdri: currentHdri } : {}),
+  };
+
+  const hooks = (editor as unknown as { __test?: EditorRuntimeHooks }).__test;
+  const bloomState = hooks?.bloomState() ?? { enabled: false, strength: 1.2, radius: 0.4, threshold: 0.85 };
+  const canonical = hooks?.serializeState();
+  const modifierByUuid = new Map<string, ModifierRecord | undefined>(
+    (canonical?.objects ?? []).map((o) => [o.uuid, o.modifiers ?? undefined]),
+  );
+  const scene = captureScene(studio.scene, (uuid: string) => modifierByUuid.get(uuid), bloomState);
+
+  return createProjectDocument({
+    // Decision W-5 (status/warden-log.md): keep the real model.name for local files too — it is
+    // the user's own local data, and File.name never carries a filesystem path — never a
+    // placeholder here. The privacy boundary is enforced at the export/receipt layer instead
+    // (provenance.setModel(null) for local files, see loadLocalModel above).
+    name: active.name.replace(/\.glb$/i, ""),
+    savedAt: new Date().toISOString(),
+    model: { name: active.name, mime: "model/gltf-binary", base64 },
+    viewer: currentViewerState(),
+    timeline: timeline.getState(),
+    asset: currentAsset,
+    environment,
+    view: {
+      position: studio.camera.position.toArray() as [number, number, number],
+      target: studio.controls.target.toArray() as [number, number, number],
+      focal: vstate.focal as 24 | 35 | 50 | 85 | 135,
+      exposure: vstate.expo as number,
+    },
+    scene,
+  });
+}
+
+// Wraps buildProjectDocument for the autosaver only, so a successful capture can be timestamped
+// for the WebGL-context-loss message ("your work was autosaved at HH:MM") without the explicit
+// Save button's flow (which does not need that bookkeeping) sharing the same wrapper. Returns
+// "busy" (not null) while an export is rendering (D-2, status/warden-log.md "defect D-2 opened")
+// so createAutosaver re-arms the debounce instead of treating an in-progress export as "nothing
+// to save"; still returns null when no model is loaded.
+async function captureForAutosave(): Promise<ProjectDocumentV2 | null | "busy"> {
+  if (studio.debug.state().busy) return "busy";
+  const doc = await buildProjectDocument();
+  if (doc) lastAutosaveAt = new Date();
+  return doc;
+}
+
+// F2 wiring (status/evidence/f2/requests.md "(b) Open handler" + "(d) Restore prompt"): the one
+// place that applies a ProjectDocumentV2 to the live studio/editor/timeline, shared by "Open
+// project" and the local-recovery "Restore" button so the two flows can never drift apart.
+async function applyProjectDocument(project: ProjectDocumentV2): Promise<void> {
+  await studio.loadModel(projectModelBlob(project), project.model.name);
+
+  let appliedHdri: ProjectHDRI | null = null;
+  if (project.environment.hdri && project.environment.hdri.fileUrl.startsWith("/assets/")) {
+    await studio.loadEnvironment(project.environment.hdri.fileUrl, project.environment.hdri.name);
+    appliedHdri = project.environment.hdri;
+  } else {
+    // Preserves the pre-v2 downgrade behavior for a v1 file upgraded in memory (its
+    // environment.hdri is always undefined) and for any HDRI whose fileUrl isn't a packaged
+    // /assets/ path.
+    studio.setEnvironment(project.environment.kind === "hdr" ? "room" : project.environment.kind);
+  }
+  currentHdri = appliedHdri;
+  studio.setEnvRotation(project.environment.rotation);
+  studio.setEnvIntensity(project.environment.intensity);
+
+  if (project.view) {
+    studio.camera.position.set(...project.view.position);
+    studio.controls.target.set(...project.view.target);
+    studio.controls.update();
+    studio.setFocalLength(project.view.focal);
+    studio.setExposure(project.view.exposure);
+  } else {
+    studio.setFocalLength(project.viewer.focal);
+    studio.setExposure(project.viewer.exposure);
+  }
+  studio.setTransparent(project.viewer.transparent);
+  studio.setSpin(project.viewer.spin, 30);
+  studio.setShadows(project.viewer.shadows);
+  studio.setFloor(project.viewer.floor);
+  timeline.loadState(project.timeline);
+
+  currentAsset = project.asset;
+  cachedModelBase64 = null;
+  const restoredCount = restoreScene(project, editor);
+  console.info(`[app] restored ${restoredCount} authored scene object(s)`);
+
+  // Seed provenance from what was ACTUALLY applied above (not merely what the document claims),
+  // so a receipt built from a later export can never assert an HDRI that was in fact downgraded
+  // to Room/Studio lighting.
+  provenance.setModel(projectAssetToProvenance(project.asset));
+  provenance.setEnvironment(appliedHdri ? hdriToProvenance(appliedHdri) : null);
+
+  refreshOutliner();
+  refreshMaterialPanel();
+  renderTimelineKeys();
+}
+
+async function restoreFromRecord(record: { savedAt: string; doc: ProjectDocumentV2 }): Promise<void> {
+  pendingRestore = null;
+  try {
+    await applyProjectDocument(record.doc);
+    setWorkspaceStatus("Unsaved work restored.");
+  } catch (error) {
+    setWorkspaceStatus(`Could not restore: ${error instanceof Error ? error.message : String(error)}`, true);
+  }
+}
+
 saveProjectBtn.addEventListener("click", () => {
   void (async () => {
-    const active = studio.getActiveModel();
-    if (!active) {
+    if (!studio.getActiveModel()) {
       setWorkspaceStatus("Load a model before saving a project.", true);
       return;
     }
     saveProjectBtn.disabled = true;
     setWorkspaceStatus("Packing the active model and project settings…");
     try {
-      const model = await studio.exportActiveGLB();
-      const project = createProjectDocument({
-        name: active.name.replace(/\.glb$/i, ""),
-        savedAt: new Date().toISOString(),
-        model: {
-          name: active.name,
-          mime: "model/gltf-binary",
-          base64: await blobToBase64(model),
-        },
-        viewer: currentViewerState(),
-        timeline: timeline.getState(),
-      });
+      const project = await buildProjectDocument();
+      if (!project) {
+        setWorkspaceStatus("Load a model before saving a project.", true);
+        return;
+      }
       const blob = new Blob([JSON.stringify(project)], { type: "application/json" });
       const safeName = project.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "studio-project";
       downloadBlob(blob, `${safeName}.studio.json`);
@@ -697,22 +1084,8 @@ projectFileInput.addEventListener("change", () => {
     setWorkspaceStatus(`Opening ${file.name}…`);
     try {
       const project = parseProjectDocument(await file.text());
-      await studio.loadModel(projectModelBlob(project), project.model.name);
-      studio.setFocalLength(project.viewer.focal);
-      studio.setExposure(project.viewer.exposure);
-      studio.setEnvironment(project.viewer.environment === "hdr" ? "room" : project.viewer.environment);
-      studio.setEnvRotation(project.viewer.environmentRotation);
-      studio.setEnvIntensity(project.viewer.environmentIntensity);
-      studio.setTransparent(project.viewer.transparent);
-      studio.setSpin(project.viewer.spin, 30);
-      studio.setShadows(project.viewer.shadows);
-      studio.setFloor(project.viewer.floor);
-      timeline.loadState(project.timeline);
-      refreshOutliner();
-      refreshMaterialPanel();
-      renderTimelineKeys();
-      const environmentNote = project.viewer.environment === "hdr" ? " Custom HDR lighting is not embedded; Room lighting was restored." : "";
-      setWorkspaceStatus(`${project.name} restored.${environmentNote}`);
+      await applyProjectDocument(project);
+      setWorkspaceStatus(`${project.name} restored.`);
     } catch (error) {
       setWorkspaceStatus(`Could not open project: ${error instanceof Error ? error.message : String(error)}`, true);
     }

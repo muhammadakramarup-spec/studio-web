@@ -1,0 +1,6 @@
+total assets: 2280
+licence==="CC0" && sourceUrl matches /^https?:\/\//: true
+exit 0 — 100% coverage across 2280 assets
+total assets: 2280
+non-CC0 count: 0
+sourceUrl not starting https://: 0

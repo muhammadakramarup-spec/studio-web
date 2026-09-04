@@ -1,0 +1,178 @@
+
+> studio-web@0.1.0 test:unit
+> node --test tests/unit/*.test.ts
+
+node:internal/modules/esm/resolve:271
+    throw new ERR_MODULE_NOT_FOUND(
+          ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module 'C:\3D-Studio\02_projects\studio-web\.worktrees\claude-design-product-v1\src\timeline\export-plan.ts' imported from C:\3D-Studio\02_projects\studio-web\.worktrees\claude-design-product-v1\tests\unit\export-plan.test.ts
+    at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+    at moduleResolve (node:internal/modules/esm/resolve:865:10)
+    at defaultResolve (node:internal/modules/esm/resolve:992:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+    at #resolve (node:internal/modules/esm/loader:683:17)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+    at ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33)
+    at ModuleJob.link (node:internal/modules/esm/module_job:253:17) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///C:/3D-Studio/02_projects/studio-web/.worktrees/claude-design-product-v1/src/timeline/export-plan.ts'
+}
+
+Node.js v24.19.0
+✖ tests\unit\export-plan.test.ts (106.9101ms)
+✖ project round-trip preserves the active model, view, and timeline (3.0851ms)
+✔ project parser rejects unsupported versions and malformed model data (1.1037ms)
+✖ v2 round-trips scene objects, modifiers, asset identity, environment, and view (3.3635ms)
+✖ committed v1 fixture parses and upgrades to v2 defaults (1.06ms)
+✖ rejects version 3 as newer and version 0 or 'x' as not a project (0.8496ms)
+✖ rejects an hdri fileUrl outside /assets/ and a non-https sourceUrl (0.3836ms)
+node:internal/modules/esm/resolve:271
+    throw new ERR_MODULE_NOT_FOUND(
+          ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module 'C:\3D-Studio\02_projects\studio-web\.worktrees\claude-design-product-v1\src\viewer\receipt.ts' imported from C:\3D-Studio\02_projects\studio-web\.worktrees\claude-design-product-v1\tests\unit\receipt.test.ts
+    at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+    at moduleResolve (node:internal/modules/esm/resolve:865:10)
+    at defaultResolve (node:internal/modules/esm/resolve:992:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+    at #resolve (node:internal/modules/esm/loader:683:17)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+    at ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33)
+    at ModuleJob.link (node:internal/modules/esm/module_job:253:17) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///C:/3D-Studio/02_projects/studio-web/.worktrees/claude-design-product-v1/src/viewer/receipt.ts'
+}
+
+Node.js v24.19.0
+✖ tests\unit\receipt.test.ts (110.1241ms)
+✔ telemetry payload keeps only the allowlisted fields for its event (1.4014ms)
+✔ telemetry payload rejects free text, non-finite durations, and unknown events (0.2616ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 3
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 179.1221
+
+✖ failing tests:
+
+test at tests\unit\export-plan.test.ts:1:1
+✖ tests\unit\export-plan.test.ts (106.9101ms)
+  'test failed'
+
+test at tests\unit\project-format.test.ts:23:1
+✖ project round-trip preserves the active model, view, and timeline (3.0851ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 2
+  
+      at TestContext.<anonymous> (file:///C:/3D-Studio/02_projects/studio-web/.worktrees/claude-design-product-v1/tests/unit/project-format.test.ts:48:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\unit\project-v2.test.ts:38:1
+✖ v2 round-trips scene objects, modifiers, asset identity, environment, and view (3.3635ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 2
+  
+      at TestContext.<anonymous> (file:///C:/3D-Studio/02_projects/studio-web/.worktrees/claude-design-product-v1/tests/unit/project-v2.test.ts:98:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\unit\project-v2.test.ts:108:1
+✖ committed v1 fixture parses and upgrades to v2 defaults (1.06ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 2
+  
+      at TestContext.<anonymous> (file:///C:/3D-Studio/02_projects/studio-web/.worktrees/claude-design-product-v1/tests/unit/project-v2.test.ts:115:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\unit\project-v2.test.ts:126:1
+✖ rejects version 3 as newer and version 0 or 'x' as not a project (0.8496ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /This is not a Studio Web project/. Input:
+  
+  'Error: This project needs a newer version of Studio Web'
+  
+      at TestContext.<anonymous> (file:///C:/3D-Studio/02_projects/studio-web/.worktrees/claude-design-product-v1/tests/unit/project-v2.test.ts:132:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: This project needs a newer version of Studio Web
+        at parseProjectDocument (file:///C:/3D-Studio/02_projects/studio-web/.worktrees/claude-design-product-v1/src/project/format.ts:150:46)
+        at file:///C:/3D-Studio/02_projects/studio-web/.worktrees/claude-design-product-v1/tests/unit/project-v2.test.ts:133:11
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at TestContext.<anonymous> (file:///C:/3D-Studio/02_projects/studio-web/.worktrees/claude-design-product-v1/tests/unit/project-v2.test.ts:132:10)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+        at Test.postRun (node:internal/test_runner/test:1522:19)
+        at Test.run (node:internal/test_runner/test:1447:12),
+    expected: /This is not a Studio Web project/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at tests\unit\project-v2.test.ts:142:1
+✖ rejects an hdri fileUrl outside /assets/ and a non-https sourceUrl (0.3836ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///C:/3D-Studio/02_projects/studio-web/.worktrees/claude-design-product-v1/tests/unit/project-v2.test.ts:155:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /fileUrl|assets/i,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at tests\unit\receipt.test.ts:1:1
+✖ tests\unit\receipt.test.ts (110.1241ms)
+  'test failed'

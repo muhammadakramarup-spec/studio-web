@@ -1,0 +1,43 @@
+{
+  "attributes": {
+    "#app-status": {
+      "present": true,
+      "role": "status",
+      "ariaLive": "polite"
+    },
+    "#export-status": {
+      "present": true,
+      "role": "status",
+      "ariaLive": "polite"
+    },
+    "#viewport-hint": {
+      "present": true,
+      "role": null,
+      "ariaLive": "polite"
+    },
+    "#viewport-error": {
+      "present": true,
+      "role": "alert",
+      "ariaLive": null
+    }
+  },
+  "observedText": {
+    "idle": "Start with a GLB\nDrop it here, open a file, or choose from the library.\nOpen a GLB",
+    "loading": "Loading model…",
+    "loaded_appStatus": "Ambulance ready",
+    "saving_appStatus": "Packing the active model and project settings…",
+    "saved_appStatus": "Project saved — active model, view, materials, and timeline included",
+    "exporting": {
+      "exportStatus": "Exporting 4%",
+      "appStatus": "Exporting Turntable…"
+    },
+    "completion_exportStatus": "Turntable ready (default 360° sweep — add keys with Turn 360°)",
+    "completion_appStatus": "Turntable ready (default 360° sweep — add keys with Turn 360°)",
+    "error_viewportError": "Choose a binary glTF file ending in .glb.",
+    "error_appStatus": "Choose a binary glTF file ending in .glb.",
+    "restorePrompt_hint": "Start with a GLB\nDrop it here, open a file, or choose from the library.\nOpen a GLB\n\nUnsaved work from 01:12 can be restoredRestoreDiscard",
+    "restorePrompt_appStatus": "Unsaved work from 01:12 can be restored",
+    "contextLost_viewportError": "Graphics context lost — your work was autosaved at not yet. Reload to restore.",
+    "contextLost_appStatus": "Graphics context lost — your work was autosaved at not yet. Reload to restore."
+  }
+}
