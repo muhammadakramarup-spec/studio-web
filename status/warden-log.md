@@ -189,3 +189,14 @@ accessibility 87→87, best practices 96→96, TBT 7,180→843 ms, TTI 13.8→7.
 (regression, attributed to the larger bundle and the boot-time IndexedDB open), CLS unchanged
 0.344. Orbit 60 fps on the largest asset; D-1 verified fixed at 1280×720 after the full export
 click cycle (24 × 1024² across three runs); recovery record 41,399 B.
+
+## 2026-09-05 — Defect D-2 fixed and accepted
+
+Red: unit test (a) saved the literal string "busy" (`actual 'busy' !== expected {name:'fixture'}`)
+and test (c) saved once instead of never; browser P5 timed out waiting for "Restore" after an
+edit made during a 72-frame export. Green: unit 19/19, project-recovery 5/5, regressions
+exports 3/3, export-timeline 3/3, studio-shell 2/2, e2e 4/4, s5 8/8. Change: `capture` may
+return `"busy"`, on which `createAutosaver` re-arms the debounce (guarded against dispose and
+quota); the shell returns `"busy"` while `studio.debug.state().busy`. Evidence in
+`status/evidence/d2/`. Repository hygiene: the performance QA's raw download artifacts (26 MB)
+were removed before push and `status/evidence/**/downloads/` is now ignored.
