@@ -9,5 +9,6 @@ public/assets/**/*.hdr
 public/assets/**/*.ktx2
 test-results/
 playwright-report/
+.worktrees/
 __pycache__/
 status/devserver.log
