@@ -91,3 +91,20 @@ not hidden. Design Foundation and Shell visual silos remain **not started** pend
   parameters only, recorded in `src/viewer/qa/latest.md`. Shell integration snippet is in
   `status/evidence/f1/requests.md` for Phase B. Found defect confirmed: `addTurntableClip`
   leaves `state.duration` stale; the planner uses the maximum authored key time instead.
+
+## 2026-09-05 — F3 gate accepted; resize-during-export defect assigned to Phase B
+
+- F3 (receipt + provenance) accepted: 5/5 receipt unit tests red (module missing) then green;
+  `tests/exports.spec.ts` X3 (local file leaks nothing) green; X2 (receipt in packages) red as
+  expected until Phase B wires the registry. `__APP_VERSION__` is injected from package.json by
+  `vite.config.ts` and never read from the environment. Snippets in `status/evidence/f3/requests.md`.
+- **Defect D-1 (found by F3's X1 guard, real shell, default 1280×720 viewport):** after the
+  export-button click cycle, a Turntable export returns `frame_0001.png` at 1024×1024 but later
+  frames at the viewport size (~840×463). Cause: `main.ts:101-109` observes the canvas wrapper with
+  a `ResizeObserver` that calls `studio.resize()`; status-text/layout churn during the export loop
+  fires it between frames, and `resize()` resets the drawing buffer while `exportSequence` is still
+  running. The synthetic-studio tests (s1 Target 5, e2e Step 6) never see it because they have no
+  observer. Fix assigned to Phase B in `src/viewer/studio.ts`: `resize()` becomes a no-op that
+  records a pending resize while `exportBusy` is true; the `finally` blocks in `exportSequence` and
+  `exportWebM` clear `exportBusy` **before** calling `endOffscreen` so the restoring `resize()`
+  still applies, and a pending resize is applied afterwards. X1 is the regression test.
