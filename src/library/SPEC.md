@@ -86,6 +86,13 @@ interface LibraryManifest {
 }
 ```
 
+> **Superseded — trust `src/library/manifest.d.ts`, not this block.** The shipped type differs in
+> two ways: ids are slash-separated (`kenney/furniture-kit/chairDesk`, `polyhaven/hdri/studio_small_03`),
+> not underscore-separated; and it carries an extra optional
+> `animationClipNames?: readonly string[]` that S4 needs for imported clips. `fileUrl`/`thumbnailUrl`
+> are same-origin `/assets/...` paths, not R2 URLs (decision #11 cut R2). This Wave-1 block is left
+> as the signed record of what was specified, exactly as `SCOPE.md` is.
+
 HDRI and material rows reuse the same `LibraryAsset` shape with `kind:"hdri"|"material"` — `triangles`
 is `0` for those and `fileUrl` points at the `.hdr`/texture set instead of a `.glb`. No HDRI/material
 rows exist in `manifest.json` until Wave 2 fetches them (Target 7); the schema is defined now so S1/S2

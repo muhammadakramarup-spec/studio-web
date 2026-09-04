@@ -67,7 +67,7 @@ export declare function AdSlot(props: AdSlotProps): HTMLElement;
 export type TelemetryEvent =
   | { type: 'asset_loaded'; assetKind: 'model' | 'hdri' | 'material'; assetId: string }
   | { type: 'effect_applied'; effect: string }
-  | { type: 'export_completed'; exportKind: 'still' | 'turntable'; ms: number }
+  | { type: 'export_completed'; exportKind: 'still' | 'turntable' | 'glb' | 'gltf' | 'blender-package'; ms: number }
   | { type: 'tool_used'; tool: string }
   | { type: 'session_started' }
   | { type: 'pro_cta_clicked'; source: string };

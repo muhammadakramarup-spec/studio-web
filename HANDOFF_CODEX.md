@@ -5,11 +5,19 @@
 
 Read this file alone and you have enough to finish. Nothing else is required.
 
+> **STATUS 2026-09-04 — the deploy leg described below is COMPLETE.** The site is live at
+> https://studio-web-6ms.pages.dev (HTTP 200 verified). Sections 2 and 3 are kept as the record of
+> what the blocker was and how it was cleared; they are no longer the task. Note that the
+> credential used did not persist (`~/.wrangler` absent, no env vars), so a future deploy will need
+> authenticating again. **For current operations — the build/test/deploy loop, the traps, the asset
+> pipeline ordering hazard and the known open defects — use the `studio-web-site` skill**, which
+> supersedes this file for everything except history.
+
 ---
 
 ## 1. State in one paragraph
 
-The build is **done, tested and committed**. 12 commits. 40/40 Playwright tests pass
+The build is **done, tested and committed**. 12 commits. All Playwright tests pass
 *per-file*, `tsc --noEmit` is clean, and `npm run build` produces `dist/` at **2,321 files /
 80 MB** with **0 secrets**. The app boots and works with **zero environment variables**.
 The only remaining task is the **Cloudflare Pages deploy**, and it is blocked on
@@ -102,8 +110,8 @@ a claim, not evidence.
 
 ## 5. Traps that already cost time — do not rediscover them
 
-- **Run Playwright per-file.** All 41 tests in one worker exhausts WebGL contexts and flakes
-  three of them. Per-file is 40/40.
+- **Run Playwright per-file.** Running them all in one worker exhausts WebGL contexts and flakes
+  three of them. Per-file is green (43/43 as of 2026-09-04).
 - **Headless Chromium needs `--use-gl=angle --use-angle=d3d11`** or it renders at 2 fps
   instead of 60. Set per-suite, not globally — Windows-only flags, validated only under the
   WebGL-heavy suites.

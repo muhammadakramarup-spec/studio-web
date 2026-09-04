@@ -58,8 +58,10 @@ function downloadBlob(blob: Blob, filename: string): void {
 const canvas = byId<HTMLCanvasElement>("viewport");
 const viewportHint = byId<HTMLDivElement>("viewport-hint");
 const studio: StudioHandle = createStudio({ canvas });
-// Exposed for manual QA/devtools inspection only — no silo and no test needs this global;
-// tests/e2e.spec.ts builds its own studio instance directly, exactly like tests/s1.spec.ts.
+// Exposed for manual QA/devtools inspection AND for the two tests/e2e.spec.ts cases that must
+// drive the real app shell rather than a synthetic instance: the export-format test and the
+// bloom clip regression. The silo tests (s1..s6) and the SCOPE §6 acceptance run build their own
+// studio via window.__e2e_studio instead. Do not remove this global — two tests read it.
 (window as unknown as { __studio?: StudioHandle }).__studio = studio;
 
 function resizeViewport(): void {
@@ -317,6 +319,24 @@ tbButton(exportGroup, "PNG", async () => {
   downloadBlob(blob, "studio-export.png");
   track({ type: "export_completed", exportKind: "still", ms: performance.now() - t0 });
 });
+tbButton(exportGroup, "GLB", async () => {
+  const t0 = performance.now();
+  const blob = await studio.exportGLB();
+  downloadBlob(blob, "studio-scene.glb");
+  track({ type: "export_completed", exportKind: "glb", ms: performance.now() - t0 });
+});
+tbButton(exportGroup, "GLTF", async () => {
+  const t0 = performance.now();
+  const blob = await studio.exportGLTF();
+  downloadBlob(blob, "studio-scene.gltf");
+  track({ type: "export_completed", exportKind: "gltf", ms: performance.now() - t0 });
+});
+tbButton(exportGroup, "Blender ZIP", async () => {
+  const t0 = performance.now();
+  const blob = await studio.exportBlenderPackage();
+  downloadBlob(blob, "studio-blender-package.zip");
+  track({ type: "export_completed", exportKind: "blender-package", ms: performance.now() - t0 });
+});
 tbButton(exportGroup, "Turntable ZIP", async () => {
   const t0 = performance.now();
   exportStatus.textContent = "Exporting…";
@@ -327,6 +347,7 @@ tbButton(exportGroup, "Turntable ZIP", async () => {
   exportStatus.textContent = "Done";
   track({ type: "export_completed", exportKind: "turntable", ms: performance.now() - t0 });
 });
+exportGroup.appendChild(el("span", "export-note", "GIF / native .blend: use PNG ZIP or Blender import"));
 exportGroup.appendChild(exportStatus);
 
 // ============================================================ 3) S3 library

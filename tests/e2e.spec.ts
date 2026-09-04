@@ -100,6 +100,39 @@ async function warmVite(page: import("@playwright/test").Page): Promise<void> {
   await page.goto("/"); // land on a guaranteed-settled page before the real run
 }
 
+test("E2E — common 3D export formats are real downloadable artifacts", async ({ page }) => {
+  test.setTimeout(30_000);
+  await page.goto("/");
+  await page.waitForTimeout(500);
+
+  const result = await page.evaluate(async () => {
+    const studio = (window as any).__studio;
+    const glb = await studio.exportGLB();
+    const gltf = await studio.exportGLTF();
+    const blender = await studio.exportBlenderPackage();
+    const glbBytes = new Uint8Array(await glb.arrayBuffer());
+    return {
+      glbType: glb.type,
+      glbMagic: Array.from(glbBytes.slice(0, 4)),
+      gltfType: gltf.type,
+      gltfAssetVersion: JSON.parse(await gltf.text()).asset?.version,
+      blenderType: blender.type,
+      blenderSize: blender.size,
+    };
+  });
+
+  expect(result.glbType).toBe("model/gltf-binary");
+  expect(result.glbMagic).toEqual([0x67, 0x6c, 0x54, 0x46]);
+  expect(result.gltfType).toBe("model/gltf+json");
+  expect(result.gltfAssetVersion).toBe("2.0");
+  expect(result.blenderType).toBe("application/zip");
+  expect(result.blenderSize).toBeGreaterThan(100);
+
+  await expect(page.getByRole("button", { name: "GLB", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "GLTF", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Blender ZIP", exact: true })).toBeVisible();
+});
+
 test("E2E — six silos, one studio (SCOPE.md §6 definition of done)", async ({ page }) => {
   test.setTimeout(120_000);
   page.on("console", (msg) => {

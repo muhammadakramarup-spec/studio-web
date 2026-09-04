@@ -12,6 +12,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+import { GLTFExporter } from "three/addons/exporters/GLTFExporter.js";
 import { buildZip } from "./zip.ts";
 
 // ---------------------------------------------------------------- public types
@@ -84,6 +85,10 @@ export interface StudioHandle {
   demetalizeActive(): void;
 
   exportPNG(res: ExportResolution): Promise<Blob>;
+  exportGLB(): Promise<Blob>;
+  exportGLTF(): Promise<Blob>;
+  /** A Blender-friendly ZIP containing GLB, GLTF, and import instructions. */
+  exportBlenderPackage(): Promise<Blob>;
   exportSequence(
     res: ExportResolution,
     frames: FrameCount,
@@ -810,6 +815,44 @@ export function createStudio(opts: StudioOptions): StudioHandle {
     return blob;
   }
 
+  async function exportGLTF(): Promise<Blob> {
+    const exporter = new GLTFExporter();
+    const result = await exporter.parseAsync(scene, { binary: false, embedImages: true });
+    if (result instanceof ArrayBuffer) {
+      throw new Error("GLTF export returned binary data unexpectedly");
+    }
+    return new Blob([JSON.stringify(result, null, 2)], { type: "model/gltf+json" });
+  }
+
+  async function exportGLB(): Promise<Blob> {
+    const exporter = new GLTFExporter();
+    const result = await exporter.parseAsync(scene, { binary: true, embedImages: true });
+    if (!(result instanceof ArrayBuffer)) {
+      throw new Error("GLB export returned JSON data unexpectedly");
+    }
+    return new Blob([result], { type: "model/gltf-binary" });
+  }
+
+  async function exportBlenderPackage(): Promise<Blob> {
+    const [glb, gltf] = await Promise.all([exportGLB(), exportGLTF()]);
+    const readme = new Blob(
+      [
+        "Studio Web Blender package\n",
+        "=========================\n\n",
+        "Open studio-scene.glb in Blender with File > Import > glTF 2.0 (.glb/.gltf).\n",
+        "The companion studio-scene.gltf is included for tools that prefer JSON glTF.\n\n",
+        "This browser export is not a native .blend file. Blender's native .blend format\n",
+        "must be saved from Blender after import so it can include Blender-specific data.\n",
+      ],
+      { type: "text/plain" },
+    );
+    return buildZip([
+      { name: "studio-scene.glb", blob: glb },
+      { name: "studio-scene.gltf", blob: gltf },
+      { name: "README-Blender.txt", blob: readme },
+    ]);
+  }
+
   async function exportSequence(
     res: ExportResolution,
     frames: FrameCount,
@@ -1078,6 +1121,9 @@ export function createStudio(opts: StudioOptions): StudioHandle {
     demetalizeActive,
 
     exportPNG,
+    exportGLB,
+    exportGLTF,
+    exportBlenderPackage,
     exportSequence,
     exportWebM,
 

@@ -2,7 +2,13 @@
 
 **Repo:** `C:\3D-Studio\02_projects\studio-web` · **Lock SHA-256:** `26ec2bb3c07dd54269dab2303bc72e166145f49be3612e60c2a232d744791261`
 **Warden:** Opus main thread · **Decisions:** 21, all in `DECISIONS.md` · **Evidence:** `status/final_qa.md` (85 PASS rows)
-**Status:** built, tested, verified, **not deployed** — public exposure is Akram's call.
+**Status:** built, tested, verified, and deployed to Cloudflare Pages.
+
+**Public URL:** https://studio-web-6ms.pages.dev
+
+The current build adds real browser downloads for PNG, GLB, GLTF JSON, and a Blender-compatible ZIP
+package, alongside the existing PNG turntable ZIP and best-effort WebM export. Native `.blend` and
+GIF are not fabricated; the UI explains the supported workflow and limitations.
 
 ---
 
@@ -14,7 +20,7 @@ a timeline, and export a 24-frame 1024×1024 turntable as a ZIP.
 
 | Silo | Shipped | Tests |
 |---|---|---|
-| **S1 Viewer core** | three r170 port of the verified r128 reference: renderer, camera framing, env + PMREM + rotation, shadow catcher, PNG/ZIP export, `metallicFactor` hint, `setRenderHook` seam | 6/6 |
+| **S1 Viewer core** | three r170 port of the verified r128 reference: renderer, camera framing, env + PMREM + rotation, shadow catcher, PNG/GLB/GLTF/Blender ZIP/turntable export, `metallicFactor` hint, `setRenderHook` seam | 6/6 |
 | **S2 Editor** | undo/redo command stack, raycast + outliner selection, `TransformControls` gizmos, add light/camera/primitive, PBR material panel, mirror + array modifiers, bloom | 9/9 |
 | **S3 Library** | 2,268 Kenney GLBs + 12 Poly Haven HDRIs manifested with licence + source, independent triangle gate, 20 kit thumbnails, library panel | 5/5 |
 | **S4 Timeline** | 8 easing presets, pure deterministic sampler, exact-count export, scrub, 50-key round-trip, 3-key turntable | 7/7 |
@@ -22,7 +28,7 @@ a timeline, and export a 24-frame 1024×1024 turntable as a ZIP.
 | **S6 AI + avatars** | mock Worker gate, generation panel (5 states), session credits gate, local CC0 avatar tile — **no paid calls, no keys** | 4/4 |
 | **Assembly** | app shell wiring S1→S3→S2→S4→S5→S6, end-to-end acceptance script | 3/3 |
 
-**40/40 tests pass** per-file. `tsc --noEmit` clean project-wide. `npm run build` clean: 2,321 files,
+**43/43 tests pass** per-file (6+9+5+7+8+4 silo, 4 e2e; re-verified 2026-09-04 after the export work). `tsc --noEmit` clean project-wide. `npm run build` clean: 2,321 files,
 80 MB, **0 secrets in `dist`**.
 
 ## 2. The day's definition of done (`SCOPE.md` §6) — measured
@@ -86,15 +92,15 @@ vars**, so none of these are blocking; they unlock features rather than fix brea
 |---|---|---|---|
 | [Supabase](https://supabase.com/dashboard/sign-up) | Project URL + anon key | `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` | Account panel stays signed-out |
 | [Lemon Squeezy](https://app.lemonsqueezy.com/register) | Test-mode store URL | `VITE_LEMONSQUEEZY_STORE_URL` | Checkout stays a labelled SANDBOX stub |
-| [Cloudflare](https://dash.cloudflare.com/sign-up) | Account ID / Pages project | — | **No public deploy** |
+| [Cloudflare](https://dash.cloudflare.com/sign-up) | Account ID / Pages project | — | Public Pages deployment is live |
 
-**Deploy is not done and was not attempted.** The lock reserves public exposure for Akram. The build
-is ready; deploying is `npx wrangler pages deploy dist` with a Cloudflare token in an env var.
+**Deployment completed:** `studio-web` is live at https://studio-web-6ms.pages.dev. The latest
+preview is https://5f6a868f.studio-web-6ms.pages.dev.
 
 ## 6. Known limitations, stated plainly
 
 - **Library tiles share one thumbnail per kit** (20 thumbnails for 2,268 models). Names differentiate them.
-- **Running all 41 tests in one Playwright worker exhausts WebGL contexts** and flakes three. Per-file is 40/40. CI must run per-file.
+- **Running every test in one Playwright worker exhausts WebGL contexts** and flakes three. Per-file is 43/43. CI must run per-file.
 - **GPU launch flags (`--use-gl=angle --use-angle=d3d11`) are per-suite, not global** — Windows-only, and validated only under the WebGL-heavy suites. Linux CI would need a fallback. (#21)
 - **`SCOPE.md` §2/§5 prose still says `AccountState.status` is `'loading' | 'ready'`** — decision #18 replaced it with `'signed-out' | 'signed-in'`. The code is correct; the signed document lagged and was deliberately not edited.
 - **`exportWebM()` returns `null` on this machine.** MediaRecorder never clears the frame-completeness floor here.
