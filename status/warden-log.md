@@ -108,3 +108,31 @@ not hidden. Design Foundation and Shell visual silos remain **not started** pend
   records a pending resize while `exportBusy` is true; the `finally` blocks in `exportSequence` and
   `exportWebM` clear `exportBusy` **before** calling `endOffscreen` so the restoring `resize()`
   still applies, and a pending resize is applied afterwards. X1 is the regression test.
+
+## 2026-09-05 — F2 gate accepted; Phase A closed
+
+- F2 (project v2 + recovery) accepted: unit red (`1 !== 2`, wrong message for version 0, missing
+  URL-scheme rejections) then green 16/16 across the whole tree; P1 persistence round trip green;
+  P2/P3/P4 red by design until Phase B; s2 9/9 and e2e 4/4 unchanged with the `studioAdd` tag.
+  One documented deviation: `tests/unit/project-format.test.ts` now asserts the parsed version is
+  2, because the parser always upgrades. `npx tsc --noEmit` is clean on the combined tree.
+- Known limitation carried forward: `restoreScene` replays through `editor.ops`, so undo depth
+  after a restore is "one add per restored object", not the pre-reload history.
+
+### Decision W-5 — Where a local filename may live
+
+The user's own filename may appear in their local project file and in the local IndexedDB
+recovery record (both stay on the user's machine and are the user's data). It must never appear
+in exports, receipts, licence files, or telemetry. Phase B therefore keeps `model.name` for
+local files and adjusts recovery test P4 to assert: `asset.origin === "local"`, no path
+separator or drive letter anywhere in the stored record, and no filename in any export
+(`tests/exports.spec.ts` X3 already enforces the export side).
+
+### Decision W-6 — Phase B ownership
+
+One Shell agent owns `src/app/main.ts`, `index.html` (mount IDs preserved; `aria-live` on
+`#viewport-hint` allowed), `src/viewer/studio.ts` for defect D-1 only (`resize()` deferral and
+the two `finally` blocks), and may align wording/selectors in `tests/export-timeline.spec.ts`,
+`tests/project-recovery.spec.ts`, and `tests/exports.spec.ts` to the integrated contract without
+weakening any assertion; every such edit is listed in its evidence. The shared dev server on
+5173 stays up for Phase B (extends Decision W-4).
