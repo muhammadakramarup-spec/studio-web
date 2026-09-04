@@ -816,6 +816,7 @@ export function createStudio(opts: StudioOptions): StudioHandle {
   // ------------------------------------------------------------------- export
 
   let exportBusy = false;
+  let resizePending = false;
   let cancelFlag = false;
 
   function beginOffscreen(w: number, h: number) {
@@ -953,8 +954,9 @@ export function createStudio(opts: StudioOptions): StudioHandle {
       }
       if (!cancelFlag && options?.extraFiles) files.push(...options.extraFiles);
     } finally {
-      endOffscreen(st);
       exportBusy = false;
+      endOffscreen(st);
+      resizePending = false;
     }
     if (cancelFlag) throw new Error("Export cancelled");
     const zip = await buildZip(files);
@@ -1041,8 +1043,9 @@ export function createStudio(opts: StudioOptions): StudioHandle {
     } catch {
       return null;
     } finally {
-      endOffscreen(st);
       exportBusy = false;
+      endOffscreen(st);
+      resizePending = false;
     }
   }
 
@@ -1060,6 +1063,10 @@ export function createStudio(opts: StudioOptions): StudioHandle {
   // --------------------------------------------------------------- resize/dispose
 
   function resize(): void {
+    if (exportBusy) {
+      resizePending = true;
+      return;
+    }
     const w = canvasEl.clientWidth || 1;
     const h = canvasEl.clientHeight || 1;
     camera.aspect = w / h;
