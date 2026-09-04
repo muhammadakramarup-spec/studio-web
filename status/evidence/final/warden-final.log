@@ -1,0 +1,27 @@
+=== Warden final verification from clean clone 2026-09-05T01:33:08+05:00 ===
+HEAD=ca2c72d5db5ffa33ebb6b23a2b7f877ed6cbafd8
+GLB=2268 HDR=12
+--- npm run build ---
+[2mdist/[22m[32mindex.html                 [39m[1m[2m  3.61 kB[22m[1m[22m[2m │ gzip:   1.36 kB[22m
+[2mdist/[22m[35massets/index-V8chZ5rB.css  [39m[1m[2m 10.17 kB[22m[1m[22m[2m │ gzip:   2.83 kB[22m
+[2mdist/[22m[36massets/index-DD4zYsHI.js   [39m[1m[33m754.47 kB[39m[22m[2m │ gzip: 200.18 kB[22m
+[32m✓ built in 2.74s[39m
+BUILD_EXIT=0
+maps=0 files=2323
+secrets=0 private=0
+--- unit ---
+ℹ tests 19
+ℹ pass 19
+ℹ fail 0
+--- serial full run ---
+
+[54/56] tests\s6.spec.ts:154:3 › S6 — AI + avatars › Avatar tile: onAvatarReady → studio.loadModel → visible mesh <2000ms, 256×256 capture differs ≥1000px from baseline
+tests\s6.spec.ts:154:3 › S6 — AI + avatars › Avatar tile: onAvatarReady → studio.loadModel → visible mesh <2000ms, 256×256 capture differs ≥1000px from baseline
+[S6] avatar tile elapsed (ms): 371.19999999925494 meshes: 2 tris: 465 diffCount: 3929
+
+[55/56] tests\studio-shell.spec.ts:3:1 › Studio Shell keeps the load-to-export workflow focused and discoverable
+[56/56] tests\studio-shell.spec.ts:45:1 › Studio Shell keeps the desktop toolbar readable without horizontal scrolling
+  56 passed (2.4m)
+SERIAL_EXIT=0
+5173 free
+=== DONE 2026-09-05T01:35:43+05:00 ===

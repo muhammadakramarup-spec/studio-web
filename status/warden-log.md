@@ -200,3 +200,12 @@ return `"busy"`, on which `createAutosaver` re-arms the debounce (guarded agains
 quota); the shell returns `"busy"` while `studio.debug.state().busy`. Evidence in
 `status/evidence/d2/`. Repository hygiene: the performance QA's raw download artifacts (26 MB)
 were removed before push and `status/evidence/**/downloads/` is now ignored.
+
+## 2026-09-05 — Gate 4: final verification at ca2c72d
+
+From the clean clone (`status/evidence/final/warden-final.log`): HEAD ca2c72d; asset fixture
+2,268 GLB + 12 HDR present; `npm run build` exit 0, dist 2,323 files, 0 source maps, 0 secret
+patterns, 0 private-path strings; `npm run test:unit` 19/19; `npx playwright test --workers=1`
+56 passed, 0 failed in 2.4 min; port 5173 released. The release report
+`docs/qa/claude-design-release-report.md` is assembled from the two QA reports, this log, and
+that verification. Pull request opened against `master`; not merged; production untouched.
