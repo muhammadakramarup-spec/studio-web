@@ -199,3 +199,130 @@ read-only research and accessibility triage, but do not start Darkroom visual im
 owner supplies the normative design artifact. In parallel, create a licence-aware fixture acquisition
 task so external Claude Code and CI runners can reproduce the complete test suite.
 
+## Wave 0 completion — state captures and downloaded-export evidence (2026-09-04)
+
+Closes the two Wave 0 gaps named in
+`docs/handoffs/2026-09-04-claude-design-product-v1-execution-handoff.md` (Wave 0 checklist): editing /
+saving / exporting / completion / recoverable state captures at all five target viewports for both the
+local production build and the live site, and real downloaded-bytes export evidence. Documentation and
+evidence only; no file outside `status/before/`, `status/tools/`, and this section of `status/baseline.md`
+was touched.
+
+### Method
+
+`dist/` (already built, matches production per the Warden's 2026-09-04 23:49 gate note) was served with
+`npx vite preview --port 4173 --strictPort`, run in the background from the worktree. Port 5173 (the
+Warden's shared Phase A dev server, PID 23436) was left untouched throughout; port 4173 was confirmed
+free both before starting the preview server and after stopping it. The live site
+`https://studio-web-6ms.pages.dev/` was captured against production as-is, no server needed.
+
+A new Node ESM script, `status/tools/capture-states.mjs`, drives Playwright's real Chromium
+(chromium-1234, already installed) with `--use-gl=angle --use-angle=d3d11 --ignore-gpu-blocklist` so
+WebGL actually renders (headless SwiftShader would be far too slow for 24-frame turntable exports). For
+each of 2 bases x 5 viewports it opens one fresh browser context/page, loads the base, waits for
+`#viewport-hint[data-state="idle"]`, then drives the five states in sequence on that same page: editing
+(click first library tile, wait for `data-state="loaded"`, click "+ Light", wait 500 ms), saving (click
+"Save project", capture the real download event, wait for `#app-status` to start with "Project saved"),
+exporting (click "Turntable", poll `#export-status` every 50 ms up to 10 s for the pattern
+"Exporting NN%", capture at first match), completion (await the same download finishing, wait for
+`#export-status` to equal "Turntable ready"), and recoverable (setInputFiles on `#model-file-input` with a
+temp `not-a-model.txt` containing "hello", wait for `#viewport-error` to become visible). Every screenshot
+resets scroll to (0,0), waits 300 ms, and is a viewport-only PNG (fullPage: false) at
+`status/before/<live|local>-<w>x<h>-<state>.png`. A separate pass at 1536x864 on both bases downloads PNG,
+GLB, GLTF, Blender ZIP, and the Turntable ZIP via their real toolbar buttons and validates the actual
+downloaded bytes with a hand-written STORE-only ZIP central-directory parser (`parseZipEntries` /
+`extractStoredEntry` in the script) — deliberately not imported from `src/viewer/zip.ts` so the check does
+not trust the code it is meant to verify.
+
+One bug was found and fixed during this run: `#viewport-hint` is intentionally hidden once
+`data-state="loaded"` (see `src/app/main.ts` `setHint()` — `state === "loaded"` sets
+`viewportHint.hidden = true`), so the first attempt's default `waitForSelector` (state: "visible") never
+resolved even though the model had loaded correctly; it was changed to state: "attached". The first
+(broken) attempt's partial output was discarded (screenshots overwritten, CAPTURE-NOTES.md reset) before
+the clean run recorded below.
+
+Exact commands used, run from the worktree root:
+
+```
+npx vite preview --port 4173 --strictPort          # backgrounded; PID 28212 on this run
+node status/tools/capture-states.mjs
+taskkill /PID 28212 /F                             # after capture completed
+netstat -ano | findstr ":4173"                     # verified no LISTENING entry remained
+```
+
+### Capture matrix
+
+All 50 captures (2 bases x 5 viewports x 5 states) succeeded on the clean run. `status/before/CAPTURE-NOTES.md`
+was created (per the task's failure-logging contract) but contains only its header — zero failure lines —
+confirming nothing timed out or was skipped.
+
+**local** (`http://localhost:4173`, production `dist/`)
+
+| Viewport | editing | saving | exporting | completion | recoverable |
+|---|:---:|:---:|:---:|:---:|:---:|
+| 1536x864 | ok | ok | ok | ok | ok |
+| 1280x720 | ok | ok | ok | ok | ok |
+| 1024x768 | ok | ok | ok | ok | ok |
+| 768x1024 | ok | ok | ok | ok | ok |
+| 390x844 | ok | ok | ok | ok | ok |
+
+**live** (`https://studio-web-6ms.pages.dev/`)
+
+| Viewport | editing | saving | exporting | completion | recoverable |
+|---|:---:|:---:|:---:|:---:|:---:|
+| 1536x864 | ok | ok | ok | ok | ok |
+| 1280x720 | ok | ok | ok | ok | ok |
+| 1024x768 | ok | ok | ok | ok | ok |
+| 768x1024 | ok | ok | ok | ok | ok |
+| 390x844 | ok | ok | ok | ok | ok |
+
+Every cell is a real file at `status/before/<live|local>-<w>x<h>-<editing|saving|exporting|completion|recoverable>.png`
+(50 files total). Visual spot checks: the editing captures show a third DirectionalLight added to the
+Scene outliner (the "+ Light" click registered); the recoverable captures show both the red `#app-status`
+message and the `#viewport-error` alert box reading "Choose a binary glTF file ending in .glb." over the
+still-loaded model; the exporting captures show a live "Exporting NN%" toolbar readout.
+
+During saving, the downloaded `.studio.json` was 337,936 bytes at every viewport on both bases (same
+active model, view, and timeline state each time — not committed, deleted with the rest of the temp
+directory). During exporting/completion, the downloaded turntable ZIP size varied by viewport because
+rendered pixel content changes PNG compression even though frame size is fixed at 1024x1024: observed
+2,058,969-5,222,415 bytes across the ten state-matrix downloads; every one of those ZIPs still carried
+exactly 24 STORE entries once parsed.
+
+### Export evidence (real downloaded bytes, 1536x864, both bases)
+
+| Format | Base | Bytes | Validation |
+|---|---|---:|---|
+| PNG | local | 253,238 | pass — signature 89 50 4E 47 0D 0A 1A 0A present; IHDR width/height = 2048x2048 |
+| PNG | live | 253,238 | pass — same as local |
+| GLB | local | 257,368 | pass — magic "glTF", version uint32 LE at offset 4 = 2 |
+| GLB | live | 257,368 | pass — same as local |
+| GLTF | local | 350,712 | pass — valid JSON, asset.version === "2.0" |
+| GLTF | live | 350,712 | pass — same as local |
+| Blender ZIP | local | 608,802 | pass — EOCD found; central directory lists exactly studio-scene.glb, studio-scene.gltf, README-Blender.txt |
+| Blender ZIP | live | 608,802 | pass — same as local |
+| Turntable ZIP | local | 3,531,811 | pass — EOCD found; exactly frame_0001.png ... frame_0024.png, each parsed frame's IHDR = 1024x1024 |
+| Turntable ZIP | live | 3,531,811 | pass — same as local |
+
+Local and live bytes are byte-size-identical per format, consistent with the Warden's prior confirmation
+that the live bundle matches `dist/` exactly. All 10/10 checks passed; zero validation failures.
+
+### Limitations
+
+- The exporting capture is an inherent race: the script proceeds the instant `#export-status` first
+  matches "Exporting NN%", but the required 300 ms scroll-settle wait before the actual screenshot means
+  the visible percentage in the saved PNG is usually well past the percentage that satisfied the poll
+  (observed: polls matched at "Exporting 4%" on every combination, but the 1536x864/local screenshot
+  itself shows "Exporting 71%" by the time it was taken). Treat the captured percentage as illustrative of
+  the in-progress state, not as a specific frame number.
+- The turntable-ZIP byte sizes captured mid-sequence (saving/completion runs, listed above) vary by
+  viewport/run because they depend on rendered pixel content, not because frame count or resolution
+  changed — every downloaded ZIP in this pass, including all 10 dedicated export-evidence ZIPs, verified
+  at exactly 24 frames of 1024x1024.
+- saving and exporting/completion were captured after editing's "+ Light" click in the same page session,
+  so every non-editing state in the matrix reflects a scene with the extra light already added — this
+  matches the natural user flow the task describes (open, edit, save/export) rather than five independent
+  blank-slate states.
+- Per the task's explicit scope, only 1536x864 was used for export-evidence byte validation; the other
+  four viewports were not re-validated for export bytes (only for the state-matrix screenshots).
+
