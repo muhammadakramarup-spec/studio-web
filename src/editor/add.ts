@@ -78,5 +78,10 @@ export function createObjectFromPayload(payload: AddPayload, renderer?: THREE.We
   }
 
   if (obj instanceof THREE.Mesh) prepMaterials(obj, renderer);
+  // Wave 3 Function 2 (project v2 + local recovery): tags every editor-created object so
+  // src/project/scene.ts's captureScene() can tell an authored light/camera/primitive apart from
+  // a loaded model's own meshes (which must not be captured into the scene document — they are
+  // already covered by the project's model/asset fields).
+  obj.userData.studioAdd = { kind: payload.kind };
   return obj;
 }

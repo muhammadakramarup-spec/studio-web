@@ -1,0 +1,31 @@
+
+Running 4 tests using 1 worker
+
+[1/4] tests\e2e.spec.ts:103:1 › E2E — common 3D export formats are real downloadable artifacts
+[2/4] tests\e2e.spec.ts:136:1 › E2E — six silos, one studio (SCOPE.md §6 definition of done)
+tests\e2e.spec.ts:136:1 › E2E — six silos, one studio (SCOPE.md §6 definition of done)
+[E2E] step1 load: loadMs=437.9 ready=true
+
+[E2E] step2 pick: manifestAssets=2280 tileFound=true pickedAssetId=kenney/car-kit/ambulance loadResolved=true loadError=null
+
+[E2E] step3 light: lightCountDelta=1 movedPct=31.37%
+
+[E2E] step4 turntable: keyCount=3 keyTs=[0,3,6] angle=3.141592653589793 diffFromPi=0 pivotAngleAfterScrub=3.141592653589793
+
+[E2E] step5 export: framesLength=24 tMismatches=0 zipBytes=3956206 progressCalls=25
+
+[E2E] step6 assert: entries=24 namesMatch=true firstDim=1024x1024 lastDim=1024x1024 allCorrectSize=true
+
+[E2E] SUMMARY loadMs=437.9 pickedAssetId=kenney/car-kit/ambulance lightDelta=1 turntableAngle=3.141592653589793 exportFrames=24 zipEntries=24 allFrames1024=true
+
+[3/4] tests\e2e.spec.ts:413:1 › E2E regression — real app shell: #viewport-hint reflects actual ready/loaded state
+tests\e2e.spec.ts:413:1 › E2E regression — real app shell: #viewport-hint reflects actual ready/loaded state
+[E2E] hint before any model load: hidden=false state=idle text="Start with a GLBDrop it here, open a file, or choose from the library.Open a GLB"
+
+[E2E] hint after a real library pick loads a model: hidden=true state=loaded
+
+[4/4] tests\e2e.spec.ts:468:1 › E2E regression — default Bloom stays readable on a plain white Kenney model (no full clip)
+tests\e2e.spec.ts:468:1 › E2E regression — default Bloom stays readable on a plain white Kenney model (no full clip)
+[E2E] bloom clip check: region=[275,73,565,449] totalPx=109040 clippedPx=0 clippedPct=0.000%
+
+  4 passed (8.5s)
