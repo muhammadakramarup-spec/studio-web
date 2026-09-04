@@ -54,6 +54,26 @@ export type ToneMappingName = "aces" | "filmic" | "reinhard" | "linear" | "none"
 export type ExportResolution = "1024x1024" | "2048x2048" | "1920x1080" | "1080x1350" | "viewport";
 export type FrameCount = 24 | 36 | 72;
 
+// Added for Wave 3 Function 1 (timeline-sampled export, docs/handoffs/
+// 2026-09-04-claude-design-product-v1-execution-handoff.md). Optional trailing parameters only —
+// see the qa/latest.md note this silo appended for why the frozen signatures below still hold for
+// every 3-argument caller (tests/s1.spec.ts Target 5, tests/e2e.spec.ts Steps 5-6).
+export interface FrameSnapshot {
+  position: [number, number, number];
+  quaternion: [number, number, number, number];
+  scale: [number, number, number];
+  fov: number;
+}
+
+export interface SequenceOptions {
+  /** When present, replaces the built-in linear rotation sweep for that frame index. */
+  applyFrame?: (index: number, frames: number) => void;
+  /** The pivot transform + camera fov actually rendered for frame `index`. */
+  onFrameRendered?: (index: number, snapshot: FrameSnapshot) => void;
+  /** Appended to the ZIP after the frame images. */
+  extraFiles?: { name: string; blob: Blob }[];
+}
+
 export interface StudioHandle {
   readonly scene: THREE.Scene;
   readonly camera: THREE.PerspectiveCamera;
@@ -90,11 +110,12 @@ export interface StudioHandle {
   exportGLB(): Promise<Blob>;
   exportGLTF(): Promise<Blob>;
   /** A Blender-friendly ZIP containing GLB, GLTF, and import instructions. */
-  exportBlenderPackage(): Promise<Blob>;
+  exportBlenderPackage(extraFiles?: { name: string; blob: Blob }[]): Promise<Blob>;
   exportSequence(
     res: ExportResolution,
     frames: FrameCount,
     onProgress?: (fraction: number) => void,
+    options?: SequenceOptions,
   ): Promise<Blob>;
   exportWebM(
     res: ExportResolution,
@@ -807,6 +828,11 @@ export function createStudio(opts: StudioOptions): StudioHandle {
       fov: camera.fov,
       pos: camera.position.clone(),
       rot: pivot.rotation.y,
+      // Full pivot transform (Wave 3 Function 1): sampled frames may translate/scale the pivot,
+      // not just spin it, so begin/end must save+restore the whole transform, not rotation.y alone.
+      pivotPos: pivot.position.clone(),
+      pivotQuat: pivot.quaternion.clone(),
+      pivotScale: pivot.scale.clone(),
       spin: spinOn,
     };
     const k = zoomFactor();
@@ -825,7 +851,9 @@ export function createStudio(opts: StudioOptions): StudioHandle {
     camera.fov = st.fov;
     camera.position.copy(st.pos);
     camera.updateProjectionMatrix();
-    pivot.rotation.y = st.rot;
+    pivot.position.copy(st.pivotPos);
+    pivot.quaternion.copy(st.pivotQuat);
+    pivot.scale.copy(st.pivotScale);
     spinOn = st.spin;
     resize();
   }
@@ -868,7 +896,7 @@ export function createStudio(opts: StudioOptions): StudioHandle {
     return new Blob([result], { type: "model/gltf-binary" });
   }
 
-  async function exportBlenderPackage(): Promise<Blob> {
+  async function exportBlenderPackage(extraFiles?: { name: string; blob: Blob }[]): Promise<Blob> {
     const [glb, gltf] = await Promise.all([exportGLB(), exportGLTF()]);
     const readme = new Blob(
       [
@@ -881,17 +909,20 @@ export function createStudio(opts: StudioOptions): StudioHandle {
       ],
       { type: "text/plain" },
     );
-    return buildZip([
+    const files: { name: string; blob: Blob }[] = [
       { name: "studio-scene.glb", blob: glb },
       { name: "studio-scene.gltf", blob: gltf },
       { name: "README-Blender.txt", blob: readme },
-    ]);
+    ];
+    if (extraFiles) files.push(...extraFiles);
+    return buildZip(files);
   }
 
   async function exportSequence(
     res: ExportResolution,
     frames: FrameCount,
     onProgress?: (fraction: number) => void,
+    options?: SequenceOptions,
   ): Promise<Blob> {
     exportBusy = true;
     cancelFlag = false;
@@ -902,14 +933,25 @@ export function createStudio(opts: StudioOptions): StudioHandle {
     try {
       for (let i = 0; i < frames; i++) {
         if (cancelFlag) break;
-        pivot.rotation.y = base + (i * Math.PI * 2) / frames;
+        if (options?.applyFrame) {
+          options.applyFrame(i, frames);
+        } else {
+          pivot.rotation.y = base + (i * Math.PI * 2) / frames;
+        }
         renderer.render(scene, camera);
         const blob = await new Promise<Blob | null>((resolve) => renderer.domElement.toBlob(resolve, "image/png"));
         if (!blob) throw new Error(`ZIP export failed: frame ${i + 1} toBlob returned null`);
         files.push({ name: `frame_${String(i + 1).padStart(4, "0")}.png`, blob });
+        options?.onFrameRendered?.(i, {
+          position: [pivot.position.x, pivot.position.y, pivot.position.z],
+          quaternion: [pivot.quaternion.x, pivot.quaternion.y, pivot.quaternion.z, pivot.quaternion.w],
+          scale: [pivot.scale.x, pivot.scale.y, pivot.scale.z],
+          fov: camera.fov,
+        });
         onProgress?.(((i + 1) / frames) * 0.85);
         await raf();
       }
+      if (!cancelFlag && options?.extraFiles) files.push(...options.extraFiles);
     } finally {
       endOffscreen(st);
       exportBusy = false;

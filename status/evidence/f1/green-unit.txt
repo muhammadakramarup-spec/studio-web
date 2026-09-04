@@ -1,0 +1,137 @@
+
+> studio-web@0.1.0 test:unit
+> node --test tests/unit/*.test.ts
+
+✔ planSequence samples over the max authored key time, not state.duration (2.8689ms)
+✔ planSequence on an empty timeline yields default-sweep with a full-length times array (0.2121ms)
+✔ planSequence uses the max key t even when keys live only on a non-pivot track (1.0872ms)
+✖ project round-trip preserves the active model, view, and timeline (4.2656ms)
+✔ project parser rejects unsupported versions and malformed model data (1.1603ms)
+✖ v2 round-trips scene objects, modifiers, asset identity, environment, and view (4.5489ms)
+✖ committed v1 fixture parses and upgrades to v2 defaults (1.4329ms)
+✖ rejects version 3 as newer and version 0 or 'x' as not a project (0.7296ms)
+✖ rejects an hdri fileUrl outside /assets/ and a non-https sourceUrl (0.368ms)
+✔ receipt carries app version, kind, ISO timestamp, frames, and CC0 asset provenance (5.7341ms)
+✔ licence text names the asset, its source URL, CC0 1.0, and the app version (0.5386ms)
+✔ receiptFiles yields studio-web-receipt.json and LICENCE.txt whose JSON parses back to the receipt (0.9244ms)
+✔ privacy guard rejects local paths and non-https sources (0.979ms)
+✔ registry lists model then hdri, replaces on set, clears on null (1.2817ms)
+✔ telemetry payload keeps only the allowlisted fields for its event (4.1285ms)
+✔ telemetry payload rejects free text, non-finite durations, and unknown events (0.4159ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 11
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 185.301
+
+✖ failing tests:
+
+test at tests\unit\project-format.test.ts:23:1
+✖ project round-trip preserves the active model, view, and timeline (4.2656ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 2
+  
+      at TestContext.<anonymous> (file:///C:/3D-Studio/02_projects/studio-web/.worktrees/claude-design-product-v1/tests/unit/project-format.test.ts:48:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\unit\project-v2.test.ts:38:1
+✖ v2 round-trips scene objects, modifiers, asset identity, environment, and view (4.5489ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 2
+  
+      at TestContext.<anonymous> (file:///C:/3D-Studio/02_projects/studio-web/.worktrees/claude-design-product-v1/tests/unit/project-v2.test.ts:98:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\unit\project-v2.test.ts:108:1
+✖ committed v1 fixture parses and upgrades to v2 defaults (1.4329ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 2
+  
+      at TestContext.<anonymous> (file:///C:/3D-Studio/02_projects/studio-web/.worktrees/claude-design-product-v1/tests/unit/project-v2.test.ts:115:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\unit\project-v2.test.ts:126:1
+✖ rejects version 3 as newer and version 0 or 'x' as not a project (0.7296ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /This is not a Studio Web project/. Input:
+  
+  'Error: This project needs a newer version of Studio Web'
+  
+      at TestContext.<anonymous> (file:///C:/3D-Studio/02_projects/studio-web/.worktrees/claude-design-product-v1/tests/unit/project-v2.test.ts:132:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: This project needs a newer version of Studio Web
+        at parseProjectDocument (file:///C:/3D-Studio/02_projects/studio-web/.worktrees/claude-design-product-v1/src/project/format.ts:150:46)
+        at file:///C:/3D-Studio/02_projects/studio-web/.worktrees/claude-design-product-v1/tests/unit/project-v2.test.ts:133:11
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at TestContext.<anonymous> (file:///C:/3D-Studio/02_projects/studio-web/.worktrees/claude-design-product-v1/tests/unit/project-v2.test.ts:132:10)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+        at Test.postRun (node:internal/test_runner/test:1522:19)
+        at Test.run (node:internal/test_runner/test:1447:12),
+    expected: /This is not a Studio Web project/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at tests\unit\project-v2.test.ts:142:1
+✖ rejects an hdri fileUrl outside /assets/ and a non-https sourceUrl (0.368ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///C:/3D-Studio/02_projects/studio-web/.worktrees/claude-design-product-v1/tests/unit/project-v2.test.ts:155:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /fileUrl|assets/i,
+    operator: 'throws',
+    diff: 'simple'
+  }
+EXIT CODE: 1

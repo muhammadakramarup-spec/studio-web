@@ -108,3 +108,46 @@ Safe to promote for this environment, with one portability caveat and one thing 
 - **Not directly tested:** I only ran `tests/s1.spec.ts` (WebGL-heavy) with these flags — I did not run
   S2/S3/S4/S5/S6's suites under them myself, so "no effect on non-GPU suites" above is an architectural
   expectation, not something I measured.
+
+## 2026-09-05 — F1 signature deviation: `exportSequence`/`exportBlenderPackage` gain optional trailing parameters
+
+Wave 3 Function 1 (timeline-sampled turntable export,
+`docs/handoffs/2026-09-04-claude-design-product-v1-execution-handoff.md`) needed a way for the
+export loop to sample the S4 timeline instead of always driving the built-in linear rotation sweep,
+and a way to append provenance/receipt files (the F3 silo's deliverable) after the frame images. Both
+needs are met by adding a 4th, **optional** parameter rather than changing any existing parameter:
+
+```ts
+export interface FrameSnapshot {
+  position: [number, number, number];
+  quaternion: [number, number, number, number];
+  scale: [number, number, number];
+  fov: number;
+}
+export interface SequenceOptions {
+  applyFrame?: (index: number, frames: number) => void;      // replaces the linear sweep for frame i
+  onFrameRendered?: (index: number, snapshot: FrameSnapshot) => void; // what actually rendered
+  extraFiles?: { name: string; blob: Blob }[];                // appended to the ZIP after the frames
+}
+// exportSequence(res, frames, onProgress?, options?): Promise<Blob>
+// exportBlenderPackage(extraFiles?): Promise<Blob>
+```
+
+Why this is not a breaking change to the frozen `StudioHandle` shape: every existing 3-argument
+`exportSequence(res, frames, onProgress)` call and every 0-argument `exportBlenderPackage()` call is
+untouched — `options`/`extraFiles` default to `undefined`, and `undefined?.applyFrame` etc. all fall
+through to exactly today's code path (linear `pivot.rotation.y = base + i*2π/frames` sweep, no extra
+ZIP entries). Verified by `tests/export-timeline.spec.ts`'s "legacy 3-argument exportSequence call
+still yields the linear sweep" test (guard) and by rerunning `tests/s1.spec.ts` Target 5 and
+`tests/e2e.spec.ts` Steps 5-6 unmodified — both still assert exactly 24 `frame_0001..0024.png`
+entries at 1024×1024 and pass unchanged (see `status/evidence/f1/regression-s1.txt`,
+`status/evidence/f1/regression-e2e.txt`).
+
+Also fixed as part of the same change (not a signature change, a correctness fix): `beginOffscreen`/
+`endOffscreen` previously saved and restored only `pivot.rotation.y`. A sampled timeline frame can
+translate or scale the pivot too (position/scale keys, not just rotation), so both functions now
+save+restore the full pivot transform (`position`, `quaternion`, `scale`) via `THREE.Vector3/
+Quaternion.clone()`/`.copy()`, in addition to the existing camera fov/aspect/position/pixel-ratio
+restore. Verified by `tests/export-timeline.spec.ts`'s Test A: pivot transform after export equals
+pivot transform before export within 1e-9 (`pivotRestoreDiff=0` measured,
+`status/evidence/f1/green-export-timeline.txt`).
