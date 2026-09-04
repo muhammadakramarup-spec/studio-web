@@ -77,3 +77,17 @@ negative results; three unblock paths for the owner), `docs/research/competitive
 12 px floor), `docs/research/api-and-cost-options.md` (53 evidence vs 91 unverified; several
 vendor pricing pages returned 403 and are flagged as secondary). Unverified items are labelled,
 not hidden. Design Foundation and Shell visual silos remain **not started** pending the artifact.
+
+## 2026-09-05 — Wave 0 completion and F1 gate accepted
+
+- Wave 0 completion: 50 new captures (saving, editing, exporting, completion, recoverable × five
+  viewports × live/local) in `status/before/`, reusable `status/tools/capture-states.mjs`, and
+  real-download validation of all five export formats on both bases (bytes identical local vs
+  live) appended to `status/baseline.md`. Preview port 4173 released. Wave 0 is now complete.
+- F1 (timeline-sampled export) accepted: red evidence shows `frame 0 was never reported to
+  onFrameRendered` and `expect(25) received 24` against the starting code; green shows 3/3 with
+  worst quaternion/position/pivot-restore differences of 0; regressions s1 6/6, s4 7/7, e2e 4/4
+  unchanged (24-entry turntable assertions intact). Frozen signatures gained optional trailing
+  parameters only, recorded in `src/viewer/qa/latest.md`. Shell integration snippet is in
+  `status/evidence/f1/requests.md` for Phase B. Found defect confirmed: `addTurntableClip`
+  leaves `state.duration` stale; the planner uses the maximum authored key time instead.
