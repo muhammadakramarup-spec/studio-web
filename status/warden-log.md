@@ -67,3 +67,13 @@ that concurrent silo Playwright runs reuse it (`reuseExistingServer: true`) inst
 and killing their own. Silos never start or stop servers. The Wave 0 capture agent uses
 `vite preview --port 4173` against the already-built `dist/` and stops it when done. The Warden
 stops the dev server when Phase A closes.
+
+## 2026-09-05 — Gate 1 (research portion) accepted
+
+Deliverables reviewed: `docs/design/darkroom-request.md` (89 lines; nine searched locations with
+negative results; three unblock paths for the owner), `docs/research/competitive-audit.md`
+(28 evidence-tagged vs 42 unverified claims; ten scored problems), `docs/research/accessibility-triage.md`
+(13 evidence tags, 15 primary w3.org/deque URLs; 16 of 30 font-size declarations sit below the
+12 px floor), `docs/research/api-and-cost-options.md` (53 evidence vs 91 unverified; several
+vendor pricing pages returned 403 and are flagged as secondary). Unverified items are labelled,
+not hidden. Design Foundation and Shell visual silos remain **not started** pending the artifact.
