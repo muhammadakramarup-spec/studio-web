@@ -1,0 +1,147 @@
+=== GATE 0 re-verification 2026-09-04T23:45:44+05:00 ===
+--- git status ---
+?? status/evidence/
+?? status/warden-log.md
+--- fetch/log ---
+b00edbd docs: record Wave 0 executable baseline
+9c010fe chore: ignore local worktrees
+95b7544 docs: add Claude design execution handoff
+--- npm run build ---
+
+[36mvite v5.4.21 [32mbuilding for production...[36m[39m
+transforming...
+[32m✓[39m 48 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist/[22m[32mindex.html                 [39m[1m[2m  3.59 kB[22m[1m[22m[2m │ gzip:   1.35 kB[22m
+[2mdist/[22m[35massets/index-V8chZ5rB.css  [39m[1m[2m 10.17 kB[22m[1m[22m[2m │ gzip:   2.83 kB[22m
+[2mdist/[22m[36massets/index-CCYwVa89.js   [39m[1m[33m737.36 kB[39m[22m[2m │ gzip: 195.39 kB[22m
+[33m
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[32m✓ built in 3.55s[39m
+BUILD_EXIT=0
+--- npm run test:unit ---
+
+> studio-web@0.1.0 test:unit
+> node --test tests/unit/*.test.ts
+
+✔ project round-trip preserves the active model, view, and timeline (1.9337ms)
+✔ project parser rejects unsupported versions and malformed model data (0.6346ms)
+✔ telemetry payload keeps only the allowlisted fields for its event (1.9405ms)
+✔ telemetry payload rejects free text, non-finite durations, and unknown events (0.1921ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 140.6208
+UNIT_EXIT=0
+--- tests/e2e.spec.ts ---
+
+[3/4] tests\e2e.spec.ts:413:1 › E2E regression — real app shell: #viewport-hint reflects actual ready/loaded state
+tests\e2e.spec.ts:413:1 › E2E regression — real app shell: #viewport-hint reflects actual ready/loaded state
+[E2E] hint before any model load: hidden=false state=idle text="Start with a GLBDrop it here, open a file, or choose from the library.Open a GLB"
+
+[E2E] hint after a real library pick loads a model: hidden=true state=loaded
+
+[4/4] tests\e2e.spec.ts:468:1 › E2E regression — default Bloom stays readable on a plain white Kenney model (no full clip)
+tests\e2e.spec.ts:468:1 › E2E regression — default Bloom stays readable on a plain white Kenney model (no full clip)
+[E2E] bloom clip check: region=[275,73,565,449] totalPx=109040 clippedPx=0 clippedPct=0.000%
+
+  4 passed (15.6s)
+EXIT=0 for tests/e2e.spec.ts
+--- tests/s1.spec.ts ---
+
+[S1 T5] ZIP entries: 24 (4436867 bytes, progress callbacks: 25)
+
+[S1 T5] ZIP frame dims: frame_0001.png=1024x1024 ... frame_0024.png=1024x1024 (all24 correct=true)
+
+[S1 T5] exportWebM: threw=false result=null gate=null (nothing produced)
+
+[6/6] tests\s1.spec.ts:666:1 › setRenderHook — render-loop seam
+tests\s1.spec.ts:666:1 › setRenderHook — render-loop seam
+[S1 renderHook] hookCalls(300ms)=20 defaultRenders-while-hooked=0 defaultRenders-after-null(300ms)=19
+
+  6 passed (41.2s)
+EXIT=0 for tests/s1.spec.ts
+--- tests/s2.spec.ts ---
+tests\s2.spec.ts:629:1 › 6. mirror: triangle count exactly 2x; mirrored bbox negated within 1e-4
+MEASURED mirror: triBefore=12 triAfter=24 (x2) triAfterUndo=12 negatedMin=true negatedMax=true
+
+[8/9] tests\s2.spec.ts:683:1 › 7. array: count = N total visible instances incl. source; changed() between count 1 and 5
+tests\s2.spec.ts:683:1 › 7. array: count = N total visible instances incl. source; changed() between count 1 and 5
+MEASURED array: countAt1=1 sceneCountAt1=1 countAt5=5 sceneCountAt5=5 moved(1->5)=5.45%
+
+[9/9] tests\s2.spec.ts:764:1 › 8. bloom: toggling on passes changed() restricted to the emissive object's screen bounds
+tests\s2.spec.ts:764:1 › 8. bloom: toggling on passes changed() restricted to the emissive object's screen bounds
+MEASURED bloom: movedInBounds=94.32% region=256x256 bloomEnabled=true
+
+  9 passed (1.1m)
+EXIT=0 for tests/s2.spec.ts
+--- tests/s3.spec.ts ---
+
+Running 5 tests using 1 worker
+
+[1/5] tests\s3.spec.ts:8:3 › S3 Library manifest › manifest.assets root shape, counts, and licence coverage
+[2/5] tests\s3.spec.ts:30:3 › S3 Library manifest › both S6-contractual asset ids are present (decision #16)
+[3/5] tests\s3.spec.ts:52:3 › S3 Library manifest › 20 kit-level thumbnails: 256x256, <=50KB each
+[4/5] tests\s3.spec.ts:83:3 › S3 Library GLB spot-check › ≥20 GLBs across ≥10 kits open in GLTFLoader with 0 console errors
+[5/5] tests\s3.spec.ts:134:3 › S3 LibraryPanel › renders manifest grid and emits onAssetPicked on tile click
+  5 passed (26.9s)
+EXIT=0 for tests/s3.spec.ts
+--- tests/s4.spec.ts ---
+tests\s4.spec.ts:146:1 › 5. 50-key JSON round-trip is bit-identical
+MEASURED roundtrip: bitIdentical=true beforeLen=5117
+
+[6/7] tests\s4.spec.ts:191:1 › 6. scrub performance: sampleAt < 2ms for 20 tracks x 4 channels x 50 keys
+tests\s4.spec.ts:191:1 › 6. scrub performance: sampleAt < 2ms for 20 tracks x 4 channels x 50 keys
+MEASURED perf: meanMs=0.0149 over 1000 iterations, totalMs=14.90
+
+[7/7] tests\s4.spec.ts:232:1 › 7. turntable: 3 quaternion keys, sample at duration/2 yields rotation pi within 1e-6
+tests\s4.spec.ts:232:1 › 7. turntable: 3 quaternion keys, sample at duration/2 yields rotation pi within 1e-6
+MEASURED turntable: keyCount=3 angle=3.141592653589793 diffFromPi=0
+
+  7 passed (15.1s)
+EXIT=0 for tests/s4.spec.ts
+--- tests/s5.spec.ts ---
+[7/8] tests\s5.spec.ts:290:3 › S5 account/pro/ads/telemetry › 7. localStorage throws: useAccount() still returns the signed-out ready state and does not throw
+tests\s5.spec.ts:290:3 › S5 account/pro/ads/telemetry › 7. localStorage throws: useAccount() still returns the signed-out ready state and does not throw
+MEASURED localStorage-throws robustness: threw=false status=signed-out isPro=false pageErrors=0
+
+[8/8] tests\s5.spec.ts:351:3 › S5 account/pro/ads/telemetry › 8. no secrets in the built bundle: grep for sk_/service_role/sb_secret (>20 chars) over an isolated zero-env build of src/account/index.ts
+tests\s5.spec.ts:351:3 › S5 account/pro/ads/telemetry › 8. no secrets in the built bundle: grep for sk_/service_role/sb_secret (>20 chars) over an isolated zero-env build of src/account/index.ts
+MEASURED secrets check: builtOk=true jsFiles=1 secretMatches=0
+
+(node:14108) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+  8 passed (22.2s)
+EXIT=0 for tests/s5.spec.ts
+--- tests/s6.spec.ts ---
+tests\s6.spec.ts:40:3 › S6 — AI + avatars › Generation panel round-trip: idle→queued→running→done <3000ms, 0 network calls, MOCK label in DOM
+[S6] generation round-trip elapsed (ms): 314.90000000037253 network calls: 0
+
+[3/4] tests\s6.spec.ts:98:3 › S6 — AI + avatars › Credits gate: 4th requestGeneration() in-session returns error synchronously <50ms, no state transition
+tests\s6.spec.ts:98:3 › S6 — AI + avatars › Credits gate: 4th requestGeneration() in-session returns error synchronously <50ms, no state transition
+[S6] credits gate 4th-call elapsed (ms): 0.09999999962747097
+
+[4/4] tests\s6.spec.ts:154:3 › S6 — AI + avatars › Avatar tile: onAvatarReady → studio.loadModel → visible mesh <2000ms, 256×256 capture differs ≥1000px from baseline
+tests\s6.spec.ts:154:3 › S6 — AI + avatars › Avatar tile: onAvatarReady → studio.loadModel → visible mesh <2000ms, 256×256 capture differs ≥1000px from baseline
+[S6] avatar tile elapsed (ms): 584.6999999992549 meshes: 2 tris: 465 diffCount: 3929
+
+  4 passed (10.1s)
+EXIT=0 for tests/s6.spec.ts
+--- tests/studio-shell.spec.ts ---
+
+Running 2 tests using 1 worker
+
+[1/2] tests\studio-shell.spec.ts:3:1 › Studio Shell keeps the load-to-export workflow focused and discoverable
+[2/2] tests\studio-shell.spec.ts:45:1 › Studio Shell keeps the desktop toolbar readable without horizontal scrolling
+  2 passed (6.9s)
+EXIT=0 for tests/studio-shell.spec.ts
+=== DONE 2026-09-04T23:49:29+05:00 ===
