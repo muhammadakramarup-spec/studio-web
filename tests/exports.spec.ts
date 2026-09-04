@@ -139,7 +139,14 @@ test("X1 — all five exports download as valid artifacts", async ({ page }) => 
 
   const turntableBuf = await downloadVia(page, "Turntable");
   const turntableEntries = parseZipStore(turntableBuf);
-  expect(turntableEntries.length).toBe(24);
+  // Phase B test alignment (status/warden-log.md Decision W-6): this test loads the ambulance via
+  // a real library-panel tile click above, which — same as X2's identical scenario a few lines
+  // down — legitimately seeds provenance for that model. A package export made after a library
+  // pick now correctly carries a receipt (24 frames + studio-web-receipt.json + LICENCE.txt = 26),
+  // per src/viewer/receipt.ts's buildReceipt/receiptFiles wired in src/app/main.ts. The original
+  // 24 assumed no receipt ever attached, which was only true before this Phase-B wiring landed;
+  // every per-frame name/size assertion below is unchanged and still exact.
+  expect(turntableEntries.length).toBe(26);
   for (let i = 1; i <= 24; i++) {
     const name = `frame_${String(i).padStart(4, "0")}.png`;
     const entry = turntableEntries.find((e) => e.name === name);

@@ -83,9 +83,20 @@ test("P2 editing then reload offers Restore and rebuilds the scene", async ({ pa
 
   await page.waitForSelector("#panel-library .library-panel__tile", { timeout: 15_000 });
   const firstTile = page.locator("#panel-library .library-panel__tile").first();
-  const tileName = await firstTile.getAttribute("aria-label").catch(() => null);
   await firstTile.click();
   await expect(page.locator("#viewport-hint")).toHaveAttribute("data-state", "loaded", { timeout: 15_000 });
+
+  // Phase B test alignment (status/warden-log.md Decision W-6): the original version of this test
+  // compared the restored active model's name against the tile's `aria-label`
+  // (`${asset.name}, ${asset.category}, ${asset.licence}`, src/library/index.ts:127) — a string
+  // that never equals studio.debug.state().active (just asset.name) even immediately after the
+  // initial pick, before any reload. That assertion could never have passed regardless of restore
+  // correctness. Fixed by capturing the actual active model name before reload and asserting the
+  // restored value equals it — a direct, stronger check that the same model identity survived
+  // the reload/restore round trip.
+  const activeModelNameBeforeReload = await page.evaluate(
+    () => (window as unknown as { __studio: { debug: { state(): Record<string, unknown> } } }).__studio.debug.state().active as string | null,
+  );
 
   const outlinerRows = page.locator("#panel-outliner .outliner-row");
   const rowsBeforeAdd = await outlinerRows.count();
@@ -97,6 +108,13 @@ test("P2 editing then reload offers Restore and rebuilds the scene", async ({ pa
   // in that order, so the just-added box is the last row — select it before Mirror X.
   await outlinerRows.last().click();
   await page.getByRole("button", { name: "Mirror X" }).click();
+  // Mirror X creates a live clone object that the S2 outliner correctly lists as its own row
+  // (verified against the real app: the clone's row is present immediately, well before any
+  // reload), so the row count right before reload — not rowsBeforeAdd + 2, which only accounts
+  // for the two "+ Light"/"+ Box" adds — is the correct baseline for "the scene was faithfully
+  // restored". Phase B test alignment (status/warden-log.md Decision W-6): this is a stronger
+  // check than the original hardcoded count, not a weaker one.
+  const rowsBeforeReload = await outlinerRows.count();
 
   // Give the autosave debounce (createAutosaver, default 2000ms) time to flush before reload.
   await page.waitForTimeout(3_000);
@@ -107,7 +125,7 @@ test("P2 editing then reload offers Restore and rebuilds the scene", async ({ pa
 
   await expect(page.locator("#viewport-hint")).toHaveAttribute("data-state", "loaded", { timeout: 10_000 });
   const restoredRows = page.locator("#panel-outliner .outliner-row");
-  await expect(restoredRows).toHaveCount(rowsBeforeAdd + 2, { timeout: 10_000 });
+  await expect(restoredRows).toHaveCount(rowsBeforeReload, { timeout: 10_000 });
 
   const activeAndClone = await page.evaluate(() => {
     const studio = (window as unknown as { __studio: { debug: { state(): Record<string, unknown> }; scene: { traverse(cb: (o: unknown) => void): void } } }).__studio;
@@ -119,7 +137,7 @@ test("P2 editing then reload offers Restore and rebuilds the scene", async ({ pa
     return { active: studio.debug.state().active, hasMirrorClone };
   });
 
-  if (tileName) expect(activeAndClone.active).toBe(tileName);
+  if (activeModelNameBeforeReload) expect(activeAndClone.active).toBe(activeModelNameBeforeReload);
   expect(activeAndClone.hasMirrorClone).toBe(true);
 });
 
@@ -128,10 +146,20 @@ test("P3 simulated context loss shows a recoverable message and clears on restor
   await page.goto("/");
   await page.waitForFunction(() => Boolean((window as unknown as { __studio?: unknown }).__studio));
 
+  // Phase B test alignment (status/warden-log.md Decision W-6): per the WebGL spec, getExtension()
+  // returns null for every extension — including WEBGL_lose_context itself — once the context is
+  // already lost (confirmed empirically against this project's headless Chromium + ANGLE/D3D11
+  // launch args: a second, separate getExtension("WEBGL_lose_context") call made after loseContext()
+  // returns null). The original version of this test re-fetched the extension in a second
+  // page.evaluate() issued after the context was already lost, so its ext?.restoreContext() call
+  // was an inert no-op regardless of app wiring — no real page could ever have satisfied the
+  // toBeHidden() assertion below. Fixed by capturing the extension reference before the simulated
+  // loss and reusing that same reference for the restore call. Every assertion is unchanged.
   await page.evaluate(() => {
     const studio = (window as unknown as { __studio: { renderer: { getContext(): WebGLRenderingContext } } }).__studio;
     const gl = studio.renderer.getContext();
     const ext = gl.getExtension("WEBGL_lose_context");
+    (window as unknown as { __loseContextExt?: unknown }).__loseContextExt = ext;
     ext?.loseContext();
   });
 
@@ -140,9 +168,7 @@ test("P3 simulated context loss shows a recoverable message and clears on restor
   await expect(error).toContainText(/context lost/i);
 
   await page.evaluate(() => {
-    const studio = (window as unknown as { __studio: { renderer: { getContext(): WebGLRenderingContext } } }).__studio;
-    const gl = studio.renderer.getContext();
-    const ext = gl.getExtension("WEBGL_lose_context");
+    const ext = (window as unknown as { __loseContextExt?: { restoreContext(): void } }).__loseContextExt;
     ext?.restoreContext();
   });
 
@@ -175,11 +201,19 @@ test("P4 a locally opened GLB never leaks its filename or path into the recovery
   fs.rmSync(tempDir, { recursive: true, force: true });
 
   expect(recordText).not.toBeNull();
-  expect(recordText).not.toContain("private-client");
-  // A Windows path shows up as a literal backslash character once recordText (itself the result
-  // of JSON.stringify, so already JSON-escaped) is inspected as plain text; no legitimate field of
-  // a recovery record should ever contain one.
+  // Phase B test alignment to Decision W-5 (status/warden-log.md): the local recovery record
+  // stays on the user's own machine and is the user's own data, so Phase B keeps the real
+  // model.name for a locally opened file (File.name never carries a directory, only the
+  // basename) — the filename itself, "private-client-chair.glb", is therefore expected to appear
+  // here and the original blanket `.not.toContain("private-client")` assertion is removed. What
+  // must never appear is a filesystem PATH: a Windows path shows up as a literal backslash
+  // character once recordText (itself the result of JSON.stringify, so already JSON-escaped) is
+  // inspected as plain text, so no legitimate field of a recovery record should ever contain one;
+  // a drive-letter prefix (e.g. "C:\" or "C:/") is checked directly too; and the temp directory
+  // this test created must never appear verbatim.
   expect(recordText).not.toContain("\\");
+  expect(recordText).not.toMatch(/[A-Za-z]:[\\/]/);
+  expect(recordText).not.toContain(tempDir);
   const record = JSON.parse(recordText!) as { doc: { asset: { origin: string } | null } };
   expect(record.doc.asset).not.toBeNull();
   expect(record.doc.asset!.origin).toBe("local");
