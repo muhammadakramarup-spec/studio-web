@@ -1,0 +1,239 @@
+[
+  {
+    "step": "1-open-glb",
+    "label": "Reach \"Open GLB\" (file-actions, first focusable element)",
+    "direction": "forward",
+    "activeElement": {
+      "tag": "BUTTON",
+      "id": "open-model-btn",
+      "name": "Open GLB",
+      "role": "",
+      "disabled": false
+    },
+    "focusRing": {
+      "focused": {
+        "outlineWidth": "3px",
+        "outlineStyle": "solid",
+        "outlineColor": "rgb(183, 210, 255)",
+        "boxShadow": "none"
+      },
+      "unfocused": {
+        "outlineWidth": "3px",
+        "outlineStyle": "none",
+        "outlineColor": "rgb(244, 247, 248)",
+        "boxShadow": "none"
+      }
+    },
+    "focusRingVisible": true,
+    "screenshot": "status\\evidence\\wave4-a11y\\focus-1-open-glb.png",
+    "pass": true,
+    "reason": "reached and verified"
+  },
+  {
+    "step": "2-library-search",
+    "label": "Reach the library search box (aria-label \"Search assets\")",
+    "direction": "forward",
+    "activeElement": {
+      "tag": "INPUT",
+      "id": "",
+      "name": "Search assets",
+      "role": "",
+      "disabled": false
+    },
+    "focusRing": {
+      "focused": {
+        "outlineWidth": "3px",
+        "outlineStyle": "solid",
+        "outlineColor": "rgb(183, 210, 255)",
+        "boxShadow": "none"
+      },
+      "unfocused": {
+        "outlineWidth": "3px",
+        "outlineStyle": "none",
+        "outlineColor": "rgb(244, 247, 248)",
+        "boxShadow": "none"
+      }
+    },
+    "focusRingVisible": true,
+    "screenshot": "status\\evidence\\wave4-a11y\\focus-2-library-search.png",
+    "pass": true,
+    "reason": "reached and verified"
+  },
+  {
+    "step": "3-first-tile",
+    "label": "Reach the first library tile (roving tabindex, tabIndex=0)",
+    "direction": "forward",
+    "activeElement": {
+      "tag": "BUTTON",
+      "id": "",
+      "name": "Ambulance, car-kit, CC0",
+      "role": "gridcell",
+      "disabled": false
+    },
+    "focusRing": {
+      "focused": {
+        "outlineWidth": "3px",
+        "outlineStyle": "solid",
+        "outlineColor": "rgb(183, 210, 255)",
+        "boxShadow": "none"
+      },
+      "unfocused": {
+        "outlineWidth": "3px",
+        "outlineStyle": "none",
+        "outlineColor": "rgb(244, 247, 248)",
+        "boxShadow": "none"
+      }
+    },
+    "focusRingVisible": true,
+    "screenshot": "status\\evidence\\wave4-a11y\\focus-3-first-tile.png",
+    "pass": true,
+    "reason": "reached and verified"
+  },
+  {
+    "step": "3b-arrow-nav",
+    "before": "Ambulance, car-kit, CC0",
+    "afterArrowRight": "Box, car-kit, CC0",
+    "afterArrowLeft": "Ambulance, car-kit, CC0",
+    "pass": true,
+    "reason": "ArrowRight moved focus to the next tile, ArrowLeft returned focus to the first tile"
+  },
+  {
+    "step": "3c-activate-tile",
+    "pass": true,
+    "reason": "Enter activated the focused tile; #viewport-hint reached data-state=loaded"
+  },
+  {
+    "step": "4-plus-light",
+    "label": "Reach \"+ Light\" and activate it (Shift+Tab: earlier in DOM than the library panel)",
+    "direction": "backward",
+    "activeElement": {
+      "tag": "BUTTON",
+      "id": "",
+      "name": "+ Light",
+      "role": "",
+      "disabled": false
+    },
+    "focusRing": {
+      "focused": {
+        "outlineWidth": "3px",
+        "outlineStyle": "solid",
+        "outlineColor": "rgb(183, 210, 255)",
+        "boxShadow": "none"
+      },
+      "unfocused": {
+        "outlineWidth": "3px",
+        "outlineStyle": "none",
+        "outlineColor": "rgb(244, 247, 248)",
+        "boxShadow": "none"
+      }
+    },
+    "focusRingVisible": true,
+    "screenshot": "status\\evidence\\wave4-a11y\\focus-4-plus-light.png",
+    "pass": true,
+    "reason": "reached and verified"
+  },
+  {
+    "step": "4b-autosave-confirmed",
+    "pass": true,
+    "reason": "recovery record present in IndexedDB before proceeding"
+  },
+  {
+    "step": "5-save-project",
+    "label": "Reach \"Save project\" and activate it (Shift+Tab: file-actions is before #toolbar)",
+    "direction": "backward",
+    "activeElement": {
+      "tag": "BUTTON",
+      "id": "save-project-btn",
+      "name": "Save project",
+      "role": "",
+      "disabled": false
+    },
+    "focusRing": {
+      "focused": {
+        "outlineWidth": "3px",
+        "outlineStyle": "solid",
+        "outlineColor": "rgb(183, 210, 255)",
+        "boxShadow": "none"
+      },
+      "unfocused": {
+        "outlineWidth": "3px",
+        "outlineStyle": "none",
+        "outlineColor": "rgb(244, 247, 248)",
+        "boxShadow": "none"
+      }
+    },
+    "focusRingVisible": true,
+    "screenshot": "status\\evidence\\wave4-a11y\\focus-5-save-project.png",
+    "downloadCaught": {
+      "suggestedFilename": "ambulance.studio.json"
+    },
+    "postActivateWait": "Project saved — active model, view, materials, and timeline included",
+    "pass": true,
+    "reason": "reached and verified"
+  },
+  {
+    "step": "6-turntable",
+    "label": "Reach \"Turntable\" and activate it (Tab: export group is later in #toolbar)",
+    "direction": "forward",
+    "activeElement": {
+      "tag": "BUTTON",
+      "id": "",
+      "name": "Turntable",
+      "role": "",
+      "disabled": false
+    },
+    "focusRing": {
+      "focused": {
+        "outlineWidth": "3px",
+        "outlineStyle": "solid",
+        "outlineColor": "rgb(183, 210, 255)",
+        "boxShadow": "none"
+      },
+      "unfocused": {
+        "outlineWidth": "3px",
+        "outlineStyle": "none",
+        "outlineColor": "rgb(244, 247, 248)",
+        "boxShadow": "none"
+      }
+    },
+    "focusRingVisible": true,
+    "screenshot": "status\\evidence\\wave4-a11y\\focus-6-turntable.png",
+    "downloadCaught": {
+      "suggestedFilename": "studio-turntable.zip"
+    },
+    "postActivateWait": "Turntable ready (default 360° sweep — add keys with Turn 360°)",
+    "pass": true,
+    "reason": "reached and verified"
+  },
+  {
+    "step": "7-restore",
+    "label": "Reload, then reach \"Restore\" and activate it (forward Tab from a fresh page)",
+    "direction": "forward",
+    "activeElement": {
+      "tag": "BUTTON",
+      "id": "",
+      "name": "Restore",
+      "role": "",
+      "disabled": false
+    },
+    "focusRing": {
+      "focused": {
+        "outlineWidth": "3px",
+        "outlineStyle": "solid",
+        "outlineColor": "rgb(183, 210, 255)",
+        "boxShadow": "none"
+      },
+      "unfocused": {
+        "outlineWidth": "3px",
+        "outlineStyle": "none",
+        "outlineColor": "rgb(244, 247, 248)",
+        "boxShadow": "none"
+      }
+    },
+    "focusRingVisible": true,
+    "screenshot": "status\\evidence\\wave4-a11y\\focus-7-restore.png",
+    "postActivateWait": "Unsaved work restored.",
+    "pass": true,
+    "reason": "reached and verified"
+  }
+]

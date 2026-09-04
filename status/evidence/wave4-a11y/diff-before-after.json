@@ -1,0 +1,282 @@
+[
+  {
+    "viewport": "1536x864",
+    "state": "empty",
+    "sizeMismatch": false,
+    "diffCount": 1027,
+    "total": 1327104,
+    "percent": 0.07738654996141975
+  },
+  {
+    "viewport": "1536x864",
+    "state": "loaded",
+    "sizeMismatch": false,
+    "diffCount": 3758,
+    "total": 1327104,
+    "percent": 0.2831729841820988
+  },
+  {
+    "viewport": "1536x864",
+    "state": "editing",
+    "sizeMismatch": false,
+    "diffCount": 0,
+    "total": 1327104,
+    "percent": 0
+  },
+  {
+    "viewport": "1536x864",
+    "state": "saving",
+    "sizeMismatch": false,
+    "diffCount": 0,
+    "total": 1327104,
+    "percent": 0
+  },
+  {
+    "viewport": "1536x864",
+    "state": "exporting",
+    "sizeMismatch": false,
+    "diffCount": 131259,
+    "total": 1327104,
+    "percent": 9.89063404224537
+  },
+  {
+    "viewport": "1536x864",
+    "state": "completion",
+    "sizeMismatch": false,
+    "diffCount": 5302,
+    "total": 1327104,
+    "percent": 0.39951654128086417
+  },
+  {
+    "viewport": "1536x864",
+    "state": "recoverable",
+    "sizeMismatch": false,
+    "diffCount": 3375,
+    "total": 1327104,
+    "percent": 0.25431315104166663
+  },
+  {
+    "viewport": "1280x720",
+    "state": "empty",
+    "sizeMismatch": false,
+    "diffCount": 1038,
+    "total": 921600,
+    "percent": 0.11263020833333333
+  },
+  {
+    "viewport": "1280x720",
+    "state": "loaded",
+    "sizeMismatch": false,
+    "diffCount": 1654,
+    "total": 921600,
+    "percent": 0.1794704861111111
+  },
+  {
+    "viewport": "1280x720",
+    "state": "editing",
+    "sizeMismatch": false,
+    "diffCount": 0,
+    "total": 921600,
+    "percent": 0
+  },
+  {
+    "viewport": "1280x720",
+    "state": "saving",
+    "sizeMismatch": false,
+    "diffCount": 0,
+    "total": 921600,
+    "percent": 0
+  },
+  {
+    "viewport": "1280x720",
+    "state": "exporting",
+    "sizeMismatch": false,
+    "diffCount": 104222,
+    "total": 921600,
+    "percent": 11.30881076388889
+  },
+  {
+    "viewport": "1280x720",
+    "state": "completion",
+    "sizeMismatch": false,
+    "diffCount": 149582,
+    "total": 921600,
+    "percent": 16.23068576388889
+  },
+  {
+    "viewport": "1280x720",
+    "state": "recoverable",
+    "sizeMismatch": false,
+    "diffCount": 147655,
+    "total": 921600,
+    "percent": 16.021592881944443
+  },
+  {
+    "viewport": "1024x768",
+    "state": "empty",
+    "sizeMismatch": false,
+    "diffCount": 1024,
+    "total": 786432,
+    "percent": 0.13020833333333331
+  },
+  {
+    "viewport": "1024x768",
+    "state": "loaded",
+    "sizeMismatch": false,
+    "diffCount": 1548,
+    "total": 786432,
+    "percent": 0.19683837890625
+  },
+  {
+    "viewport": "1024x768",
+    "state": "editing",
+    "sizeMismatch": false,
+    "diffCount": 0,
+    "total": 786432,
+    "percent": 0
+  },
+  {
+    "viewport": "1024x768",
+    "state": "saving",
+    "sizeMismatch": false,
+    "diffCount": 0,
+    "total": 786432,
+    "percent": 0
+  },
+  {
+    "viewport": "1024x768",
+    "state": "exporting",
+    "sizeMismatch": false,
+    "diffCount": 89565,
+    "total": 786432,
+    "percent": 11.388778686523438
+  },
+  {
+    "viewport": "1024x768",
+    "state": "completion",
+    "sizeMismatch": false,
+    "diffCount": 149788,
+    "total": 786432,
+    "percent": 19.046529134114586
+  },
+  {
+    "viewport": "1024x768",
+    "state": "recoverable",
+    "sizeMismatch": false,
+    "diffCount": 147815,
+    "total": 786432,
+    "percent": 18.795649210611977
+  },
+  {
+    "viewport": "768x1024",
+    "state": "empty",
+    "sizeMismatch": false,
+    "diffCount": 666,
+    "total": 786432,
+    "percent": 0.084686279296875
+  },
+  {
+    "viewport": "768x1024",
+    "state": "loaded",
+    "sizeMismatch": false,
+    "diffCount": 264694,
+    "total": 786432,
+    "percent": 33.657582600911454
+  },
+  {
+    "viewport": "768x1024",
+    "state": "editing",
+    "sizeMismatch": false,
+    "diffCount": 0,
+    "total": 786432,
+    "percent": 0
+  },
+  {
+    "viewport": "768x1024",
+    "state": "saving",
+    "sizeMismatch": false,
+    "diffCount": 0,
+    "total": 786432,
+    "percent": 0
+  },
+  {
+    "viewport": "768x1024",
+    "state": "exporting",
+    "sizeMismatch": false,
+    "diffCount": 59688,
+    "total": 786432,
+    "percent": 7.5897216796875
+  },
+  {
+    "viewport": "768x1024",
+    "state": "completion",
+    "sizeMismatch": false,
+    "diffCount": 242580,
+    "total": 786432,
+    "percent": 30.84564208984375
+  },
+  {
+    "viewport": "768x1024",
+    "state": "recoverable",
+    "sizeMismatch": false,
+    "diffCount": 251199,
+    "total": 786432,
+    "percent": 31.941604614257812
+  },
+  {
+    "viewport": "390x844",
+    "state": "empty",
+    "sizeMismatch": false,
+    "diffCount": 284,
+    "total": 329160,
+    "percent": 0.08628022846032324
+  },
+  {
+    "viewport": "390x844",
+    "state": "loaded",
+    "sizeMismatch": false,
+    "diffCount": 139645,
+    "total": 329160,
+    "percent": 42.424656701907885
+  },
+  {
+    "viewport": "390x844",
+    "state": "editing",
+    "sizeMismatch": false,
+    "diffCount": 0,
+    "total": 329160,
+    "percent": 0
+  },
+  {
+    "viewport": "390x844",
+    "state": "saving",
+    "sizeMismatch": false,
+    "diffCount": 0,
+    "total": 329160,
+    "percent": 0
+  },
+  {
+    "viewport": "390x844",
+    "state": "exporting",
+    "sizeMismatch": false,
+    "diffCount": 61093,
+    "total": 329160,
+    "percent": 18.56027463847369
+  },
+  {
+    "viewport": "390x844",
+    "state": "completion",
+    "sizeMismatch": false,
+    "diffCount": 121521,
+    "total": 329160,
+    "percent": 36.91851986875684
+  },
+  {
+    "viewport": "390x844",
+    "state": "recoverable",
+    "sizeMismatch": false,
+    "diffCount": 124114,
+    "total": 329160,
+    "percent": 37.70628265888929
+  }
+]

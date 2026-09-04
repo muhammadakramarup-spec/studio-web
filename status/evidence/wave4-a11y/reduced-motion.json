@@ -1,0 +1,13 @@
+{
+  "matchMediaReducedMotion": true,
+  "spin": {
+    "y0": 0,
+    "y1": 0.21844540917922012,
+    "stillSpinningUnderReducedMotion": true
+  },
+  "timelinePlay": {
+    "pivotQuaternionY_beforePlay": 0.2333689933808277,
+    "pivotQuaternionY_afterPlay500ms": 0.250058940378707,
+    "stillPlayingUnderReducedMotion": true
+  }
+}
